@@ -3,7 +3,7 @@
   "description": "A tool to protect your namespace",
   "type": "library",
   "bin": [
-    "src/bin/namespace-protector"
+    "bin/namespace-protector"
   ],
   "config": {
     "sort-packages": true,
