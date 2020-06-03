@@ -1,5 +1,7 @@
 {
   "name": "brucegithub/namespace-protector",
+  "description": "A tool to protect your namespace",
+  "type": "library",
   "require": {
     "nikic/php-parser": "^4.4",
     "symfony/console": "^5.1"
