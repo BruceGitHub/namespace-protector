@@ -2,6 +2,13 @@
   "name": "brucegithub/namespace-protector",
   "description": "A tool to protect your namespace",
   "type": "library",
+  "bin": [
+    "src/bin/namespace-protector"
+  ],
+  "config": {
+    "sort-packages": true,
+    "bin-dir": "bin"
+  },
   "require": {
     "nikic/php-parser": "^4.4",
     "symfony/console": "^5.1"
