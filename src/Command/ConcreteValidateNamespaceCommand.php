@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Command;
+namespace NamespaceProtector\Command;
 
-use App\Config;
-use App\Common\FileSystemPath;
+use NamespaceProtector\Config;
+use NamespaceProtector\Common\FileSystemPath;
 
 final class ConcreteValidateNamespaceCommand extends ValidateNamespaceCommand
 {
     public function getConfig(): Config
     {
         return   new Config(
-            new FileSystemPath('.'), 
+            new FileSystemPath('src'),
             [
-                'L2',
-                'L1',
-                'PhpParser\Builder',
-                'PhpParser\Node\Stmt'
-            ]
+                '\Legacy\Controller',
+            ],
+            [
+                '\Facile\Pagamenti\Legacy\ClientPagamentiLegacy',
+            ],
+            Config::MODE_PUBLIC
         );        
     }
 

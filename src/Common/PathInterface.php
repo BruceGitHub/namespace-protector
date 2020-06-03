@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common; 
+namespace NamespaceProtector\Common;
 
 interface PathInterface 
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Common; 
+namespace NamespaceProtector\Common;
 
 final class FileSystemPath implements PathInterface
 {
     private $path; 
 
-    public function __construct(string $path )
+    public function __construct(string $path)
     {
         $this->path = $path; 
     }

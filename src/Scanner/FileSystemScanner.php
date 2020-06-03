@@ -1,41 +1,46 @@
 <?php
 
-namespace App\Scanner;
+namespace NamespaceProtector\Scanner;
 
 final class FileSystemScanner implements ScannerInterface {
 
     private $startPath;
     private $fileLoaded = [];
-    private $extensions = 'php';
+    private $extensions;
 
-    public function __construct(
-        array $startPaths, 
-        string $extensions = 'php')
+    public function __construct(array $startPaths, string $extensions = 'php')
     {
-        $this->startPaths = $startPaths; 
+        $this->startPath = $startPaths;
+        $this->extensions = $extensions;
     }
 
     public function load(): void
     {
-        $fileLoaded = array();
-        $this->fileLoaded = array();
+        $fileLoaded = [];
+        $this->fileLoaded = [];
 
-        foreach ($this->startPaths as $pathDescriptor) {
+        foreach ($this->startPath as $pathDescriptor) {
     
             $iterator = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($pathDescriptor->get()
                 )
             );
+
             foreach ($iterator as $file) {
-                if ($file->isDir()) continue;
-                if ($file->getExtension() !== $this->extensions) continue; 
+                if ($file->isDir()) {
+                    continue;
+                }
+
+                if ($file->getExtension() !== $this->extensions) {
+                    continue;
+                }
     
                 $pathDescriptor = $file->getPathname();
                 $fileLoaded[] = $pathDescriptor;
             }
         }
 
-        $this->fileLoaded = $fileLoaded;        
+        $this->fileLoaded = $fileLoaded;
     }
 
     public function getFileLoaded(): array 

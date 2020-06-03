@@ -1,17 +1,17 @@
 <?php
 
-namespace App;
+namespace NamespaceProtector;
 
-use App\Common\PathInterface;
-use App\Parser\ParserInteface;
-use App\Parser\Node\PhpNode;
+use NamespaceProtector\Common\PathInterface;
+use NamespaceProtector\Parser\ParserInterface;
+use NamespaceProtector\Parser\Node\PhpNode;
 
 final class Analyser 
 {
-    private $listParser = []; 
+    private $listParser;
     private $withError = false; 
     
-    public function __construct(ParserInteface ...$listParser)
+    public function __construct(ParserInterface ...$listParser)
     {
         $this->listParser = $listParser; 
     }
@@ -32,7 +32,7 @@ final class Analyser
         }
     }
 
-    public function getWithError(): bool
+    public function withError(): bool
     {
         return $this->withError;
     }

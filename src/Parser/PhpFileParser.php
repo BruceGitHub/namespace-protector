@@ -1,32 +1,24 @@
 <?php
 
-namespace App\Parser;
-
-use PhpParser\Parser;
-use PhpParser\NameContext;
-use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitor\NameResolver;
-use PhpParser\NodeVisitorAbstract;
-use PhpParser\Error;
-use PhpParser\NodeDumper;
-use PhpParser\ParserFactory;
-use PhpParser\Node\Name\FullyQualified;
+namespace NamespaceProtector\Parser;
 
 //lib namespace
-use App\Common\PathInterface;
-use App\Parser\Node\PhpNode;
-use App\Result\ResultCollector;
-use App\Result\Result;
-use App\MetadataLoader;
-use App\Config;
+use NamespaceProtector\Common\PathInterface;
+use NamespaceProtector\Config;
+use NamespaceProtector\MetadataLoader;
+use NamespaceProtector\Parser\Node\PhpNode;
+use NamespaceProtector\Result\Result;
+use NamespaceProtector\Result\ResultCollector;
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory;
 
-final class PhpFileParser implements ParserInteface
+
+
+final class PhpFileParser implements ParserInterface
 {
     private const ONLY_ONE_ENTRY=1; 
     private $parser;
     private $traverser;
-    private $phpNode;
     private $resultCollector;
 
     public function __construct(Config $config, MetadataLoader $metadataLoader)
@@ -35,19 +27,19 @@ final class PhpFileParser implements ParserInteface
         $this->traverser = new NodeTraverser();
         $this->resultCollector = new ResultCollector();
 
-        $this->phpNode = new PhpNode(
+        $phpNode = new PhpNode(
             $config,
             ['preserveOriginalNames' => true, 'replaceNodes' => true],
             $this->resultCollector,
             $metadataLoader
         );
 
-        $this->traverser->addVisitor($this->phpNode);
+        $this->traverser->addVisitor($phpNode);
     }
 
     public function parseFile(PathInterface $pathFile): void
     {
-        $this->resultCollector->empyResult();
+        $this->resultCollector->emptyResult();
         $this->resultCollector->addResult(
             new Result('Process file: ' . $pathFile->get() . PHP_EOL)
         );
@@ -58,7 +50,7 @@ final class PhpFileParser implements ParserInteface
         $this->traverser->traverse($ast);
 
         if (\count($this->resultCollector->get()) === self::ONLY_ONE_ENTRY) {
-            $this->resultCollector->empyResult();
+            $this->resultCollector->emptyResult();
         }
     }
 

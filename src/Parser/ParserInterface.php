@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Parser;
+namespace NamespaceProtector\Parser;
 
-use App\Common\PathInterface;
-use App\Result\ResultCollector;
+use NamespaceProtector\Common\PathInterface;
+use NamespaceProtector\Result\ResultCollector;
 
-interface ParserInteface {
+interface ParserInterface {
     public function parseFile(PathInterface $pathInterface): void; 
     public function getListResult(): ResultCollector;
 }

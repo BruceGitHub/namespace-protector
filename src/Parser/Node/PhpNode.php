@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Parser\Node;
+namespace NamespaceProtector\Parser\Node;
 
-use App\MetadataLoader;
+
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\UseUse;
 use PhpParser\Node\Stmt\FullyQualified;
 
 //lib namespace
-use App\Result\ResultCollector;
-use App\Result\Result;
-use App\Config;
+use NamespaceProtector\MetadataLoader;
+use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\Result;
+use NamespaceProtector\Config;
 
 final class PhpNode extends NameResolver
 {
@@ -19,7 +20,7 @@ final class PhpNode extends NameResolver
     private $listNodeProcessor = [];
     private $resultCollector;
     private $metadataLoader;
-    private $globalConfig; 
+    private $globalConfig;
 
     public function __construct(
         Config $configGlobal,
@@ -33,13 +34,15 @@ final class PhpNode extends NameResolver
         $this->metadataLoader = $metadataLoader;
         $this->resultCollector = $resultCollector;
 
-        $this->listNodeProcessor[UseUse::class] = function (Node $node): string {
+        $this->listNodeProcessor[UseUse::class] = static function (Node $node): string {
             return $node->name->toCodeString();
         };
 
-        $this->listNodeProcessor[FullyQualified::class] = function (Node $node): string {
+        $this->listNodeProcessor[FullyQualified::class] = static function (Node $node): string {
             return $node->name->toCodeString();
         };
+
+
     }
 
     public function enterNode(Node $node)
@@ -54,44 +57,70 @@ final class PhpNode extends NameResolver
             $func = $this->listNodeProcessor[$class];
             $val = $func($node);
 
-            if ($this->isFalsePositives($val)) {
+            if (!$this->isFalsePositives($val)) {
                 return;
             }
-            
-            foreach ($this->globalConfig->getNamespaceToValidate() as $priv) {
 
-                if (strpos($val,$priv)>=1) {
-                    $err = "\t > ERROR: of use $val. it's PRIVATE namespace access, on Line: ". 
-                            $node->getLine().
-                            PHP_EOL
-                            ;
-                    $this->resultCollector->addResult(new Result($err,self::ERR));
-                }
+            if ($this->isPublicEntry($val)) {
+                return;
             }
-            
 
+            //todo: optimize
+            if ($this->globalConfig->getMode()===Config::MODE_PRIVATE) {
+                $this->pushError($val, $node);
+                return;
+            }
+
+            $this->validateWithPrivateMode($val, $node);
         }
     }
 
     private function isFalsePositives(string $result): bool
     {
         $val = str_replace('\\', '', $result);
-        if (\in_array("$val", $this->metadataLoader->getCollectBaseClasses(), true)) {
+        if (MetadataLoader::valueExist($this->metadataLoader->getCollectBaseClasses(),$val)) {
             return true;
         }
 
-        if (\in_array("$val", $this->metadataLoader->getCollectBaseInterfaces(), true)) {
+        if (MetadataLoader::valueExist($this->metadataLoader->getCollectBaseInterfaces(),$val)) {
             return true;
         }
 
-        if (\in_array("$val", $this->metadataLoader->getCollectBaseFunctions(), true)) {
+        if (MetadataLoader::valueExist($this->metadataLoader->getCollectBaseFunctions(),$val)) {
             return true;
         }
 
-        if (\key_exists("$val", $this->metadataLoader->getCollectBaseConstants())) {
+        if (MetadataLoader::keyExist($this->metadataLoader->getCollectBaseConstants(),$val)) {
             return true;
         }
 
         return false;
+    }
+
+    private function isPublicEntry($entry): bool
+    {
+        if (\in_array($entry,$this->globalConfig->getPublicEntries() ,true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function validateWithPrivateMode($val, Node $node): void
+    {
+        foreach ($this->globalConfig->getPrivateEntries() as $entry) {
+
+            if (strpos($val, $entry) >= 1) {
+                $this->pushError($val, $node);
+            }
+        }
+    }
+
+    private function pushError($val, Node $node): void
+    {
+        $err = "\t > ERROR: of use $val. it's PRIVATE namespace access, on Line: " .
+            $node->getLine() .
+            PHP_EOL;
+        $this->resultCollector->addResult(new Result($err, self::ERR));
     }
 }

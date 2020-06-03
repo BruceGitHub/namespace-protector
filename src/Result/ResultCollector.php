@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Result; 
-
-use App\Result\Result;
+namespace NamespaceProtector\Result;
 
 final class ResultCollector   {
-    private $listResult = [];
+    private $listResult ;
 
     public function __construct()
     {
@@ -22,7 +20,7 @@ final class ResultCollector   {
         return $this->listResult;
     }
 
-    public function empyResult(): void
+    public function emptyResult(): void
     {
         $this->listResult = [];
     }

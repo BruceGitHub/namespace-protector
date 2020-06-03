@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace NamespaceProtector;
 
 final class MetadataLoader {
 
@@ -15,10 +15,12 @@ final class MetadataLoader {
 
     public function load(): void
     {
-        $this->collectBaseClasses = get_declared_classes();
-        $this->collectBaseInterfaces = get_declared_interfaces();
-        $this->collectBaseFunctions = get_defined_functions()['internal'];
-        $this->collectBaseConstants = get_defined_constants();        
+        $this->collectBaseClasses = \get_declared_classes();
+        $this->collectBaseInterfaces = \get_declared_interfaces();
+        $this->collectBaseFunctions = \get_defined_functions()['internal'];
+        $this->collectBaseConstants = \get_defined_constants();
+
+
     }
 
     public function getCollectBaseClasses(): array 
@@ -44,7 +46,7 @@ final class MetadataLoader {
     //helper 
     public static function valueExist(array $array,string $value): bool
     {
-        if (\in_array("$value",$array ,true)) {
+        if (\in_array($value,$array ,true)) {
             return false; 
         }
 
@@ -53,11 +55,11 @@ final class MetadataLoader {
 
     public static function keyExist(array $array,string $value): bool
     {
-        if (\key_exists("$value",$array)) {
+        if (\array_key_exists($value,$array)) {
             return false; 
         }
 
-        return true;         
+        return true;
     }
 
 }

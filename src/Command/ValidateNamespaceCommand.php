@@ -1,20 +1,18 @@
 <?php
 
-namespace App\Command;
+namespace NamespaceProtector\Command;
 
+use NamespaceProtector\Analyser;
+use NamespaceProtector\Common\FileSystemPath;
+use NamespaceProtector\Config;
+use NamespaceProtector\MetadataLoader;
+use NamespaceProtector\Parser\PhpFileParser;
+use NamespaceProtector\Scanner\FileSystemScanner;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
-//lib namespace 
-use App\Scanner\FileSystemScanner;
-use App\Config;
-use App\MetadataLoader;
-use App\Analyser;
-use App\Parser\PhpFileParser;
-use App\Common\FileSystemPath;
+//lib namespace
 
 abstract class ValidateNamespaceCommand extends Command
 {
@@ -25,9 +23,9 @@ abstract class ValidateNamespaceCommand extends Command
             ->setHelp('Validate for each namespace the access from another private namespace');
     }
 
-    abstract function getConfig(): Config;
+    abstract public function getConfig(): Config;
 
-    final protected function execute(InputInterface $input, OutputInterface $output)
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         //todo extract body method in specific namespace class 
         //todo load from json file 
@@ -52,7 +50,7 @@ abstract class ValidateNamespaceCommand extends Command
         $output->writeln('Start analysis...');
         $this->processEntries($fileSystem, $analyser);
 
-        if ($analyser->getWithError()) {
+        if ($analyser->withError()) {
             return self::FAILURE;
         }
 
@@ -63,13 +61,11 @@ abstract class ValidateNamespaceCommand extends Command
     {
         $metaDataLoader->load();
 
-        $totalSymbolsLoaded =
+        return
             count($metaDataLoader->getCollectBaseClasses()) +
             count($metaDataLoader->getCollectBaseInterfaces()) +
             count($metaDataLoader->getCollectBaseFunctions()) +
             count($metaDataLoader->getCollectBaseConstants());
-
-        return $totalSymbolsLoaded;
     }
 
     private function processEntries(FileSystemScanner $fileSystem, Analyser $analyser): void

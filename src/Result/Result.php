@@ -1,11 +1,11 @@
 <?php 
 
-namespace App\Result;
+namespace NamespaceProtector\Result;
 
 final class Result {
 
-    private $value=''; 
-    private $type=0; 
+    private $value;
+    private $type;
 
     public function __construct(string $value, int $type=0)
     {
