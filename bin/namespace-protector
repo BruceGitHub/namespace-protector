@@ -1,17 +1,27 @@
 #!/usr/bin/env php
 <?php
-require_once __DIR__ . '/../../../autoload.php';
+$autoloader = null;
+if (file_exists( __DIR__ . '/../../../autoload.php')) {
+    $autoloader = require_once __DIR__ . '/../../../autoload.php';
+}
+else
+if (file_exists( __DIR__ . '/../vendor/autoload.php')) {
+    $autoloader = require_once __DIR__ . '/../vendor/autoload.php';
+}
+else
+{
+    throw new \RuntimeException('autoload.php non found');
+}
 
 use NamespaceProtector\Command\ConcreteValidateNamespaceCommand;
 use Symfony\Component\Console\Application;
- 
-$app = new Application();
-$cmd = new ConcreteValidateNamespaceCommand();
-$app->add(new ConcreteValidateNamespaceCommand());
+
+$app = new Application('Namespace Protector','0.1.0 (Alpha)');
+$app->add(new ConcreteValidateNamespaceCommand($autoloader));
+
 try {
     $app->run();
 } catch (Exception $e) {
-
     echo "Unexpected error...";
-
+    return 1;
 }

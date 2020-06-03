@@ -2,6 +2,7 @@
 
 namespace NamespaceProtector;
 
+use Composer\Autoload\ClassLoader;
 use NamespaceProtector\Common\PathInterface;
 
 final class Config {
@@ -13,8 +14,10 @@ final class Config {
     private $privateEntries;
     private $publicEntries;
     private $mode;
+    private $classLoader;
 
     public function __construct(
+        ClassLoader $classLoader,
         PathInterface $pathStart,
         array $privateEntries,
         array $publicEntries,
@@ -25,6 +28,7 @@ final class Config {
         $this->privateEntries = $privateEntries;
         $this->publicEntries = $publicEntries;
         $this->mode = $mode;
+        $this->classLoader = $classLoader;
     }
 
     public function getStartPath(): PathInterface
@@ -47,6 +51,10 @@ final class Config {
         return $this->mode;
     }
 
+    public function getClassLoader(): ClassLoader
+    {
+        return $this->classLoader;
+    }
 
     public function print(): string 
     {

@@ -2,6 +2,7 @@
 
 namespace NamespaceProtector\Command;
 
+use Composer\Autoload\ClassLoader;
 use NamespaceProtector\Analyser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Config;
@@ -16,6 +17,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class ValidateNamespaceCommand extends Command
 {
+    private $classLoader;
+
+    public function __construct(ClassLoader $classLoader, string $name = null)
+    {
+        parent::__construct($name);
+        $this->classLoader = $classLoader;
+    }
+
     protected function configure()
     {
         $this->setName('validate-namespace')
@@ -35,7 +44,7 @@ abstract class ValidateNamespaceCommand extends Command
         $config = $this->getConfig(); 
 
         $fileSystem = new FileSystemScanner([$config->getStartPath()]);
-        $metaDataLoader = new MetadataLoader();
+        $metaDataLoader = new MetadataLoader($this->getClassLoader());
         $analyser = new Analyser(new PhpFileParser($config,$metaDataLoader));
 
         $output->writeln($config->print());
@@ -55,6 +64,11 @@ abstract class ValidateNamespaceCommand extends Command
         }
 
         return self::SUCCESS;
+    }
+
+    public function getClassLoader(): ClassLoader
+    {
+        return $this->classLoader;
     }
 
     private function loadSymbols(MetadataLoader $metaDataLoader): int

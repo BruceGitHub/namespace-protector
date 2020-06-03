@@ -10,6 +10,7 @@ final class ConcreteValidateNamespaceCommand extends ValidateNamespaceCommand
     public function getConfig(): Config
     {
         return   new Config(
+            $this->getClassLoader(),
             new FileSystemPath('src'),
             [
                 '\Legacy\Controller',

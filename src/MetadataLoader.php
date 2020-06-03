@@ -2,15 +2,20 @@
 
 namespace NamespaceProtector;
 
+use Composer\Autoload\ClassLoader;
+
 final class MetadataLoader {
 
     private $collectBaseClasses = []; 
     private $collectBaseInterfaces = []; 
     private $collectBaseFunctions = [];
     private $collectBaseConstants = [];
+    private $collectVendorNamespace = [];
+    private $classLoader;
 
-    public function __construct()
+    public function __construct(ClassLoader $classLoader)
     {
+        $this->classLoader = $classLoader;
     }
 
     public function load(): void
@@ -19,7 +24,7 @@ final class MetadataLoader {
         $this->collectBaseInterfaces = \get_declared_interfaces();
         $this->collectBaseFunctions = \get_defined_functions()['internal'];
         $this->collectBaseConstants = \get_defined_constants();
-
+        $this->collectVendorNamespace = $this->classLoader->getPrefixesPsr4();
 
     }
 
@@ -41,6 +46,11 @@ final class MetadataLoader {
     public function getCollectBaseConstants(): array 
     {
         return $this->collectBaseFunctions;
+    }
+
+    public function getCollectVendorNamespace(): array
+    {
+        return $this->collectVendorNamespace;
     }
 
     //helper 
