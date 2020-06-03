@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use NamespaceProtector\Command\ConcreteValidateNamespaceCommand;
+use Symfony\Component\Console\Application;
+ 
+$app = new Application();
+$cmd = new ConcreteValidateNamespaceCommand();
+$app->add(new ConcreteValidateNamespaceCommand());
+try {
+    $app->run();
+} catch (Exception $e) {
+
+    echo "Unexpected error...";
+
+}
