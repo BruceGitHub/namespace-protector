@@ -6,8 +6,9 @@ use Composer\Autoload\ClassLoader;
 use NamespaceProtector\Analyser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Config;
-use NamespaceProtector\MetadataLoader;
+use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Parser\PhpFileParser;
+use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Scanner\FileSystemScanner;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,12 +18,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class ValidateNamespaceCommand extends Command
 {
-    private $classLoader;
+    private $composerJson;
 
-    public function __construct(ClassLoader $classLoader, string $name = null)
+    public function __construct(ComposerJson $composerJson, string $name = null)
     {
         parent::__construct($name);
-        $this->classLoader = $classLoader;
+        $this->composerJson = $composerJson;
     }
 
     protected function configure()
@@ -41,10 +42,12 @@ abstract class ValidateNamespaceCommand extends Command
         //todo use DI 
         $output->writeln("Boot validate analysis....");
 
-        $config = $this->getConfig(); 
+        $config = $this->getConfig();
+        $composerJson = $this->getComposerJson();
+        $composerJson->load();
 
         $fileSystem = new FileSystemScanner([$config->getStartPath()]);
-        $metaDataLoader = new MetadataLoader($this->getClassLoader());
+        $metaDataLoader = new EnvironmentDataLoader($composerJson);
         $analyser = new Analyser(new PhpFileParser($config,$metaDataLoader));
 
         $output->writeln($config->print());
@@ -66,12 +69,12 @@ abstract class ValidateNamespaceCommand extends Command
         return self::SUCCESS;
     }
 
-    public function getClassLoader(): ClassLoader
+    public function getComposerJson(): ComposerJson
     {
-        return $this->classLoader;
+        return $this->composerJson;
     }
 
-    private function loadSymbols(MetadataLoader $metaDataLoader): int
+    private function loadSymbols(EnvironmentDataLoader $metaDataLoader): int
     {
         $metaDataLoader->load();
 

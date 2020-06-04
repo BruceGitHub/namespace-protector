@@ -5,7 +5,7 @@ namespace NamespaceProtector\Parser;
 //lib namespace
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Config;
-use NamespaceProtector\MetadataLoader;
+use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Result\Result;
 use NamespaceProtector\Result\ResultCollector;
@@ -21,7 +21,7 @@ final class PhpFileParser implements ParserInterface
     private $traverser;
     private $resultCollector;
 
-    public function __construct(Config $config, MetadataLoader $metadataLoader)
+    public function __construct(Config $config, EnvironmentDataLoader $metadataLoader)
     {
         $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
         $this->traverser = new NodeTraverser();

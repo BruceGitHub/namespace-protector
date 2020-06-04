@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
-$autoloader = null;
+
+//todo aggiungere check versione
+
 if (file_exists( __DIR__ . '/../../../autoload.php')) {
     $autoloader = require_once __DIR__ . '/../../../autoload.php';
 }
@@ -14,10 +16,12 @@ else
 }
 
 use NamespaceProtector\Command\ConcreteValidateNamespaceCommand;
+use NamespaceProtector\Common\FileSystemPath;
+use NamespaceProtector\Scanner\ComposerJson;
 use Symfony\Component\Console\Application;
 
 $app = new Application('Namespace Protector','0.1.0 (Alpha)');
-$app->add(new ConcreteValidateNamespaceCommand($autoloader));
+$app->add(new ConcreteValidateNamespaceCommand(new ComposerJson(new FileSystemPath(__DIR__.'/../composer.json'))));
 
 try {
     $app->run();

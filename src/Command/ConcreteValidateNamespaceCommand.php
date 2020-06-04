@@ -10,7 +10,6 @@ final class ConcreteValidateNamespaceCommand extends ValidateNamespaceCommand
     public function getConfig(): Config
     {
         return   new Config(
-            $this->getClassLoader(),
             new FileSystemPath('src'),
             [
                 '\Legacy\Controller',
@@ -18,7 +17,7 @@ final class ConcreteValidateNamespaceCommand extends ValidateNamespaceCommand
             [
                 '\Facile\Pagamenti\Legacy\ClientPagamentiLegacy',
             ],
-            Config::MODE_PUBLIC
+            Config::MODE_PRIVATE
         );        
     }
 

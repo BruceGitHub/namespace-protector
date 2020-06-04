@@ -3,20 +3,20 @@
 namespace NamespaceProtector\Parser\Node;
 
 
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\UseUse;
-use PhpParser\Node\Stmt\FullyQualified;
 
 //lib namespace
-use NamespaceProtector\MetadataLoader;
+use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Result\Result;
 use NamespaceProtector\Config;
 
 final class PhpNode extends NameResolver
 {
-    public const ERR=1; 
+    public const ERR = 1;
     private $listNodeProcessor = [];
     private $resultCollector;
     private $metadataLoader;
@@ -26,8 +26,9 @@ final class PhpNode extends NameResolver
         Config $configGlobal,
         array $configParser,
         ResultCollector $resultCollector,
-        MetadataLoader $metadataLoader
-    ) {
+        EnvironmentDataLoader $metadataLoader
+    )
+    {
         parent::__construct(null, $configParser);
 
         $this->globalConfig = $configGlobal;
@@ -39,7 +40,7 @@ final class PhpNode extends NameResolver
         };
 
         $this->listNodeProcessor[FullyQualified::class] = static function (Node $node): string {
-            return $node->name->toCodeString();
+            return $node->toCodeString();
         };
 
     }
@@ -69,7 +70,7 @@ final class PhpNode extends NameResolver
             }
 
             //todo: optimize
-            if ($this->globalConfig->getMode()===Config::MODE_PRIVATE) {
+            if ($this->globalConfig->getMode() === Config::MODE_PRIVATE) {
                 $this->pushError($val, $node);
                 return;
             }
@@ -81,19 +82,19 @@ final class PhpNode extends NameResolver
     private function isFalsePositives(string $result): bool
     {
         $val = \str_replace('\\', '', $result);
-        if (MetadataLoader::valueExist($this->metadataLoader->getCollectBaseClasses(),$val)) {
+        if (EnvironmentDataLoader::valueExist($this->metadataLoader->getCollectBaseClasses(), $val)) {
             return true;
         }
 
-        if (MetadataLoader::valueExist($this->metadataLoader->getCollectBaseInterfaces(),$val)) {
+        if (EnvironmentDataLoader::valueExist($this->metadataLoader->getCollectBaseInterfaces(), $val)) {
             return true;
         }
 
-        if (MetadataLoader::valueExist($this->metadataLoader->getCollectBaseFunctions(),$val)) {
+        if (EnvironmentDataLoader::valueExist($this->metadataLoader->getCollectBaseFunctions(), $val)) {
             return true;
         }
 
-        if (MetadataLoader::keyExist($this->metadataLoader->getCollectBaseConstants(),$val)) {
+        if (EnvironmentDataLoader::keyExist($this->metadataLoader->getCollectBaseConstants(), $val)) {
             return true;
         }
 
@@ -102,7 +103,7 @@ final class PhpNode extends NameResolver
 
     private function isPublicEntry($entry): bool
     {
-        if (\in_array($entry,$this->globalConfig->getPublicEntries() ,true)) {
+        if (\in_array($entry, $this->globalConfig->getPublicEntries(), true)) {
             return true;
         }
 
@@ -129,9 +130,11 @@ final class PhpNode extends NameResolver
 
     private function isVendorNamespace($val): bool
     {
-        if (isset($this->metadataLoader->getCollectVendorNamespace()[$val])) {
-            var_dump($this->metadataLoader->getCollectVendorNamespace()[$val]);
-            return true;
+        foreach ($this->metadataLoader->getCollectVendorNamespace() as $entry => $value) {
+
+            if (strpos($val, $entry) === false) {
+                return true;
+            }
         }
 
         return false;

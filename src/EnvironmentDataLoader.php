@@ -2,20 +2,20 @@
 
 namespace NamespaceProtector;
 
-use Composer\Autoload\ClassLoader;
+use NamespaceProtector\Scanner\ComposerJson;
 
-final class MetadataLoader {
+final class EnvironmentDataLoader {
 
     private $collectBaseClasses = []; 
     private $collectBaseInterfaces = []; 
     private $collectBaseFunctions = [];
     private $collectBaseConstants = [];
     private $collectVendorNamespace = [];
-    private $classLoader;
+    private $composerJson;
 
-    public function __construct(ClassLoader $classLoader)
+    public function __construct(ComposerJson $composerJson)
     {
-        $this->classLoader = $classLoader;
+        $this->composerJson = $composerJson;
     }
 
     public function load(): void
@@ -24,7 +24,7 @@ final class MetadataLoader {
         $this->collectBaseInterfaces = \get_declared_interfaces();
         $this->collectBaseFunctions = \get_defined_functions()['internal'];
         $this->collectBaseConstants = \get_defined_constants();
-        $this->collectVendorNamespace = $this->classLoader->getPrefixesPsr4();
+        $this->collectVendorNamespace = $this->composerJson->getPsr4Ns();
 
     }
 
