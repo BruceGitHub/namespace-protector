@@ -14,7 +14,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-//lib namespace
 
 abstract class ValidateNamespaceCommand extends Command
 {
@@ -61,6 +60,8 @@ abstract class ValidateNamespaceCommand extends Command
 
         $output->writeln('Start analysis...');
         $this->processEntries($fileSystem, $analyser);
+
+        $output->writeln('Total errors: '.$analyser->getCountErrors());
 
         if ($analyser->withError()) {
             return self::FAILURE;

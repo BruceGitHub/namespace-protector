@@ -2,7 +2,6 @@
 
 namespace NamespaceProtector\Parser;
 
-//lib namespace
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Config;
 use NamespaceProtector\EnvironmentDataLoader;

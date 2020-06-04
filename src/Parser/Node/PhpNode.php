@@ -8,7 +8,6 @@ use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\UseUse;
 
-//lib namespace
 use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Result\Result;
@@ -17,7 +16,7 @@ use NamespaceProtector\Config;
 final class PhpNode extends NameResolver
 {
     public const ERR = 1;
-    private $listNodeProcessor = [];
+    private $listNodeProcessor;
     private $resultCollector;
     private $metadataLoader;
     private $globalConfig;
@@ -53,30 +52,33 @@ final class PhpNode extends NameResolver
     private function processNode(Node $node): void
     {
         $class = \get_class($node);
-        if (isset($this->listNodeProcessor[$class])) {
-            $func = $this->listNodeProcessor[$class];
-            $val = $func($node);
-
-            if (!$this->isFalsePositives($val)) {
-                return;
-            }
-
-            if ($this->isVendorNamespace($val)) {
-                return;
-            }
-
-            if ($this->isPublicEntry($val)) {
-                return;
-            }
-
-            //todo: optimize
-            if ($this->globalConfig->getMode() === Config::MODE_PRIVATE) {
-                $this->pushError($val, $node);
-                return;
-            }
-
-            $this->validateWithPrivateMode($val, $node);
+        if (!isset($this->listNodeProcessor[$class])) {
+            return;
         }
+
+        $func = $this->listNodeProcessor[$class];
+        $val = $func($node);
+
+        if (!$this->isFalsePositives($val)) {
+            return;
+        }
+
+        if ($this->isVendorNamespace($val)) {
+            return;
+        }
+
+        if ($this->isPublicEntry($val)) {
+            return;
+        }
+
+        //todo: optimize (avoid if)
+        if ($this->globalConfig->getMode() === Config::MODE_PRIVATE) {
+            $this->pushError($val, $node);
+            return;
+        }
+
+        $this->validateAccessToPrivateEntries($val, $node);
+
     }
 
     private function isFalsePositives(string $result): bool
@@ -101,7 +103,7 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function isPublicEntry($entry): bool
+    private function isPublicEntry(string $entry): bool
     {
         if (\in_array($entry, $this->globalConfig->getPublicEntries(), true)) {
             return true;
@@ -110,25 +112,25 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function validateWithPrivateMode($val, Node $node): void
+    private function validateAccessToPrivateEntries(string $val, Node $node): void
     {
         foreach ($this->globalConfig->getPrivateEntries() as $entry) {
 
-            if (strpos($val, $entry) >= 1) {
+            if (strpos($val, $entry) !== false) {
                 $this->pushError($val, $node);
             }
         }
     }
 
-    private function pushError($val, Node $node): void
+    private function pushError(string $val, Node $node): void
     {
-        $err = "\t > ERROR: of use $val. it's PRIVATE namespace access, on Line: " .
+        $err = "\t > ERROR: of use $val. On Line: " .
             $node->getLine() .
             PHP_EOL;
         $this->resultCollector->addResult(new Result($err, self::ERR));
     }
 
-    private function isVendorNamespace($val): bool
+    private function isVendorNamespace(string $val): bool
     {
         foreach ($this->metadataLoader->getCollectVendorNamespace() as $entry => $value) {
 
