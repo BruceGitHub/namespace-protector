@@ -137,9 +137,7 @@ final class PhpNode extends NameResolver
 
     private function pushError(string $val, Node $node): void
     {
-        $err = "\t > ERROR: of use $val. On Line: " .
-            $node->getLine() .
-            PHP_EOL;
+        $err = "\t > ERROR Line: ".$node->getLine()." of use $val " . PHP_EOL;
         $this->resultCollector->addResult(new Result($err, self::ERR));
     }
 
