@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+  php:
+    image: image-namespace-protector
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./..:/var/www/html
+    ports:
+      - "1000:22"
+
+    environment:
+      XDEBUG_CONFIG: >-
+        remote_enable=1
+        remote_host=192.168.0.1
+        remote_port=10000
+        xdebug.remote_autostart=on
+        remote_connect_back=0
+        idekey=PHPSTORM
+        xdebug.remote_log=/tmp/xdebug_remote.log
+
+      PHP_IDE_CONFIG: "serverName=namespace-protector"
+
+  composer:
+    image: composer:1.9
+    command: ["composer", "install"]
+    user: '1000'
+    volumes:
+      - .:/app
+
+networks:
+  main-network:
+    ipam:
+      config:
+        - subnet: "192.168.0.0/24"
+          gateway: "192.168.0.1"

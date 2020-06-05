@@ -1,7 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-//todo  check version
+if (version_compare(PHP_VERSION, '7.1.0') < 0) {
+    fwrite(STDERR, "PHP 7.1 is required\n");
+    exit(1);
+}
+
 
 if (file_exists( __DIR__ . '/../../../autoload.php')) {
     $autoloader = require_once __DIR__ . '/../../../autoload.php';

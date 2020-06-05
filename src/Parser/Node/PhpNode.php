@@ -2,16 +2,14 @@
 
 namespace NamespaceProtector\Parser\Node;
 
-use NamespaceProtector\Parser\ParserInterface;
-use PhpParser\Node\Name\FullyQualified;
-use PhpParser\NodeVisitor\NameResolver;
-use PhpParser\Node;
-use PhpParser\Node\Stmt\UseUse;
-
-use NamespaceProtector\EnvironmentDataLoader;
-use NamespaceProtector\Result\ResultCollector;
-use NamespaceProtector\Result\Result;
 use NamespaceProtector\Config;
+use NamespaceProtector\EnvironmentDataLoader;
+use NamespaceProtector\Result\Result;
+use NamespaceProtector\Result\ResultCollector;
+use PhpParser\Node;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Stmt\UseUse;
+use PhpParser\NodeVisitor\NameResolver;
 
 final class PhpNode extends NameResolver
 {
@@ -117,20 +115,22 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function isPublicEntry(string $entry): bool
+    private function isPublicEntry(string $currentNamespaceAccess): bool
     {
-        if (\in_array($entry, $this->globalConfig->getPublicEntries(), true)) {
-            return true;
+        foreach ($this->globalConfig->getPublicEntries() as $publicEntry) {
+            if (strpos($currentNamespaceAccess, $publicEntry) !== false) {
+                return true;
+            }
         }
 
         return false;
     }
 
-    private function validateAccessToPrivateEntries(string $val, Node $node): void
+    private function validateAccessToPrivateEntries(string $currentNamespaceAccess, Node $node): void
     {
-        foreach ($this->globalConfig->getPrivateEntries() as $entry) {
-            if (strpos($val, $entry) !== false) {
-                $this->pushError($val, $node);
+        foreach ($this->globalConfig->getPrivateEntries() as $privateEntry) {
+            if (strpos($currentNamespaceAccess, $privateEntry) !== false) {
+                $this->pushError($currentNamespaceAccess, $node);
             }
         }
     }

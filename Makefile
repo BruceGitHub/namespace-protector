@@ -12,4 +12,22 @@ cs_run:
 run:
 	./bin/namespace-protector v
 
+start:
+	docker-compose -f ./.container/docker-compose.yml up -d php
+
+shell: start
+	docker-compose -f ./.container/docker-compose.yml exec php sh
+
+stop:
+	docker-compose -f ./.container/docker-compose.yml down
+
+restart: stop start
+
+composer_install:
+	docker-compose run composer install
+
+composer_shell:
+	docker-compose run composer sh
+
+
 .SILENT:
