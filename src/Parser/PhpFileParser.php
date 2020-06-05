@@ -5,22 +5,30 @@ namespace NamespaceProtector\Parser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Config;
 use NamespaceProtector\EnvironmentDataLoader;
+use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Result\Result;
 use NamespaceProtector\Result\ResultCollector;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 
-
-
 final class PhpFileParser implements ParserInterface
 {
-    private const ONLY_ONE_ENTRY=1; 
+    private const ONLY_ONE_ENTRY=1;
+
+    /** @var \PhpParser\Parser  */
     private $parser;
+
+    /** @var NodeTraverser  */
     private $traverser;
+
+    /** @var ResultCollector  */
     private $resultCollector;
 
-    public function __construct(Config $config, EnvironmentDataLoader $metadataLoader)
+    /** @var \Psr\SimpleCache\CacheInterface  */
+    private $cache;
+
+    public function __construct(Config $config, EnvironmentDataLoader $metadataLoader, \Psr\SimpleCache\CacheInterface $cache)
     {
         $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
         $this->traverser = new NodeTraverser();
@@ -34,27 +42,53 @@ final class PhpFileParser implements ParserInterface
         );
 
         $this->traverser->addVisitor($phpNode);
+        $this->cache = $cache;
     }
 
     public function parseFile(PathInterface $pathFile): void
     {
         $this->resultCollector->emptyResult();
-        $this->resultCollector->addResult(
-            new Result('Process file: ' . $pathFile->get() . PHP_EOL)
-        );
+        $this->resultCollector->addResult(new Result('Process file: ' . $pathFile->get() . PHP_EOL));
 
-        $code = file_get_contents($pathFile->get());
-        $ast = $this->parser->parse($code);
+        $ast = $this->fetchAst($pathFile);
 
         $this->traverser->traverse($ast);
 
-        if (\count($this->resultCollector->get()) === self::ONLY_ONE_ENTRY) {
-            $this->resultCollector->emptyResult();
-        }
+        $this->emptyLogIfNoErrorEntry();
     }
 
     public function getListResult(): ResultCollector
     {
         return $this->resultCollector;
+    }
+
+    private function emptyLogIfNoErrorEntry(): void
+    {
+        if (\count($this->resultCollector->get()) === self::ONLY_ONE_ENTRY) {
+            $this->resultCollector->emptyResult();
+        }
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function fetchAst(PathInterface $pathFile): array
+    {
+        $code = $pathFile->get();
+        $keyEntryForCache = sha1($code).'.'.base64_encode($pathFile->get());
+
+        if (!$this->cache->has($keyEntryForCache)) {
+            $code = file_get_contents($pathFile->get());
+            if ($code === false) {
+                throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_FILE_GET_CONTENT);
+            }
+
+            $ast = $this->parser->parse($code);
+            $this->cache->set($keyEntryForCache, $ast);
+
+            return $ast ?? [];
+        }
+
+        return $this->cache->get($keyEntryForCache, []);
     }
 }

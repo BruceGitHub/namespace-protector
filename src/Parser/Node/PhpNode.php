@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Parser\Node;
 
-
+use NamespaceProtector\Parser\ParserInterface;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Node;
@@ -16,18 +16,28 @@ use NamespaceProtector\Config;
 final class PhpNode extends NameResolver
 {
     public const ERR = 1;
+
+    /** @var array<Callable> */
     private $listNodeProcessor;
+
+    /** @var ResultCollector  */
     private $resultCollector;
+
+    /** @var EnvironmentDataLoader  */
     private $metadataLoader;
+
+    /** @var Config  */
     private $globalConfig;
 
+    /**
+     * @param array<string,mixed> $configParser
+     */
     public function __construct(
         Config $configGlobal,
         array $configParser,
         ResultCollector $resultCollector,
         EnvironmentDataLoader $metadataLoader
-    )
-    {
+    ) {
         parent::__construct(null, $configParser);
 
         $this->globalConfig = $configGlobal;
@@ -35,18 +45,23 @@ final class PhpNode extends NameResolver
         $this->resultCollector = $resultCollector;
 
         $this->listNodeProcessor[UseUse::class] = static function (Node $node): string {
+
+            /** @var UseUse $node*/
             return $node->name->toCodeString();
         };
 
         $this->listNodeProcessor[FullyQualified::class] = static function (Node $node): string {
+
+            /** @var FullyQualified $node*/
             return $node->toCodeString();
         };
-
     }
 
     public function enterNode(Node $node)
     {
         $this->processNode($node);
+
+        return $node;
     }
 
     private function processNode(Node $node): void
@@ -78,7 +93,6 @@ final class PhpNode extends NameResolver
         }
 
         $this->validateAccessToPrivateEntries($val, $node);
-
     }
 
     private function isFalsePositives(string $result): bool
@@ -115,7 +129,6 @@ final class PhpNode extends NameResolver
     private function validateAccessToPrivateEntries(string $val, Node $node): void
     {
         foreach ($this->globalConfig->getPrivateEntries() as $entry) {
-
             if (strpos($val, $entry) !== false) {
                 $this->pushError($val, $node);
             }
@@ -133,7 +146,6 @@ final class PhpNode extends NameResolver
     private function isVendorNamespace(string $val): bool
     {
         foreach ($this->metadataLoader->getCollectVendorNamespace() as $entry => $value) {
-
             if (strpos($val, $entry) === false) {
                 return true;
             }

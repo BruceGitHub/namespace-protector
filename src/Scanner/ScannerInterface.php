@@ -2,6 +2,7 @@
 
 namespace NamespaceProtector\Scanner;
 
-interface ScannerInterface {
+interface ScannerInterface
+{
     public function load(): void;
 }

@@ -4,15 +4,16 @@ namespace NamespaceProtector\Common;
 
 final class FileSystemPath implements PathInterface
 {
-    private $path; 
+    /** @var string  */
+    private $path;
 
     public function __construct(string $path)
     {
-        $this->path = $path; 
+        $this->path = $path;
     }
 
     public function get(): string
     {
-        return $this->path; 
-    } 
+        return $this->path;
+    }
 }

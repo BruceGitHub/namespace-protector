@@ -4,13 +4,25 @@ namespace NamespaceProtector;
 
 use NamespaceProtector\Scanner\ComposerJson;
 
-final class EnvironmentDataLoader {
+final class EnvironmentDataLoader
+{
 
-    private $collectBaseClasses = []; 
-    private $collectBaseInterfaces = []; 
+    /** @var array<string>  */
+    private $collectBaseClasses = [];
+
+    /** @var array<string>  */
+    private $collectBaseInterfaces = [];
+
+    /** @var array<string>  */
     private $collectBaseFunctions = [];
+
+    /** @var array<string>  */
     private $collectBaseConstants = [];
+
+    /** @var array<string>  */
     private $collectVendorNamespace = [];
+
+    /** @var ComposerJson  */
     private $composerJson;
 
     public function __construct(ComposerJson $composerJson)
@@ -25,51 +37,69 @@ final class EnvironmentDataLoader {
         $this->collectBaseFunctions = \get_defined_functions()['internal'];
         $this->collectBaseConstants = \get_defined_constants();
         $this->collectVendorNamespace = $this->composerJson->getPsr4Ns();
-
     }
 
-    public function getCollectBaseClasses(): array 
+    /**
+     * @return array<string>
+     */
+    public function getCollectBaseClasses(): array
     {
         return $this->collectBaseClasses;
     }
 
-    public function getCollectBaseInterfaces(): array 
+    /**
+     * @return array<string>
+     */
+    public function getCollectBaseInterfaces(): array
     {
         return $this->collectBaseInterfaces;
     }
 
-    public function getCollectBaseFunctions(): array 
-    {
-        return $this->collectBaseFunctions;
-    }
-    
-    public function getCollectBaseConstants(): array 
+    /**
+     * @return array<string>
+     */
+    public function getCollectBaseFunctions(): array
     {
         return $this->collectBaseFunctions;
     }
 
+    /**
+     * @return array<string>
+     */
+    public function getCollectBaseConstants(): array
+    {
+        return $this->collectBaseFunctions;
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getCollectVendorNamespace(): array
     {
         return $this->collectVendorNamespace;
     }
 
-    //helper 
-    public static function valueExist(array $array,string $value): bool
+    /**
+     * @param  array<string> $array
+     */
+    public static function valueExist(array $array, string $value): bool
     {
-        if (\in_array($value,$array ,true)) {
-            return false; 
-        }
-
-        return true; 
-    }
-
-    public static function keyExist(array $array,string $value): bool
-    {
-        if (\array_key_exists($value,$array)) {
-            return false; 
+        if (\in_array($value, $array, true)) {
+            return false;
         }
 
         return true;
     }
 
+    /**
+     * @param  array<string> $array
+     */
+    public static function keyExist(array $array, string $value): bool
+    {
+        if (\array_key_exists($value, $array)) {
+            return false;
+        }
+
+        return true;
+    }
 }

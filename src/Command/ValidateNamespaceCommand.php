@@ -2,8 +2,8 @@
 
 namespace NamespaceProtector\Command;
 
-use Composer\Autoload\ClassLoader;
 use NamespaceProtector\Analyser;
+use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Config;
 use NamespaceProtector\EnvironmentDataLoader;
@@ -14,9 +14,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 abstract class ValidateNamespaceCommand extends Command
 {
+    private const NAMESPACE_PROTECTOR_CACHE = 'namespace-protector-cache';
+
+    /** @var ComposerJson  */
     private $composerJson;
 
     public function __construct(ComposerJson $composerJson, string $name = null)
@@ -25,7 +27,7 @@ abstract class ValidateNamespaceCommand extends Command
         $this->composerJson = $composerJson;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('validate-namespace')
             ->setDescription('Validate namespace accessibility')
@@ -34,11 +36,11 @@ abstract class ValidateNamespaceCommand extends Command
 
     abstract public function getConfig(): Config;
 
-    final protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        //todo extract body method in specific namespace class 
-        //todo load from json file 
-        //todo use DI 
+        //todo extract body method in specific namespace class
+        //todo load from json file
+        //todo use DI
         $output->writeln("Boot validate analysis....");
 
         $config = $this->getConfig();
@@ -47,7 +49,11 @@ abstract class ValidateNamespaceCommand extends Command
 
         $fileSystem = new FileSystemScanner([$config->getStartPath()]);
         $metaDataLoader = new EnvironmentDataLoader($composerJson);
-        $analyser = new Analyser(new PhpFileParser($config,$metaDataLoader));
+
+        $directory = sys_get_temp_dir().\DIRECTORY_SEPARATOR.self::NAMESPACE_PROTECTOR_CACHE;
+        $cacheClass = $this->createCacheObject($directory);
+
+        $analyser = new Analyser(new PhpFileParser($config, $metaDataLoader, $cacheClass));
 
         $output->writeln($config->print());
         $output->writeln("Load data....");
@@ -61,7 +67,7 @@ abstract class ValidateNamespaceCommand extends Command
         $output->writeln('Start analysis...');
         $this->processEntries($fileSystem, $analyser);
 
-        $output->writeln('Total errors: '.$analyser->getCountErrors());
+        $output->writeln('<fg=red>Total errors: ' . $analyser->getCountErrors().'</>');
 
         if ($analyser->withError()) {
             return self::FAILURE;
@@ -91,5 +97,10 @@ abstract class ValidateNamespaceCommand extends Command
         foreach ($fileSystem->getFileLoaded() as $file) {
             $analyser->execute(new FileSystemPath($file));
         }
+    }
+
+    protected function createCacheObject(string $directory): SimpleFileCache
+    {
+        return new SimpleFileCache(new FileSystemPath($directory));
     }
 }

@@ -2,15 +2,26 @@
 
 namespace NamespaceProtector\Scanner;
 
-final class FileSystemScanner implements ScannerInterface {
+use NamespaceProtector\Common\PathInterface;
 
-    private $startPath;
+final class FileSystemScanner implements ScannerInterface
+{
+
+    /** @var array<PathInterface>  */
+    private $startPaths;
+
+    /** @var array<string>  */
     private $fileLoaded = [];
+
+    /** @var string  */
     private $extensions;
 
+    /**
+     * @param array<PathInterface> $startPaths
+     */
     public function __construct(array $startPaths, string $extensions = 'php')
     {
-        $this->startPath = $startPaths;
+        $this->startPaths = $startPaths;
         $this->extensions = $extensions;
     }
 
@@ -19,10 +30,10 @@ final class FileSystemScanner implements ScannerInterface {
         $fileLoaded = [];
         $this->fileLoaded = [];
 
-        foreach ($this->startPath as $pathDescriptor) {
-    
+        foreach ($this->startPaths as $pathDescriptor) {
             $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($pathDescriptor->get()
+                new \RecursiveDirectoryIterator(
+                    $pathDescriptor->get()
                 )
             );
 
@@ -43,9 +54,11 @@ final class FileSystemScanner implements ScannerInterface {
         $this->fileLoaded = $fileLoaded;
     }
 
-    public function getFileLoaded(): array 
+    /**
+     * @return array<string>
+     */
+    public function getFileLoaded(): array
     {
         return $this->fileLoaded;
     }
-
 }

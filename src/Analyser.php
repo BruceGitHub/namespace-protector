@@ -6,10 +6,15 @@ use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Parser\Node\PhpNode;
 
-final class Analyser 
+final class Analyser
 {
+    /** @var ParserInterface[]  */
     private $listParser;
+
+    /** @var bool  */
     private $withError;
+
+    /** @var int  */
     private $countErrors;
 
     public function __construct(ParserInterface ...$listParser)
@@ -21,17 +26,15 @@ final class Analyser
 
     public function execute(PathInterface $pathInterface): void
     {
-        foreach ($this->listParser as $currentParser)
-        {
+        foreach ($this->listParser as $currentParser) {
             $currentParser->parseFile($pathInterface);
             
-            foreach ($currentParser->getListResult()->get() as $result) 
-            {
-              echo $result->get();   
-              if ($result->getType() === PhpNode::ERR) {
-                  $this->withError = true;
-                  $this->incrementError();
-              }
+            foreach ($currentParser->getListResult()->get() as $result) {
+                echo $result->get();
+                if ($result->getType() === PhpNode::ERR) {
+                    $this->withError = true;
+                    $this->incrementError();
+                }
             }
         }
     }
@@ -50,5 +53,4 @@ final class Analyser
     {
         return $this->countErrors;
     }
-
 }

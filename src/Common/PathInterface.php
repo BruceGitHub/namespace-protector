@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Common;
 
-interface PathInterface 
+interface PathInterface
 {
-  public function get(): string; 
+    public function get(): string;
 }

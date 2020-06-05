@@ -2,7 +2,10 @@
 
 namespace NamespaceProtector\Result;
 
-final class ResultCollector   {
+final class ResultCollector
+{
+
+    /** @var array<Result>  */
     private $listResult ;
 
     public function __construct()
@@ -12,9 +15,10 @@ final class ResultCollector   {
 
     public function addResult(Result $result): void
     {
-        $this->listResult[] = $result; 
+        $this->listResult[] = $result;
     }
 
+    /** @return  array<Result>  */
     public function get(): array
     {
         return $this->listResult;
@@ -24,5 +28,4 @@ final class ResultCollector   {
     {
         $this->listResult = [];
     }
-
 }
