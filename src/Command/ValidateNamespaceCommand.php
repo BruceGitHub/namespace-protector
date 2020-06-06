@@ -86,10 +86,10 @@ abstract class ValidateNamespaceCommand extends Command
         $metaDataLoader->load();
 
         return
-            count($metaDataLoader->getCollectBaseClasses()) +
-            count($metaDataLoader->getCollectBaseInterfaces()) +
-            count($metaDataLoader->getCollectBaseFunctions()) +
-            count($metaDataLoader->getCollectBaseConstants());
+            ($metaDataLoader->getCollectBaseClasses()->count()) +
+            ($metaDataLoader->getCollectBaseInterfaces()->count()) +
+            ($metaDataLoader->getCollectBaseFunctions()->count()) +
+            ($metaDataLoader->getCollectBaseConstants()->count());
     }
 
     private function processEntries(FileSystemScanner $fileSystem, Analyser $analyser): void

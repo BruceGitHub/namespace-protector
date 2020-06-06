@@ -2,104 +2,98 @@
 
 namespace NamespaceProtector;
 
+use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Scanner\ComposerJson;
 
 final class EnvironmentDataLoader
 {
 
-    /** @var array<string>  */
-    private $collectBaseClasses = [];
+    /** @var DbKeyValue */
+    private $collectBaseClasses;
 
-    /** @var array<string>  */
-    private $collectBaseInterfaces = [];
+    /** @var DbKeyValue */
+    private $collectBaseInterfaces;
 
-    /** @var array<string>  */
-    private $collectBaseFunctions = [];
+    /** @var DbKeyValue */
+    private $collectBaseFunctions;
 
-    /** @var array<string>  */
-    private $collectBaseConstants = [];
+    /** @var DbKeyValue */
+    private $collectBaseConstants;
 
-    /** @var array<string>  */
-    private $collectVendorNamespace = [];
+    /** @var DbKeyValue */
+    private $collectVendorNamespace;
 
-    /** @var ComposerJson  */
+    /** @var ComposerJson */
     private $composerJson;
 
     public function __construct(ComposerJson $composerJson)
     {
         $this->composerJson = $composerJson;
+        $this->collectBaseClasses = new DbKeyValue();
+        $this->collectBaseInterfaces = new DbKeyValue();
+        $this->collectBaseFunctions = new DbKeyValue();
+        $this->collectVendorNamespace = new DbKeyValue();
     }
 
     public function load(): void
     {
-        $this->collectBaseClasses = \get_declared_classes();
-        $this->collectBaseInterfaces = \get_declared_interfaces();
-        $this->collectBaseFunctions = \get_defined_functions()['internal'];
-        $this->collectBaseConstants = \get_defined_constants();
-        $this->collectVendorNamespace = $this->composerJson->getPsr4Ns();
+        $this->collectBaseClasses = $this->fillFromArrayKeyValue(\get_declared_classes());
+        $this->collectBaseInterfaces = $this->fillFromArrayKeyValue(\get_declared_interfaces());
+        $this->collectBaseFunctions = $this->fillFromArrayKeyValue(\get_defined_functions()['internal']);
+        $this->collectBaseConstants = $this->fillFromArrayKeyValue(\get_defined_constants());
+        $this->collectVendorNamespace = $this->fillFromArrayKeyValue($this->composerJson->getPsr4Ns());
     }
 
     /**
-     * @return array<string>
+     * @return DbKeyValue
      */
-    public function getCollectBaseClasses(): array
+    public function getCollectBaseClasses(): DbKeyValue
     {
         return $this->collectBaseClasses;
     }
 
     /**
-     * @return array<string>
+     * @return DbKeyValue
      */
-    public function getCollectBaseInterfaces(): array
+    public function getCollectBaseInterfaces(): DbKeyValue
     {
         return $this->collectBaseInterfaces;
     }
 
     /**
-     * @return array<string>
+     * @return DbKeyValue
      */
-    public function getCollectBaseFunctions(): array
+    public function getCollectBaseFunctions(): DbKeyValue
     {
         return $this->collectBaseFunctions;
     }
 
     /**
-     * @return array<string>
+     * @return DbKeyValue
      */
-    public function getCollectBaseConstants(): array
+    public function getCollectBaseConstants(): DbKeyValue
     {
-        return $this->collectBaseFunctions;
+        return $this->collectBaseConstants;
     }
 
     /**
-     * @return array<string>
+     * @return DbKeyValue
      */
-    public function getCollectVendorNamespace(): array
+    public function getCollectVendorNamespace(): DbKeyValue
     {
         return $this->collectVendorNamespace;
     }
 
     /**
-     * @param  array<string> $array
+     * @param array<string> $collections
      */
-    public static function valueExist(array $array, string $value): bool
+    private function fillFromArrayKeyValue(array $collections): DbKeyValue
     {
-        if (\in_array($value, $array, true)) {
-            return false;
+        $db = new DbKeyValue();
+        foreach ($collections as $key => $value) {
+            $db->add((string)$key, (string)$value);
         }
 
-        return true;
-    }
-
-    /**
-     * @param  array<string> $array
-     */
-    public static function keyExist(array $array, string $value): bool
-    {
-        if (\array_key_exists($value, $array)) {
-            return false;
-        }
-
-        return true;
+        return $db;
     }
 }
