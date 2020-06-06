@@ -164,7 +164,7 @@ final class PhpNode extends NameResolver
     private function isVendorNamespace(string $val): bool
     {
         if ($this->metadataLoader
-            ->getCollectVendorNamespace()
+            ->getCollectComposerNamespace()
             ->booleanSearch($this->matchPos, $val)) {
             return true;
         }

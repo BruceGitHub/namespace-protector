@@ -2,7 +2,6 @@
 
 namespace NamespaceProtector;
 
-use Composer\Autoload\ClassLoader;
 use NamespaceProtector\Common\PathInterface;
 
 final class Config

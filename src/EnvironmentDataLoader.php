@@ -21,7 +21,7 @@ final class EnvironmentDataLoader
     private $collectBaseConstants;
 
     /** @var DbKeyValue */
-    private $collectVendorNamespace;
+    private $collectComposerNamespace;
 
     /** @var ComposerJson */
     private $composerJson;
@@ -32,7 +32,7 @@ final class EnvironmentDataLoader
         $this->collectBaseClasses = new DbKeyValue();
         $this->collectBaseInterfaces = new DbKeyValue();
         $this->collectBaseFunctions = new DbKeyValue();
-        $this->collectVendorNamespace = new DbKeyValue();
+        $this->collectComposerNamespace = new DbKeyValue();
     }
 
     public function load(): void
@@ -41,7 +41,7 @@ final class EnvironmentDataLoader
         $this->collectBaseInterfaces = $this->fillFromArrayKeyValue(\get_declared_interfaces());
         $this->collectBaseFunctions = $this->fillFromArrayKeyValue(\get_defined_functions()['internal']);
         $this->collectBaseConstants = $this->fillFromArrayKeyValue(\get_defined_constants());
-        $this->collectVendorNamespace = $this->fillFromArrayKeyValue($this->composerJson->getPsr4Ns());
+        $this->collectComposerNamespace = $this->fillFromArrayKeyValue($this->composerJson->getPsr4Ns());
     }
 
     /**
@@ -79,9 +79,9 @@ final class EnvironmentDataLoader
     /**
      * @return DbKeyValue
      */
-    public function getCollectVendorNamespace(): DbKeyValue
+    public function getCollectComposerNamespace(): DbKeyValue
     {
-        return $this->collectVendorNamespace;
+        return $this->collectComposerNamespace;
     }
 
     /**
