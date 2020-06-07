@@ -1,11 +1,11 @@
 {
-  "ver": "0.1.0",
-  "start-path": "",
+  "version": "0.1.0",
+  "start-path": "src",
+  "composer-json-path": "./",
   "public-entries": [
-
   ],
   "private-entries": [
-
+    "\\safe\\"
   ],
-  "mode": "PUBLIC"
+  "mode": "MODE_MAKE_VENDOR_PRIVATE"
 }

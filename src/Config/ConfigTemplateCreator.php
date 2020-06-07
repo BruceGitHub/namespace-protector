@@ -17,12 +17,12 @@ final class ConfigTemplateCreator
 
     public static function createJsonTemplateConfig(): void
     {
-        self::createFileWithBack(self::FILENAME,self::TEMPLATE_CONFIG_JSON);
+        self::createFileWithBack(self::FILENAME, self::TEMPLATE_CONFIG_JSON);
     }
 
     public static function createJsonTemplateVisibility(): void
     {
-        self::createFileWithBack(self::FILENAME_VISIBILITY,'template-visibility');
+        self::createFileWithBack(self::FILENAME_VISIBILITY, 'template-visibility');
     }
 
     private static function createFileWithBack(string $fileName, string $templateFile): void
@@ -32,5 +32,4 @@ final class ConfigTemplateCreator
         $content = safe\file_get_contents(__DIR__ . '/'.  $templateFile);
         safe\file_put_contents($fileName, $content);
     }
-
 }

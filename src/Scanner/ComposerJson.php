@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Scanner;
 
+use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
+use Webmozart\Assert\Assert;
 
 final class ComposerJson implements ScannerInterface
 {
@@ -17,15 +19,13 @@ final class ComposerJson implements ScannerInterface
 
     public function __construct(PathInterface $fileSystemPathComposerJson)
     {
-        $this->fileSystemPathComposerJson = $fileSystemPathComposerJson;
+        $this->fileSystemPathComposerJson = new FileSystemPath($fileSystemPathComposerJson->get().'/composer.json');
+        Assert::readable($this->fileSystemPathComposerJson->get(), "Composer json file not readable");
     }
 
     public function load(): void
     {
-        $content = file_get_contents($this->fileSystemPathComposerJson->get());
-        if ($content === false) {
-            throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAINE_JSON_EXCEPTION.': ' . json_last_error_msg());
-        }
+        $content = \safe\file_get_contents($this->fileSystemPathComposerJson->get());
 
         $data = \safe\json_decode($content, true);
 

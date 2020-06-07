@@ -18,13 +18,9 @@ abstract class AbstractValidateNamespaceCommand extends Command
 {
     private const NAMESPACE_PROTECTOR_CACHE = 'namespace-protector-cache';
 
-    /** @var ComposerJson  */
-    private $composerJson;
-
-    public function __construct(ComposerJson $composerJson, string $name = null)
+    public function __construct(string $name = null)
     {
         parent::__construct($name);
-        $this->composerJson = $composerJson;
     }
 
     protected function configure(): void
@@ -42,7 +38,7 @@ abstract class AbstractValidateNamespaceCommand extends Command
 
         $config = Config::loadFromFile(new FileSystemPath(__DIR__.'/../../namespace-protector-config.json'));
 
-        $composerJson = $this->getComposerJson();
+        $composerJson = new ComposerJson($config->getPathComposerJson());
         $composerJson->load();
 
         $fileSystem = new FileSystemScanner([$config->getStartPath()]);
@@ -72,11 +68,6 @@ abstract class AbstractValidateNamespaceCommand extends Command
         }
 
         return self::SUCCESS;
-    }
-
-    public function getComposerJson(): ComposerJson
-    {
-        return $this->composerJson;
     }
 
     private function loadSymbols(EnvironmentDataLoader $metaDataLoader): int

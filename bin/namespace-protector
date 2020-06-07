@@ -25,7 +25,7 @@ use NamespaceProtector\Scanner\ComposerJson;
 use Symfony\Component\Console\Application;
 
 $app = new Application('Namespace Protector','0.1.0 (Alpha)');
-$app->add(new NamespaceProtectorCommand(new ComposerJson(new FileSystemPath(__DIR__.'/../composer.json'))));
+$app->add(new NamespaceProtectorCommand());
 
 try {
     $app->run();
