@@ -1,12 +1,13 @@
 <?php
 
-namespace NamespaceProtector;
+namespace NamespaceProtector\Config;
 
+use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Common\PathInterface;
 
 final class Config
 {
-    public const MODE_PRIVATE = 'PRIVATE';
+    public const MODE_MAKE_VENDOR_PRIVATE = 'MODE_MAKE_VENDOR_PRIVATE';
     public const MODE_PUBLIC = 'PUBLIC';
 
     /** @var PathInterface  */
@@ -93,4 +94,20 @@ final class Config
         }
         return $prettyPrintNamespaceToValidate;
     }
+
+    public static function  loadFromFile(PathInterface $path): self
+    {
+        $content = \safe\file_get_contents($path->get());
+        $arrayConfig = \safe\json_decode($content,true);
+
+        $self = new self(
+            new FileSystemPath($arrayConfig['start-path']) ,
+            $arrayConfig['private-entries'],
+            $arrayConfig['public-entries'],
+            $arrayConfig['mode']
+        );
+
+        return $self;
+    }
+
 }

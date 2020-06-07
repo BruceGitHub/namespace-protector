@@ -5,7 +5,7 @@ namespace NamespaceProtector\Command;
 use NamespaceProtector\Analyser;
 use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
-use NamespaceProtector\Config;
+use NamespaceProtector\Config\Config;
 use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Scanner\ComposerJson;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class ValidateNamespaceCommand extends Command
+abstract class AbstractValidateNamespaceCommand extends Command
 {
     private const NAMESPACE_PROTECTOR_CACHE = 'namespace-protector-cache';
 
@@ -34,16 +34,14 @@ abstract class ValidateNamespaceCommand extends Command
             ->setHelp('Validate for each namespace the access from another private namespace');
     }
 
-    abstract public function getConfig(): Config;
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         //todo extract body method in specific namespace class
-        //todo load from json file
         //todo use DI
         $output->writeln("Boot validate analysis....");
 
-        $config = $this->getConfig();
+        $config = Config::loadFromFile(new FileSystemPath(__DIR__.'/../../namespace-protector-config.json'));
+
         $composerJson = $this->getComposerJson();
         $composerJson->load();
 

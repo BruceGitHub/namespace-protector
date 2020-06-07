@@ -3,7 +3,7 @@
 namespace NamespaceProtector\Parser;
 
 use NamespaceProtector\Common\PathInterface;
-use NamespaceProtector\Config;
+use NamespaceProtector\Config\Config;
 use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use NamespaceProtector\Parser\Node\PhpNode;

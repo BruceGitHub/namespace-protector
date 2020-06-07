@@ -7,7 +7,6 @@ use NamespaceProtector\Scanner\ComposerJson;
 
 final class EnvironmentDataLoader
 {
-
     /** @var DbKeyValue */
     private $collectBaseClasses;
 

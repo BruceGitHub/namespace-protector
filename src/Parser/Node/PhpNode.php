@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Parser\Node;
 
-use NamespaceProtector\Config;
+use NamespaceProtector\Config\Config;
 use NamespaceProtector\Db\BooleanMatchKey;
 use NamespaceProtector\Db\BooleanMatchPos;
 use NamespaceProtector\Db\BooleanMatchValue;
@@ -102,7 +102,7 @@ final class PhpNode extends NameResolver
         }
 
         //todo: optimize (avoid if)
-        if ($this->globalConfig->getMode() === Config::MODE_PRIVATE) {
+        if ($this->globalConfig->getMode() === Config::MODE_MAKE_VENDOR_PRIVATE) {
             $this->pushError($val, $node);
             return;
         }
