@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace NamespaceProtector\Cache;
 
 use NamespaceProtector\Common\PathInterface;
-use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 
+//todo: use not implemented exception
 final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
 {
     /** @var PathInterface */
@@ -14,8 +14,8 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
     public function __construct(PathInterface $cachePath)
     {
         $this->path = $cachePath;
-        if (!is_dir($this->path->get())) {
-            \mkdir($this->path->get());
+        if (!\is_dir($this->path->get())) {
+            \safe\mkdir($this->path->get());
         }
     }
 
@@ -28,10 +28,7 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
 
         $jsonDecoder = new \PhpParser\JsonDecoder();
 
-        $content = \file_get_contents($fileCached);
-        if ($content === false) {
-            throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_PHP_PARSE_JSON_DECODE);
-        }
+        $content = \safe\file_get_contents($fileCached);
 
         return $jsonDecoder->decode($content);
     }

@@ -1,13 +1,19 @@
-stan_check:
-	docker run --rm -v $(CURDIR):/app phpstan/phpstan analyse /app/src
 
-cs_check_install:
+install_phpunit:
+	wget -O phpunit https://phar.phpunit.de/phpunit-9.phar
+	mv phpunit ./vendor/bin/phpunit
+	chmod +x ./vendor/bin/phpunit
+	./vendor/bin/phpunit --check-version
+
+install_csfixer:
 	wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O ./bin/php-cs-fixer
 	sudo chmod a+x ./bin/php-cs-fixer
 
-cs_run:
-	./bin/php-cs-fixer fix .
+phpstan:
+	docker run --rm -v $(CURDIR):/app phpstan/phpstan analyse /app/src
 
+csf:
+	./bin/php-cs-fixer fix .
 
 run:
 	./bin/namespace-protector v
@@ -23,7 +29,7 @@ stop:
 
 restart: stop start
 
-composer_install:
+install_composer:
 	docker-compose run composer install
 
 composer_shell:

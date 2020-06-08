@@ -3,13 +3,12 @@ version: '2'
 services:
   php:
     image: image-namespace-protector
+    user: '1000'
     build:
       context: .
       dockerfile: ./Dockerfile
     volumes:
       - ./..:/var/www/html
-    ports:
-      - "1000:22"
 
     environment:
       XDEBUG_CONFIG: >-
