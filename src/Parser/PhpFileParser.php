@@ -28,7 +28,7 @@ final class PhpFileParser implements ParserInterface
     /** @var \Psr\SimpleCache\CacheInterface  */
     private $cache;
 
-    public function __construct(Config $config, EnvironmentDataLoader $metadataLoader, \Psr\SimpleCache\CacheInterface $cache)
+    public function __construct(Config $config, EnvironmentDataLoader $environmentDataLoader, \Psr\SimpleCache\CacheInterface $cache)
     {
         $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
         $this->traverser = new NodeTraverser();
@@ -38,7 +38,7 @@ final class PhpFileParser implements ParserInterface
             $config,
             ['preserveOriginalNames' => true, 'replaceNodes' => true],
             $this->resultCollector,
-            $metadataLoader
+            $environmentDataLoader
         );
 
         $this->traverser->addVisitor($phpNode);

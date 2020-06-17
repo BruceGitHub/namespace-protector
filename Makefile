@@ -35,5 +35,10 @@ install_composer:
 composer_shell:
 	docker-compose run composer sh
 
+run_tests:
+	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
+
+run_tests_coverage:
+	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --coverage-html=./.coverage/ --whitelist=./src
 
 .SILENT:

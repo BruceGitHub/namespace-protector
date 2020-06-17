@@ -2,6 +2,8 @@
 
 namespace NamespaceProtector\Common;
 
+use Webmozart\Assert\Assert;
+
 final class FileSystemPath implements PathInterface
 {
     /** @var string  */
@@ -9,6 +11,7 @@ final class FileSystemPath implements PathInterface
 
     public function __construct(string $path)
     {
+        Assert::readable($path);
         $this->path = $path;
     }
 
