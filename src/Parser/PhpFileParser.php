@@ -53,11 +53,11 @@ final class PhpFileParser implements ParserInterface
         $ast = $this->fetchAst($pathFile);
 
         $this->traverser->traverse($ast);
-
+                
         $this->emptyLogIfNoErrorEntry();
     }
 
-    public function getListResult(): ResultCollector
+    public function getListResult(): ResultCollector //todo: use immutable
     {
         return $this->resultCollector;
     }

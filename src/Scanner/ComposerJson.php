@@ -38,7 +38,6 @@ final class ComposerJson implements ScannerInterface
 
 
         for ($i = 0; $i < $countMax; $i++) {
-
             $relativePath .= '..'.DIRECTORY_SEPARATOR;
             $pathComposer = __DIR__ .DIRECTORY_SEPARATOR. $relativePath;
 
@@ -47,14 +46,13 @@ final class ComposerJson implements ScannerInterface
             }
 
             $jsonArray = \safe\json_decode(
-                \file_get_contents($pathComposer.DIRECTORY_SEPARATOR.self::COMPOSER_JSON),
+                \safe\file_get_contents($pathComposer.DIRECTORY_SEPARATOR.self::COMPOSER_JSON),
                 true
             );
 
             if ($jsonArray['name']!==self::NAME_PROJECT) {
                 return new FileSystemPath($pathComposer);
             }
-
         }
 
         throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSE_JSON_NOT_FOUND);

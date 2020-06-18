@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Unit\Result;
 
-
 use NamespaceProtector\Result\Result;
 use NamespaceProtector\Result\ResultCollector;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +18,7 @@ final class ResultCollectorTest extends TestCase
         $resultCollector->addResult($result);
 
         $this->assertCount(1, $resultCollector->get());
-        $this->assertEquals($result,$resultCollector->get()[0]);
+        $this->assertEquals($result, $resultCollector->get()[0]);
     }
 
     /** @test */
@@ -32,6 +31,5 @@ final class ResultCollectorTest extends TestCase
         $resultCollector->emptyResult();
 
         $this->assertCount(0, $resultCollector->get());
-
     }
 }

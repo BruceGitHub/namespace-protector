@@ -31,6 +31,7 @@ final class EnvironmentDataLoader
         $this->collectBaseClasses = new DbKeyValue();
         $this->collectBaseInterfaces = new DbKeyValue();
         $this->collectBaseFunctions = new DbKeyValue();
+        $this->collectBaseConstants = new DbKeyValue();
         $this->collectComposerNamespace = new DbKeyValue();
     }
 

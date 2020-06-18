@@ -6,8 +6,16 @@ install_phpunit:
 	./vendor/bin/phpunit --check-version
 
 install_csfixer:
-	wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O ./bin/php-cs-fixer
-	sudo chmod a+x ./bin/php-cs-fixer
+	wget -O ./bin/php-cs-fixer https://cs.symfony.com/download/php-cs-fixer-v2.phar 
+	chmod a+x ./bin/php-cs-fixer
+
+install_composer:
+	docker-compose -f .container/docker-compose.yml run composer install
+
+install: 
+	install_composer && 
+	install_phpunit &&
+	install_csfixer
 
 phpstan:
 	docker run --rm -v $(CURDIR):/app phpstan/phpstan analyse /app/src
@@ -29,16 +37,13 @@ stop:
 
 restart: stop start
 
-install_composer:
-	docker-compose run composer install
-
 composer_shell:
 	docker-compose run composer sh
 
-run_tests:
+test:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
 
-run_tests_coverage:
+test-coverage:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --coverage-html=./.coverage/ --whitelist=./src
 
 .SILENT:

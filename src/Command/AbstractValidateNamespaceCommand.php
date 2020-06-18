@@ -26,8 +26,8 @@ abstract class AbstractValidateNamespaceCommand extends Command
     protected function configure(): void
     {
         $this->setName('validate-namespace')
-            ->setDescription('Validate namespace accessibility')
-            ->setHelp('Validate for each namespace the access from another private namespace');
+            ->setDescription('Validate namespace')
+            ->setHelp('Validate if some namespace access to one private namespace');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

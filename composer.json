@@ -6,8 +6,7 @@
     "bin/namespace-protector"
   ],
   "config": {
-    "sort-packages": true,
-    "bin-dir": "bin"
+    "sort-packages": true
   },
   "require": {
     "ext-json": "*",
@@ -18,6 +17,8 @@
     "webmozart/assert": "^1.8"
   },
   "require-dev": {
+    "mikey179/vfsstream": "^1.6",
+    "phpunit/phpunit": "^9",
     "roave/security-advisories": "dev-master"
   },
   "autoload": {
@@ -28,6 +29,11 @@
       "src"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+        "Tests\\": "tests/"
+    }
+  },  
   "authors": [
     {
       "name": "BruceGitHub",

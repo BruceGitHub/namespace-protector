@@ -27,7 +27,7 @@ services:
     command: ["composer", "install"]
     user: '1000'
     volumes:
-      - .:/app
+      - ./../:/app
 
 networks:
   main-network:
