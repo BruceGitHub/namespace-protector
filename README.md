@@ -10,12 +10,11 @@ This functionality allow to improve the information hiding at level of namespace
 The idea is that namespace in some situations can be private at all except for a specific entry point. 
 For example the namespace of third parts lib. Trought the json configuration it's possible define 
 
-- public namespace
-- private namespace 
-- mode public by default in this setup only a private namespace it's validated or mode `private vendor` in which each access 
-to namespace of vendor trigger a violation if not was added public namespace.
+- `public namespace`
+- `private namespace` 
+- mode public by default in this setup only a private namespace it's validated or mode `private vendor` in which each access of vendor namespace trigger a violation if was not added public namespace.
 
-I think the in future the modes can be increase
+I think thta the in future the modes can be increase
 
 
 For now it is a lab 
