@@ -2,8 +2,11 @@
 A tool to validate namespace
 
 Ispired by 
-https://www.slideshare.net/MicheleOrselli/comunicare-condividere-e-mantenere-decisioni-architetturali-nei-team-di-sviluppo-approcci-e-strumenti
-this https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/access-modifiers#:~:text=Class%20members%2C%20including%20nested%20classes,from%20outside%20the%20containing%20type. 
+
+- https://www.slideshare.net/MicheleOrselli/comunicare-condividere-e-mantenere-decisioni-architetturali-nei-team-di-sviluppo-approcci-e-strumenti
+- https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/access-modifiers#:~:text=Class%20members%2C%20including%20nested%20classes,from%20outside%20the%20containing%20type. 
+- https://wiki.php.net/rfc/namespace-visibility
+
 and for fun ...
 
 This functionality allow to improve the information hiding at level of namespace Like C#/Java pubblic/private class. 
