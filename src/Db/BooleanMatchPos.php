@@ -9,9 +9,9 @@ class BooleanMatchPos implements MatchCollectionInterface
      * @param Iterable<mixed> $data
      */
     public function evaluate(Iterable $data, string $matchMe): bool
-    {
+    {   
         foreach ($data as $entry => $value) {
-            if (strpos($matchMe, $entry) === false) {
+            if (strpos($matchMe, $entry) !==false) {
                 return true;
             }
         }

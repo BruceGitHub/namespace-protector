@@ -117,7 +117,7 @@ final class Config
     {
         $content = \safe\file_get_contents($path->get());
         $arrayConfig = \safe\json_decode($content, true);
-
+        
         $self = new self(
             $arrayConfig['version'],
             new FileSystemPath($arrayConfig['start-path']),

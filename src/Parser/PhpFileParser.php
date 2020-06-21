@@ -2,15 +2,15 @@
 
 namespace NamespaceProtector\Parser;
 
-use NamespaceProtector\Common\PathInterface;
-use NamespaceProtector\Config\Config;
-use NamespaceProtector\EnvironmentDataLoader;
-use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
-use NamespaceProtector\Parser\Node\PhpNode;
-use NamespaceProtector\Result\Result;
-use NamespaceProtector\Result\ResultCollector;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
+use NamespaceProtector\Config\Config;
+use NamespaceProtector\Result\Result;
+use NamespaceProtector\Parser\Node\PhpNode;
+use NamespaceProtector\Common\PathInterface;
+use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\EnvironmentDataLoaderInterface;
+use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 
 final class PhpFileParser implements ParserInterface
 {
@@ -28,7 +28,7 @@ final class PhpFileParser implements ParserInterface
     /** @var \Psr\SimpleCache\CacheInterface  */
     private $cache;
 
-    public function __construct(Config $config, EnvironmentDataLoader $environmentDataLoader, \Psr\SimpleCache\CacheInterface $cache)
+    public function __construct(Config $config, EnvironmentDataLoaderInterface $environmentDataLoader, \Psr\SimpleCache\CacheInterface $cache)
     {
         $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
         $this->traverser = new NodeTraverser();

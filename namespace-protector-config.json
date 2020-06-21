@@ -5,6 +5,7 @@
   "public-entries": [
   ],
   "private-entries": [
+    "\\safe\\"
   ],
   "mode": "MODE_MAKE_VENDOR_PRIVATE"
 }

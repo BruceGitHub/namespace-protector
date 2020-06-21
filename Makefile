@@ -43,7 +43,10 @@ composer_shell:
 test:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
 
+test-filter:
+	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --filter=$(filter)
+
 test-coverage:
-	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --coverage-html=./.coverage/ --whitelist=./src
+	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --coverage-html=./.coverage/ --whitelist=./src
 
 .SILENT:

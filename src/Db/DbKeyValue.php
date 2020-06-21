@@ -8,9 +8,12 @@ final class DbKeyValue implements DbKeyValueInterface
     /** @var array<mixed> */
     private $collections;
 
-    public function __construct()
+    /**
+     * @param array<string> $initValue
+     */
+    public function __construct(array $initValue = [])
     {
-        $this->collections = [];
+        $this->collections = $initValue;
     }
 
     public function add(string $key, string $value): void

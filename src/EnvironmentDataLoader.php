@@ -5,7 +5,7 @@ namespace NamespaceProtector;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Scanner\ComposerJson;
 
-final class EnvironmentDataLoader
+final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 {
     /** @var DbKeyValue */
     private $collectBaseClasses;

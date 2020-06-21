@@ -8,6 +8,8 @@ use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use Webmozart\Assert\Assert;
 
+use function Safe\realpath;
+
 final class ComposerJson implements ScannerInterface
 {
     private const COMPOSER_JSON = 'composer.json';
@@ -33,15 +35,16 @@ final class ComposerJson implements ScannerInterface
     //todo: dirty implemetation
     public static function detectComposerJsonDirectory(): PathInterface
     {
-        $countMax = 10;
+        $countMax = 5;
         $relativePath = '';
 
 
         for ($i = 0; $i < $countMax; $i++) {
-            $relativePath .= '..'.DIRECTORY_SEPARATOR;
-            $pathComposer = __DIR__ .DIRECTORY_SEPARATOR. $relativePath;
+            $pathComposer = \getcwd() .DIRECTORY_SEPARATOR. $relativePath;
+            $realPath = \safe\realpath($pathComposer . self::COMPOSER_JSON);
 
-            if (!file_exists($pathComposer . self::COMPOSER_JSON)) {
+            if (\is_readable($realPath) === false) {
+                $relativePath .= '..'.DIRECTORY_SEPARATOR;
                 continue;
             }
 

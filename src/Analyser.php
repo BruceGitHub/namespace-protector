@@ -30,7 +30,7 @@ final class Analyser
             $currentParser->parseFile($pathInterface);
             
             foreach ($currentParser->getListResult()->get() as $result) {
-                echo $result->get();
+                echo $result->get(); //todo: bad here
                 if ($result->getType() === PhpNode::ERR) {
                     $this->withError = true;
                     $this->incrementError();

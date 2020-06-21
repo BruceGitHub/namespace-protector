@@ -3,6 +3,7 @@
 namespace NamespaceProtector\Command;
 
 use NamespaceProtector\Analyser;
+use NamespaceProtector\Cache\NullCache;
 use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Config\Config;
@@ -10,6 +11,7 @@ use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Scanner\FileSystemScanner;
+use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +27,7 @@ abstract class AbstractValidateNamespaceCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
         $this->setName('validate-namespace')
             ->setDescription('Validate namespace')
             ->setHelp('Validate if some namespace access to one private namespace');
@@ -44,7 +47,7 @@ abstract class AbstractValidateNamespaceCommand extends Command
         $fileSystem = new FileSystemScanner([$config->getStartPath()]);
         $metaDataLoader = new EnvironmentDataLoader($composerJson);
 
-        $directory = sys_get_temp_dir().\DIRECTORY_SEPARATOR.self::NAMESPACE_PROTECTOR_CACHE;
+        $directory = \sys_get_temp_dir().self::NAMESPACE_PROTECTOR_CACHE;
         $cacheClass = $this->createCacheObject($directory);
 
         $analyser = new Analyser(new PhpFileParser($config, $metaDataLoader, $cacheClass));
@@ -88,8 +91,9 @@ abstract class AbstractValidateNamespaceCommand extends Command
         }
     }
 
-    protected function createCacheObject(string $directory): SimpleFileCache
+    protected function createCacheObject(string $directory): CacheInterface
     {
-        return new SimpleFileCache(new FileSystemPath($directory));
+        return new NullCache();
+        return new SimpleFileCache(new FileSystemPath($directory,true));
     }
 }

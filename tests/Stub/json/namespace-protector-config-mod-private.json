@@ -1,0 +1,12 @@
+{
+    "version": "0.1.0",
+    "start-path": ".",
+    "composer-json-path":".",
+    "public-entries": [
+
+    ],
+    "private-entries": [
+
+    ],
+    "mode": "MODE_MAKE_VENDOR_PRIVATE"
+}

@@ -2,31 +2,30 @@
 
 namespace NamespaceProtector\Parser\Node;
 
+use PhpParser\Node;
+use PhpParser\Node\Stmt\UseUse;
 use NamespaceProtector\Config\Config;
+use NamespaceProtector\Result\Result;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\NodeVisitor\NameResolver;
 use NamespaceProtector\Db\BooleanMatchKey;
 use NamespaceProtector\Db\BooleanMatchPos;
 use NamespaceProtector\Db\BooleanMatchValue;
 use NamespaceProtector\Db\DbKeyValueInterface;
-use NamespaceProtector\Db\MatchCollectionInterface;
-use NamespaceProtector\EnvironmentDataLoader;
-use NamespaceProtector\Result\Result;
 use NamespaceProtector\Result\ResultCollector;
-use PhpParser\Node;
-use PhpParser\Node\Name\FullyQualified;
-use PhpParser\Node\Stmt\UseUse;
-use PhpParser\NodeVisitor\NameResolver;
+use NamespaceProtector\Db\MatchCollectionInterface;
+use NamespaceProtector\EnvironmentDataLoaderInterface;
 
 final class PhpNode extends NameResolver
 {
     public const ERR = 1;
-
     /** @var array<Callable> */
     private $listNodeProcessor;
 
     /** @var ResultCollector  */
     private $resultCollector;
 
-    /** @var EnvironmentDataLoader  */
+    /** @var EnvironmentDataLoaderInterface  */
     private $metadataLoader;
 
     /** @var Config  */
@@ -48,7 +47,7 @@ final class PhpNode extends NameResolver
         Config $configGlobal,
         array $configParser,
         ResultCollector $resultCollector,
-        EnvironmentDataLoader $metadataLoader
+        EnvironmentDataLoaderInterface $metadataLoader
     ) {
         parent::__construct(null, $configParser);
 
@@ -89,32 +88,34 @@ final class PhpNode extends NameResolver
         $func = $this->listNodeProcessor[$class];
         $val = $func($node);
 
-        if (!$this->isFalsePositives($val)) {
+        if ($this->isFalsePositives($val)) {
             return;
         }
 
-        if ($this->isVendorNamespace($val)) {
-            return;
-        }
-
-        if ($this->isPublicEntry($val)) {
-            return;
-        }
-
-        //todo: optimize (avoid if)
         if ($this->globalConfig->getMode() === Config::MODE_MAKE_VENDOR_PRIVATE) {
-            $this->pushError($val, $node);
+            $this->withModeVendorPrivate($val, $node);
             return;
         }
 
-        $this->validateAccessToPrivateEntries($val, $node);
+        if (true === $this->isComposerNamespace($val)) {
+            return;
+        }
+
+        if (true === $this->isInPrivateConfiguredEntries($val, $node)) {
+            return;
+        }
+        // echo "\n $val \n ";
+
+        // if ($this->isInPublicConfiguredEntries($val)) {
+        //     return;
+        // }
     }
 
-    private function isFalsePositives(string $result): bool
+    private function isFalsePositives(string $resultTocheck): bool
     {
-        if ($result[0] ==='\\') {
-            $result= substr($result, 1, strlen($result));
-        }
+        $resultTocheck = $this->stripFirstSlash($resultTocheck);
+
+        $result = $resultTocheck;
 
         if ($this->valueExist($this->metadataLoader->getCollectBaseConstants(), $this->matchKey, $result)) {
             return true;
@@ -135,9 +136,10 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function isPublicEntry(string $currentNamespaceAccess): bool
+    private function isInPublicConfiguredEntries(string $currentNamespaceAccess): bool
     {
         foreach ($this->globalConfig->getPublicEntries() as $publicEntry) {
+
             if (strpos($currentNamespaceAccess, $publicEntry) !== false) {
                 return true;
             }
@@ -146,26 +148,30 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function validateAccessToPrivateEntries(string $currentNamespaceAccess, Node $node): void
+    private function isInPrivateConfiguredEntries(string $currentNamespaceAccess, Node $node): bool
     {
         foreach ($this->globalConfig->getPrivateEntries() as $privateEntry) {
             if (strpos($currentNamespaceAccess, $privateEntry) !== false) {
                 $this->pushError($currentNamespaceAccess, $node);
+                return true;
             }
         }
+        return false;
     }
 
     private function pushError(string $val, Node $node): void
     {
-        $err = "\t > ERROR Line: ".$node->getLine()." of use $val " . \PHP_EOL;
+        $err = "\t > ERROR Line: " . $node->getLine() . " of use $val " . \PHP_EOL; //todo: output data no context
         $this->resultCollector->addResult(new Result($err, self::ERR));
     }
 
-    private function isVendorNamespace(string $val): bool
+    private function isComposerNamespace(string $val): bool
     {
+        $val = $this->stripFirstSlash($val);
         if ($this->metadataLoader
             ->getCollectComposerNamespace()
-            ->booleanSearch($this->matchPos, $val)) {
+            ->booleanSearch($this->matchPos, $val)
+        ) {
             return true;
         }
 
@@ -179,5 +185,28 @@ final class PhpNode extends NameResolver
         }
 
         return false;
+    }
+
+    private function withModeVendorPrivate(string $currentNamespaceAccess, Node $node): void
+    {
+        if ($this->isInPublicConfiguredEntries($currentNamespaceAccess)) {
+            return;
+        }
+
+        if (true === $this->isComposerNamespace($currentNamespaceAccess)) {
+            return;
+        }        
+
+        $this->pushError($currentNamespaceAccess, $node);
+        return;
+    }
+
+    private function stripFirstSlash(string $token): string
+    {
+        if ($token[0] === '\\') {
+            $token = substr($token, 1, strlen($token));
+        }
+
+        return $token;
     }
 }
