@@ -2,7 +2,7 @@
   "version": "0.1.0",
   "start-path": "src",
   "composer-json-path": "./",
-  "public-entries": ["safe","phpParse"],
+  "public-entries": [],
   "private-entries": [],
   "mode": "MODE_MAKE_VENDOR_PRIVATE"
 }
