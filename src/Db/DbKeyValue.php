@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Db;
 
+use NamespaceProtector\Entry\Entry;
+
 final class DbKeyValue implements DbKeyValueInterface
 {
     /** @var array<mixed> */
@@ -21,7 +23,7 @@ final class DbKeyValue implements DbKeyValueInterface
         $this->collections[$key] = $value;
     }
 
-    public function booleanSearch(MatchCollectionInterface $match, string $matchMe): bool
+    public function booleanSearch(MatchCollectionInterface $match, Entry $matchMe): bool
     {
         if ($match->evaluate($this->collections, $matchMe)) {
             return true;

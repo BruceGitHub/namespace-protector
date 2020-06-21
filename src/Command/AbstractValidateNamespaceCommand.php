@@ -37,9 +37,10 @@ abstract class AbstractValidateNamespaceCommand extends Command
     {
         //todo extract body method in specific namespace class
         //todo use DI
+        
         $output->writeln("Boot validate analysis....");
 
-        $config = Config::loadFromFile(new FileSystemPath(__DIR__.'/../../namespace-protector-config.json'));
+        $config = Config::loadFromFile(new FileSystemPath(\getcwd().'/namespace-protector-config.json'));
 
         $composerJson = new ComposerJson($config->getPathComposerJson());
         $composerJson->load();

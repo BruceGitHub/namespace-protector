@@ -24,8 +24,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $composerJson = new ComposerJson(new FileSystemPath($fsPath));
         $environmentDataLoader = new EnvironmentDataLoader($composerJson);
-
         $config = Config::loadFromFile($file);
+
+        //act
         $phpFileParser = new PhpFileParser($config, $environmentDataLoader, new NullCache());
 
         $this->assertCount(0, $phpFileParser->getListResult()->get());
@@ -34,20 +35,19 @@ class PhpFileParserTest extends AbstractUnitTestCase
     /** @test */
     public function it_parse_work(): void
     {
-        $fsPath = $this->getVirtualFileSystem()->url() . '/json';
-        $files =  $this->getVirtualFileSystem()->url() . '/files';
-        $file = new FileSystemPath($fsPath . '/namespace-protector-config.json');
+        $fileSystem = $this->StartBuildFileSystem()
+            ->addFile('namespace-protector-config-mod-public.json', 'json', 'json')
+            ->addFile('first.php', 'php', 'files')
+            ->buildFileSystemUrl();
 
-        $composerJson = new ComposerJson(new FileSystemPath($fsPath));
-        $composerJson->load();
-
-        $environmentDataLoader = new EnvironmentDataLoader($composerJson);
-        $environmentDataLoader->load();
-
-        $config = Config::loadFromFile($file);
+        $pathStubClass = new FileSystemPath($fileSystem . '/files/first.php');
+        $environmentDataLoader = $this->getEnvironmentMock();
+        $config = Config::loadFromFile(new FileSystemPath($fileSystem . '/json/namespace-protector-config-mod-public.json'));
         $phpFileParser = new PhpFileParser($config, $environmentDataLoader, new NullCache());
 
-        $phpFileParser->parseFile(new FileSystemPath($files . '/first.php'));
+        //act
+        $phpFileParser->parseFile($pathStubClass);
+
         $rsCollector = $phpFileParser->getListResult();
 
         $this->assertEquals([], $rsCollector->get());
@@ -65,8 +65,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $environmentDataLoader = new EnvironmentDataLoader($composerJson);
         $environmentDataLoader->load();
-
         $config = Config::loadFromFile($file);
+
+        //act
         $phpFileParser = new PhpFileParser($config, $environmentDataLoader, new NullCache());
 
         $phpFileParser->parseFile(new FileSystemPath($files . '/no_violation.php'));
@@ -87,9 +88,10 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $config = Config::loadFromFile(new FileSystemPath($fileSystem . '/json/namespace-protector-config-mod-private.json'));
         $phpFileParser = new PhpFileParser($config, $environmentDataLoader, new NullCache());
 
+        //act
         $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUsePrivateNamespace.php'));
-        $rsCollector = $phpFileParser->getListResult();
 
+        $rsCollector = $phpFileParser->getListResult();
         $this->assertCount(4, $rsCollector->get());
         $this->assertStringContainsString('files/FileThatUsePrivateNamespace.php', $rsCollector->get()[0]->get());
         $this->assertStringContainsString('> ERROR Line: 5 of use org\bovigo\vfs\vfsStream', $rsCollector->get()[1]->get());
@@ -253,13 +255,47 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $config = Config::loadFromFile(new FileSystemPath($fileSystem . '/json/namespace-protector-config-mod-private.json'));
         $phpFileParser = new PhpFileParser($config, $environmentDataLoader, new NullCache());
 
+        //act
         $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUsePublicEntry.php'));
-        $rsCollector = $phpFileParser->getListResult();
 
+        $rsCollector = $phpFileParser->getListResult();
         $this->assertCount(0, $rsCollector->get());
     }
 
+    /** @test */
+    public function it_violation_when_entry_and_target_are_different_case_mod_vendor_private(): void
+    {
+        $fileSystem = $this->StartBuildFileSystem()
+            ->addFileWithCallable(
+                'namespace-protector-config-mod-private.json',
+                'json',
+                'json',
+                function ($directoryReal, $pathFile) {
+                    return $this->helperEditChangesEntries(
+                        $directoryReal,
+                        $pathFile,
+                        ['InPublic\ENTRIES\Ns'],
+                        []
+                    );
+                }
+            )
+            ->addFile('FileThatUseLowerCaseNaspace.php', 'php', 'files')
+            ->buildFileSystemUrl();
 
+        $environmentDataLoader = $this->getEnvironmentMock();
+        $config = Config::loadFromFile(new FileSystemPath($fileSystem . '/json/namespace-protector-config-mod-private.json'));
+        $phpFileParser = new PhpFileParser($config, $environmentDataLoader, new NullCache());
+
+        //act
+        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUseLowerCaseNaspace.php'));
+
+        $rsCollector = $phpFileParser->getListResult();
+        $this->assertCount(4, $rsCollector->get());
+        $this->assertStringContainsString('Process file: vfs://root/files/FileThatUseLowerCaseNaspace.php', $rsCollector->get()[0]->get());
+        $this->assertStringContainsString('> ERROR Line: 5 of use inpublic\entries\ns', $rsCollector->get()[1]->get());
+        $this->assertStringContainsString('> ERROR Line: 11 of use \inpublic\entries\NS', $rsCollector->get()[2]->get());
+        $this->assertStringContainsString('> ERROR Line: 12 of use \inpublic\entries\ns', $rsCollector->get()[3]->get());
+    }
 
     private function getEnvironmentMock(
         array $constans = [],

@@ -4,6 +4,6 @@ namespace NamespaceProtector\Common;
 
 interface PathInterface
 {
-    //todo: use __invoke
+    public function __invoke(): string;
     public function get(): string;
 }

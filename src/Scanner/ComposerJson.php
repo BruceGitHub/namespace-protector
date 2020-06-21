@@ -29,7 +29,7 @@ final class ComposerJson implements ScannerInterface
             .self::COMPOSER_JSON
         );
 
-        Assert::readable($this->fileSystemPathComposerJson->get(), "Composer json file not readable");
+        Assert::readable($this->fileSystemPathComposerJson->get(), NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSER_JSON_NOT_READABLE);
     }
 
     //todo: dirty implemetation
@@ -58,7 +58,7 @@ final class ComposerJson implements ScannerInterface
             }
         }
 
-        throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSE_JSON_NOT_FOUND);
+        throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSER_JSON_NOT_FOUND);
     }
 
     public function load(): void

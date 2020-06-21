@@ -14,7 +14,10 @@ use NamespaceProtector\Db\BooleanMatchValue;
 use NamespaceProtector\Db\DbKeyValueInterface;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Db\MatchCollectionInterface;
+use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
+
+use function Safe\strtotime;
 
 final class PhpNode extends NameResolver
 {
@@ -86,7 +89,9 @@ final class PhpNode extends NameResolver
         }
 
         $func = $this->listNodeProcessor[$class];
-        $val = $func($node);
+        $resultProcessNode = $func($node);
+
+        $val = new Entry($resultProcessNode);
 
         if ($this->isFalsePositives($val)) {
             return;
@@ -97,25 +102,19 @@ final class PhpNode extends NameResolver
             return;
         }
 
-        if (true === $this->isComposerNamespace($val)) {
+        if (true === $this->isInConfiguredComposerPsr4Namespaces($val)) {
             return;
         }
 
         if (true === $this->isInPrivateConfiguredEntries($val, $node)) {
+            $this->pushError($val, $node);
             return;
         }
-        // echo "\n $val \n ";
-
-        // if ($this->isInPublicConfiguredEntries($val)) {
-        //     return;
-        // }
     }
 
-    private function isFalsePositives(string $resultTocheck): bool
+    private function isFalsePositives(Entry $resultTocheck): bool
     {
-        $resultTocheck = $this->stripFirstSlash($resultTocheck);
-
-        $result = $resultTocheck;
+        $result = $this->stripFirstSlash($resultTocheck);
 
         if ($this->valueExist($this->metadataLoader->getCollectBaseConstants(), $this->matchKey, $result)) {
             return true;
@@ -136,11 +135,12 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function isInPublicConfiguredEntries(string $currentNamespaceAccess): bool
+    private function isInPublicConfiguredEntries(Entry $currentNamespaceAccess): bool
     {
         foreach ($this->globalConfig->getPublicEntries() as $publicEntry) {
-
-            if (strpos($currentNamespaceAccess, $publicEntry) !== false) {
+            $publicEntry = \strtolower($publicEntry);
+            $current = \strtolower($currentNamespaceAccess->get());
+            if (strpos($current, $publicEntry) !== false) {
                 return true;
             }
         }
@@ -148,26 +148,28 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function isInPrivateConfiguredEntries(string $currentNamespaceAccess, Node $node): bool
+    private function isInPrivateConfiguredEntries(Entry $currentNamespaceAccess, Node $node): bool
     {
         foreach ($this->globalConfig->getPrivateEntries() as $privateEntry) {
-            if (strpos($currentNamespaceAccess, $privateEntry) !== false) {
-                $this->pushError($currentNamespaceAccess, $node);
+            $privateEntry = \strtolower($privateEntry);
+            $current = \strtolower($currentNamespaceAccess->get());
+            if (strpos($current, $privateEntry) !== false) {
                 return true;
             }
         }
         return false;
     }
 
-    private function pushError(string $val, Node $node): void
+    private function pushError(Entry $val, Node $node): void
     {
-        $err = "\t > ERROR Line: " . $node->getLine() . " of use $val " . \PHP_EOL; //todo: output data no context
+        $err = "\t > ERROR Line: " . $node->getLine() . " of use " . $val->getOriginalEntry() . \PHP_EOL; //todo: output data no context
         $this->resultCollector->addResult(new Result($err, self::ERR));
     }
 
-    private function isComposerNamespace(string $val): bool
+    private function isInConfiguredComposerPsr4Namespaces(Entry $val): bool
     {
         $val = $this->stripFirstSlash($val);
+
         if ($this->metadataLoader
             ->getCollectComposerNamespace()
             ->booleanSearch($this->matchPos, $val)
@@ -178,7 +180,7 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function valueExist(DbKeyValueInterface $collections, MatchCollectionInterface $matchCriteria, string $matchMe): bool
+    private function valueExist(DbKeyValueInterface $collections, MatchCollectionInterface $matchCriteria, Entry $matchMe): bool
     {
         if ($collections->booleanSearch($matchCriteria, $matchMe)) {
             return true;
@@ -187,24 +189,24 @@ final class PhpNode extends NameResolver
         return false;
     }
 
-    private function withModeVendorPrivate(string $currentNamespaceAccess, Node $node): void
+    private function withModeVendorPrivate(Entry $currentNamespaceAccess, Node $node): void
     {
         if ($this->isInPublicConfiguredEntries($currentNamespaceAccess)) {
             return;
         }
 
-        if (true === $this->isComposerNamespace($currentNamespaceAccess)) {
+        if (true === $this->isInConfiguredComposerPsr4Namespaces($currentNamespaceAccess)) {
             return;
-        }        
+        }
 
         $this->pushError($currentNamespaceAccess, $node);
         return;
     }
 
-    private function stripFirstSlash(string $token): string
+    private function stripFirstSlash(Entry $token): Entry
     {
-        if ($token[0] === '\\') {
-            $token = substr($token, 1, strlen($token));
+        if ($token->get()[0] === '\\') {
+            return new Entry(substr($token->get(), 1, strlen($token->get())));
         }
 
         return $token;

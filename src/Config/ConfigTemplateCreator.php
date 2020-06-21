@@ -15,19 +15,19 @@ final class ConfigTemplateCreator
     {
     }
 
-    public static function createJsonTemplateConfig(PathInterface $baseDir): void
+    public static function createJsonTemplateConfig(PathInterface $baseComposerJsonDirectory): void
     {
-        self::createFileWithBack($baseDir->get().self::FILENAME, self::TEMPLATE_CONFIG_JSON);
+        self::createFileWithBackup($baseComposerJsonDirectory().self::FILENAME, self::TEMPLATE_CONFIG_JSON);
     }
 
     public static function createJsonTemplateVisibility(): void
     {
-        self::createFileWithBack(self::FILENAME_VISIBILITY, 'template-visibility');
+        self::createFileWithBackup(self::FILENAME_VISIBILITY, 'template-visibility');
     }
 
-    private static function createFileWithBack(string $fileName, string $templateFile): void
+    private static function createFileWithBackup(string $fileName, string $templateFile): void
     {
-        @rename($fileName, $fileName . '_back.json');
+        @rename($fileName, $fileName . '_backup.json');
 
         $content = \safe\file_get_contents(__DIR__ . '/' . $templateFile);
         \safe\file_put_contents($fileName, $content);

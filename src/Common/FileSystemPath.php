@@ -18,6 +18,11 @@ final class FileSystemPath implements PathInterface
         $this->path = $path;
     }
 
+    public function __invoke(): string 
+    {
+        return $this->get();
+    }
+
     public function get(): string
     {
         return $this->path;
