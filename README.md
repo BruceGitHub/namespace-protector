@@ -1,11 +1,7 @@
 # namespace-protector
 A tool to validate namespace
 
-[![Build Status](https://travis-ci.org/BruceGitHub/namespace-protector.svg?branch=master)](https://travis-ci.org/BruceGitHub/namespace-protector)
-
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/BruceGitHub/namespace-protector/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/BruceGitHub/namespace-protector/?branch=master)
-
-[![Coverage Status](https://coveralls.io/repos/github/BruceGitHub/namespace-protector/badge.svg?branch=master)](https://coveralls.io/github/BruceGitHub/namespace-protector?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/brucegithub/namespace-protector/v)](//packagist.org/packages/brucegithub/namespace-protector) [![Total Downloads](https://poser.pugx.org/brucegithub/namespace-protector/downloads)](//packagist.org/packages/brucegithub/namespace-protector) [![Latest Unstable Version](https://poser.pugx.org/brucegithub/namespace-protector/v/unstable)](//packagist.org/packages/brucegithub/namespace-protector) [![License](https://poser.pugx.org/brucegithub/namespace-protector/license)](//packagist.org/packages/brucegithub/namespace-protector) [![Build Status](https://travis-ci.org/BruceGitHub/namespace-protector.svg?branch=master)](https://travis-ci.org/BruceGitHub/namespace-protector) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/BruceGitHub/namespace-protector/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/BruceGitHub/namespace-protector/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/BruceGitHub/namespace-protector/badge.svg?branch=master)](https://coveralls.io/github/BruceGitHub/namespace-protector?branch=master)
 
 # Ispired by 
 
