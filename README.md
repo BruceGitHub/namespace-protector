@@ -1,6 +1,8 @@
 # namespace-protector
 A tool to validate namespace
 
+[![Build Status](https://travis-ci.org/BruceGitHub/namespace-protector.svg?branch=master)](https://travis-ci.org/BruceGitHub/namespace-protector)
+
 # Ispired by 
 
 - https://www.slideshare.net/MicheleOrselli/comunicare-condividere-e-mantenere-decisioni-architetturali-nei-team-di-sviluppo-approcci-e-strumenti
