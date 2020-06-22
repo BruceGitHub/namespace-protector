@@ -1,0 +1,17 @@
+language: php
+
+# list any PHP version you want to test against
+php:
+  # using major version aliases
+  # aliased to a recent 7.x version
+  - 7.0
+  # aliased to a recent hhvm version
+  - hhvm
+
+# optionally set up exclusions and allowed failures in the matrix
+matrix:
+  allow_failures:
+    - php: 7.0
+
+script: phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --coverage-text
+
