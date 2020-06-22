@@ -1,11 +1,13 @@
 language: php
+dist: trusty
+os: linux
 
-# list any PHP version you want to test against
 php:
-  # using major version aliases
-  # aliased to a recent 7.x version
-  - 7.2
+  - 7.4
+  - 7.3
 
+before_install: 
+install: composer install --prefer-dist --prefer-stable --no-interaction
 
-script: phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --coverage-text
-
+script: 
+  - vendor/bin/phpunit tests
