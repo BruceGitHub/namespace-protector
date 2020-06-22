@@ -3,6 +3,8 @@ A tool to validate namespace
 
 [![Build Status](https://travis-ci.org/BruceGitHub/namespace-protector.svg?branch=master)](https://travis-ci.org/BruceGitHub/namespace-protector)
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/BruceGitHub/namespace-protector/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/BruceGitHub/namespace-protector/?branch=master)
+
 [![Coverage Status](https://coveralls.io/repos/github/BruceGitHub/namespace-protector/badge.svg?branch=master)](https://coveralls.io/github/BruceGitHub/namespace-protector?branch=master)
 
 # Ispired by 
