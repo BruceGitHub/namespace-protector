@@ -3,6 +3,8 @@ A tool to validate namespace
 
 [![Build Status](https://travis-ci.org/BruceGitHub/namespace-protector.svg?branch=master)](https://travis-ci.org/BruceGitHub/namespace-protector)
 
+[![Coverage Status](https://coveralls.io/repos/github/BruceGitHub/namespace-protector/badge.svg?branch=master)](https://coveralls.io/github/BruceGitHub/namespace-protector?branch=master)
+
 # Ispired by 
 
 - https://www.slideshare.net/MicheleOrselli/comunicare-condividere-e-mantenere-decisioni-architetturali-nei-team-di-sviluppo-approcci-e-strumenti
