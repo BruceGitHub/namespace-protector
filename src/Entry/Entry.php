@@ -28,9 +28,4 @@ final class Entry {
     {
         return $this->entry;
     }
-
-    public function getOriginalEntry(): string  //todo: bad 
-    {
-        return $this->originalEntry;
-    }
 }
