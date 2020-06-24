@@ -32,7 +32,7 @@ Trought the json configuration it's possible define
 }
 
 ```
-# Fast because each ast it's cached a reused until the target file change
+# Fast because each ast it's cached and reused until the target file change
 
 - mode `public` default mode, in this setup only a private namespace it's validated
 - mode `private vendor` in which each access of vendor namespace trigger a violation if was not added public namespace.
