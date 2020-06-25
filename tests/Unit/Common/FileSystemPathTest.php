@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Unit\Common;
 
 use NamespaceProtector\Common\FileSystemPath;
-use PHPUnit\Framework\TestCase;
 use Tests\Unit\AbstractUnitTestCase;
 
 class FileSystemPathTest extends AbstractUnitTestCase
@@ -17,4 +16,14 @@ class FileSystemPathTest extends AbstractUnitTestCase
 
         $this->assertEquals('vfs://root', $fileSystemPath->get());
     }
+
+    /** @test */
+    public function it_invoke_work(): void
+    {
+        $fs = $this->getVirtualFileSystem();
+        $fileSystemPath = new FileSystemPath($fs->url());
+
+        $this->assertEquals('vfs://root', $fileSystemPath());
+    }
+
 }
