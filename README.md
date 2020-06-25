@@ -17,6 +17,9 @@ Allow to improve the information hiding at level of namespace Like C#/Java pubbl
 The idea is that namespace in some situations can be private at all except for a specific entry point. 
 For example the namespace of third parts lib. 
 
+# todo
+- Adds mode DISCOVER_CONFIG, so for each lib that in the `extra` node of composer.json declares the visibility settings of the namespace lib, this tool can perform the validity in autonomy
+
 # Minimal config 
 
 Trought the json configuration it's possible define 
