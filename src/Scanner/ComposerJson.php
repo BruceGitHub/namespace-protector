@@ -23,7 +23,6 @@ final class ComposerJson implements ScannerInterface
 
     public function __construct(PathInterface $fileSystemPathComposerJson)
     {
-        //todo: assert isDirectory 
         $this->fileSystemPathComposerJson = new FileSystemPath(
             $fileSystemPathComposerJson->get()
             . DIRECTORY_SEPARATOR

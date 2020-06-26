@@ -2,6 +2,7 @@
 
 namespace NamespaceProtector\Scanner;
 
+use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Common\PathInterface;
 
 final class FileSystemScanner implements ScannerInterface
@@ -10,7 +11,7 @@ final class FileSystemScanner implements ScannerInterface
     /** @var array<PathInterface>  */
     private $startPaths;
 
-    /** @var array<string>  */
+    /** @var array<PathInterface>  */
     private $fileLoaded = [];
 
     /** @var string  */
@@ -47,7 +48,7 @@ final class FileSystemScanner implements ScannerInterface
                 }
     
                 $pathDescriptor = $file->getPathname();
-                $fileLoaded[] = $pathDescriptor;
+                $fileLoaded[] = new FileSystemPath($pathDescriptor);
             }
         }
 
@@ -55,7 +56,7 @@ final class FileSystemScanner implements ScannerInterface
     }
 
     /**
-     * @return array<string> //todo: use PathInterface
+     * @return array<PathInterface> //todo: use PathInterface
      */
     public function getFileLoaded(): array
     {

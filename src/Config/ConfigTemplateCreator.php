@@ -11,10 +11,6 @@ final class ConfigTemplateCreator
     private const FILENAME_VISIBILITY =  'namespace-protector-visibility.json';
     private const TEMPLATE_CONFIG_JSON = 'template-config-json';
 
-    public function __construct()
-    {
-    }
-
     public static function createJsonTemplateConfig(PathInterface $baseComposerJsonDirectory): void
     {
         self::createFileWithBackup($baseComposerJsonDirectory().self::FILENAME, self::TEMPLATE_CONFIG_JSON);

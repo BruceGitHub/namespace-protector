@@ -16,7 +16,7 @@ class FileSystemScannerTest extends AbstractUnitTestCase {
         $file->load();
 
         $this->assertCount(1,$file->getFileLoaded());
-        $this->assertStringContainsString('root/files/ClassPsr4Composer.php',$file->getFileLoaded()[0]);
+        $this->assertStringContainsString('root/files/ClassPsr4Composer.php',$file->getFileLoaded()[0]());
     }
 
     private function getPathToScan()

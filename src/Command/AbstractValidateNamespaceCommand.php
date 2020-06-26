@@ -88,7 +88,7 @@ abstract class AbstractValidateNamespaceCommand extends Command
     private function processEntries(FileSystemScanner $fileSystem, Analyser $analyser): void
     {
         foreach ($fileSystem->getFileLoaded() as $file) {
-            $analyser->execute(new FileSystemPath($file));
+            $analyser->execute($file);
         }
     }
 

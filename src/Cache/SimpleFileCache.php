@@ -5,7 +5,6 @@ namespace NamespaceProtector\Cache;
 
 use NamespaceProtector\Common\PathInterface;
 
-//todo: use not implemented exception
 final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
 {
     /** @var PathInterface */
@@ -61,7 +60,7 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
      */
     public function getMultiple($keys, $default = null)
     {
-        return $default;
+        throw new \RuntimeException('Non implemented yet');
     }
 
     /**
@@ -70,7 +69,7 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
      */
     public function setMultiple($values, $ttl = null)
     {
-        return false;
+        throw new \RuntimeException('Non implemented yet');
     }
 
     /**
@@ -79,7 +78,7 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
      */
     public function deleteMultiple($keys)
     {
-        return false;
+        throw new \RuntimeException('Non implemented yet');
     }
 
     public function has($key)
