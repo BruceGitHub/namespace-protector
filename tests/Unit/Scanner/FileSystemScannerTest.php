@@ -5,18 +5,19 @@ use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Scanner\FileSystemScanner;
 
-class FileSystemScannerTest extends AbstractUnitTestCase {
+class FileSystemScannerTest extends AbstractUnitTestCase
+{
 
     /** @test */
     public function it_create_work(): void
     {
         $path = $this->getPathToScan();
 
-        $file = new FileSystemScanner([$path],'php');
+        $file = new FileSystemScanner([$path], 'php');
         $file->load();
 
-        $this->assertCount(1,$file->getFileLoaded());
-        $this->assertStringContainsString('root/files/ClassPsr4Composer.php',$file->getFileLoaded()[0]());
+        $this->assertCount(1, $file->getFileLoaded());
+        $this->assertStringContainsString('root/files/ClassPsr4Composer.php', $file->getFileLoaded()[0]());
     }
 
     private function getPathToScan()
@@ -27,10 +28,9 @@ class FileSystemScannerTest extends AbstractUnitTestCase {
             ->addFile('namespace-protector-config.json', 'json', 'files')
             ->buildFileSystemUrl();
         
-        $file = new FileSystemPath($fileSystem.'/files'); 
+        $file = new FileSystemPath($fileSystem.'/files');
         
 
         return $file;
     }
-
 }

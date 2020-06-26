@@ -13,12 +13,12 @@ final class FileSystemPath implements PathInterface
     {
         if ($noCheck === false) {
             Assert::readable($path);
-        } 
+        }
 
         $this->path = $path;
     }
 
-    public function __invoke(): string 
+    public function __invoke(): string
     {
         return $this->get();
     }

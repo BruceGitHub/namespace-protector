@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use NamespaceProtector\Config\ConfigTemplateCreator;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class NamespaceProtectorConfigCreatorCommand extends  Command
+final class NamespaceProtectorConfigCreatorCommand extends Command
 {
     const CREATE_DEFAULT_CONFIG = 'create-default-config';
     const NAMESPACE_PROTECTOR_JSON = 'namespace-protector.json';

@@ -49,7 +49,7 @@ abstract class AbstractValidateNamespaceCommand extends Command
         $metaDataLoader = new EnvironmentDataLoader($composerJson);
 
         $directory = \sys_get_temp_dir().self::NAMESPACE_PROTECTOR_CACHE;
-        $cacheClass = $this->createCacheObject($directory);
+        $cacheClass = $this->createCacheObject($directory, $config);
 
         $analyser = new Analyser(new PhpFileParser($config, $metaDataLoader, $cacheClass));
 
@@ -92,9 +92,12 @@ abstract class AbstractValidateNamespaceCommand extends Command
         }
     }
 
-    protected function createCacheObject(string $directory): CacheInterface
+    protected function createCacheObject(string $directory, Config $config): CacheInterface
     {
+        if ($config->enabledCache()) {
+            return new SimpleFileCache(new FileSystemPath($directory, true));
+        }
+        
         return new NullCache();
-        return new SimpleFileCache(new FileSystemPath($directory,true));
     }
 }

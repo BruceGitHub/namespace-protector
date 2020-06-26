@@ -25,5 +25,4 @@ class FileSystemPathTest extends AbstractUnitTestCase
 
         $this->assertEquals('vfs://root', $fileSystemPath());
     }
-
 }

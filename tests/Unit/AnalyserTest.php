@@ -7,7 +7,8 @@ use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\Result;
 use NamespaceProtector\Result\ResultCollector;
 
-class AnalyserTest extends AbstractUnitTestCase {
+class AnalyserTest extends AbstractUnitTestCase
+{
 
     /** @test */
     public function it_create_work(): void
@@ -15,7 +16,7 @@ class AnalyserTest extends AbstractUnitTestCase {
         $file = $this->getFileToParse();
         $parser = $this->prophesize(ParserInterface::class);
         $parser->parseFile($file)
-                ->shouldBeCalled(); 
+                ->shouldBeCalled();
 
         $resultCollector = $this->resultCollectorWithError();
 
@@ -37,7 +38,7 @@ class AnalyserTest extends AbstractUnitTestCase {
         $file = $this->getFileToParse();
         $parser = $this->prophesize(ParserInterface::class);
         $parser->parseFile($file)
-                ->shouldBeCalled(); 
+                ->shouldBeCalled();
 
         $resultCollector = $this->resultCollectorWithError();
         $parser->getListResult()
@@ -52,15 +53,14 @@ class AnalyserTest extends AbstractUnitTestCase {
         $analyser->execute($file);
 
         $this->assertTrue($analyser->withError());
-        $this->assertEquals(1,$analyser->getCountErrors());
-
+        $this->assertEquals(1, $analyser->getCountErrors());
     }
 
     private function resultCollectorWithError()
     {
         $resultCollector = new ResultCollector();
         $resultCollector->addResult(
-            new Result('Message',1)
+            new Result('Message', 1)
         );
         
 
@@ -73,12 +73,9 @@ class AnalyserTest extends AbstractUnitTestCase {
             ->addFile('ClassPsr4Composer.php', 'php', 'files')
             ->buildFileSystemUrl();
         
-        $file = new FileSystemPath($fileSystem.'/files/ClassPsr4Composer.php'); 
+        $file = new FileSystemPath($fileSystem.'/files/ClassPsr4Composer.php');
         
 
         return $file;
     }
-
 }
-
-

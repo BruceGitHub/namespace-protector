@@ -4,5 +4,6 @@
     "composer-json-path":".",
     "public-entries": [],
     "private-entries": [],
-    "mode": "PUBLIC"
+    "mode": "PUBLIC",
+    "cache": true
 }

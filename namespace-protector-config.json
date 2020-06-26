@@ -4,5 +4,6 @@
   "composer-json-path": "./",
   "public-entries": [],
   "private-entries": [],
-  "mode": "MODE_MAKE_VENDOR_PRIVATE"
+  "mode": "MODE_MAKE_VENDOR_PRIVATE",
+  "cache": false
 }

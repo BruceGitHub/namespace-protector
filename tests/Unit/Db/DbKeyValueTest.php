@@ -15,16 +15,16 @@ class DbKeyValueTest extends AbstractUnitTestCase
     {
         $db = new DbKeyValue(['barr' => 'foo']);
 
-        $this->assertEquals(1,$db->count());
+        $this->assertEquals(1, $db->count());
     }
 
     /** @test */
     public function it_add_work(): void
     {
         $db = new DbKeyValue(['barr' => 'foo']);
-        $db->add('foo2','bar2');
+        $db->add('foo2', 'bar2');
 
-        $this->assertEquals(2,$db->count());
+        $this->assertEquals(2, $db->count());
     }
 
 
@@ -35,14 +35,14 @@ class DbKeyValueTest extends AbstractUnitTestCase
         $entry = new Entry('matchMe');
 
         $machCriteria = $this->prophesize(MatchCollectionInterface::class);
-        $machCriteria->evaluate($collections,$entry)
+        $machCriteria->evaluate($collections, $entry)
                       ->shouldBeCalled()
                       ->willReturn(true);
 
         $db = new DbKeyValue($collections);
 
-        $result = $db->booleanSearch($machCriteria->reveal(),$entry);
-        $this->assertEquals(1,$db->count());
+        $result = $db->booleanSearch($machCriteria->reveal(), $entry);
+        $this->assertEquals(1, $db->count());
         $this->assertTrue($result);
     }
 }

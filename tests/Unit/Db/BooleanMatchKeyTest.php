@@ -14,7 +14,7 @@ class BooleanMatchKeyTest extends AbstractUnitTestCase
         $collections = ['foo' => 'bar'];
         
         $mach = new BooleanMatchKey();
-        $result = $mach->evaluate($collections,$entry);
+        $result = $mach->evaluate($collections, $entry);
 
         $this->assertTrue($result);
     }
@@ -26,9 +26,8 @@ class BooleanMatchKeyTest extends AbstractUnitTestCase
         $collections = ['foo' => 'bar'];
         
         $mach = new BooleanMatchKey();
-        $result = $mach->evaluate($collections,$entry);
+        $result = $mach->evaluate($collections, $entry);
 
         $this->assertFalse($result);
     }
-
 }

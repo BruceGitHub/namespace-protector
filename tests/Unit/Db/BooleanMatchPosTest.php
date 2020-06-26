@@ -14,7 +14,7 @@ class BooleanMatchPosTest extends AbstractUnitTestCase
         $collections = ['fooBar' => 'bar'];
         
         $mach = new BooleanMatchPos();
-        $result = $mach->evaluate($collections,$entry);
+        $result = $mach->evaluate($collections, $entry);
 
         $this->assertTrue($result);
     }
@@ -26,9 +26,8 @@ class BooleanMatchPosTest extends AbstractUnitTestCase
         $collections = ['foo' => 'bar'];
         
         $mach = new BooleanMatchPos();
-        $result = $mach->evaluate($collections,$entry);
+        $result = $mach->evaluate($collections, $entry);
 
         $this->assertFalse($result);
     }
-
 }

@@ -3,13 +3,14 @@ namespace NamespaceProtector\Entry;
 
 use Webmozart\Assert\Assert;
 
-final class Entry {
+final class Entry
+{
 
     /** @var string */
     private $entry;
 
     /** @var string */
-    private $originalEntry; 
+    private $originalEntry;
 
     public function __construct(string $entry)
     {
@@ -21,7 +22,7 @@ final class Entry {
 
     public function equalTo(self $other): bool
     {
-        return $this == $other; 
+        return $this == $other;
     }
 
     public function get(): string

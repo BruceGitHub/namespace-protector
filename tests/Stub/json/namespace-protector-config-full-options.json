@@ -1,0 +1,15 @@
+{
+    "version": "0.1.0",
+    "start-path": "vfs://root/stat_path_in_config",
+    "composer-json-path":"vfs://root/composer_json_path",
+    "public-entries": [
+        "PublicEntriOne",
+        "PublicEntriTwo"        
+    ],
+    "private-entries": [
+        "PrivateEntriOne",
+        "PrivateEntriTwo"
+    ],
+    "mode": "MODE_MAKE_VENDOR_PRIVATE",
+    "cache": true
+}

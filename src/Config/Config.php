@@ -29,6 +29,9 @@ final class Config
     /** @var string */
     private $version;
 
+    /** @var bool */
+    private $enabledCache;
+
     /**
      * @param array<string> $privateEntries
      * @param array<string> $publicEntries
@@ -39,7 +42,8 @@ final class Config
         PathInterface $pathComposerJson,
         array $privateEntries,
         array $publicEntries,
-        string $mode = self::MODE_PUBLIC
+        string $mode = self::MODE_PUBLIC,
+        bool $enabledCache = false
     ) {
         $this->version = $version;
         $this->pathStart = $pathStart;
@@ -47,6 +51,7 @@ final class Config
         $this->privateEntries = $privateEntries;
         $this->publicEntries = $publicEntries;
         $this->mode = $mode;
+        $this->enabledCache = $enabledCache;
     }
 
     public function getStartPath(): PathInterface
@@ -92,6 +97,7 @@ final class Config
             '' . PHP_EOL .
             '|Dump config:' . PHP_EOL .
             '|> Version: ' . $this->getVersion() . PHP_EOL .
+            '|> Cache: ' . ($this->enabledCache() === true ? "TRUE": "FALSE")  . PHP_EOL .
             '|> Path start: ' . $this->pathStart->get() . PHP_EOL .
             '|> Composer Json path: ' . $this->pathComposerJson->get() . PHP_EOL .
             '|> Mode: ' . $this->getMode() . PHP_EOL .
@@ -124,7 +130,8 @@ final class Config
             new FileSystemPath($arrayConfig['composer-json-path']),
             $arrayConfig['private-entries'],
             $arrayConfig['public-entries'],
-            $arrayConfig['mode']
+            $arrayConfig['mode'],
+            $arrayConfig['cache']
         );
 
         $self->validateLoadedConfig();
@@ -140,11 +147,17 @@ final class Config
         Assert::eq('0.1.0', $this->getVersion(), "Version not valid");
         Assert::directory($this->getStartPath()->get(), "Start directory not valid");
         Assert::directory($this->getPathComposerJson()->get(), "Composer json directory not valid");
+        Assert::boolean($this->enabledCache(), "Cache flag must be boolean");
     }
 
     private function getVersion(): string
     {
         //todo: use https://github.com/nikolaposa/version
         return $this->version;
+    }
+
+    public function enabledCache(): bool
+    {
+        return $this->enabledCache;
     }
 }

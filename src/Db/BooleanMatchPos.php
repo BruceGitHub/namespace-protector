@@ -11,7 +11,7 @@ class BooleanMatchPos implements MatchCollectionInterface
      * @param Iterable<mixed> $data
      */
     public function evaluate(Iterable $data, Entry $matchMe): bool
-    {   
+    {
         foreach ($data as $entry => $value) {
             if (strpos($matchMe->get(), $entry) !==false) {
                 return true;
