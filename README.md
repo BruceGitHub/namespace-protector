@@ -18,7 +18,9 @@ The idea is that namespace in some situations can be private at all except for a
 For example the namespace of third parts lib. 
 
 # todo
-- Adds mode DISCOVER_CONFIG, so for each lib that in the `extra` node of composer.json declares the visibility settings of the namespace lib, it can perform the validity in autonomy
+- [] Adds mode DISCOVER_CONFIG, so for each lib that in the `extra` node of composer.json declares the visibility settings of the namespace lib, it can perform the validity in autonomy
+
+- [] Adds command to build deps graph 
 
 # Minimal config 
 
