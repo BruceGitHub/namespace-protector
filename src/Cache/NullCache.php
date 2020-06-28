@@ -16,19 +16,19 @@ final class NullCache implements CacheInterface
     /*** @inheritDoc */
     public function set($key, $value, $ttl = null)
     {
-        return true;
+        return false;
     }
 
     /*** @inheritDoc */
     public function delete($key)
     {
-        return true;
+        return false;
     }
 
     /*** @inheritDoc */
     public function clear()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -37,7 +37,7 @@ final class NullCache implements CacheInterface
      */
     public function getMultiple($keys, $default = null)
     {
-        return $default;
+        return [];
     }
 
     /**
@@ -46,7 +46,7 @@ final class NullCache implements CacheInterface
      */
     public function setMultiple($values, $ttl = null)
     {
-        return true;
+        return false;
     }
 
     /**
@@ -55,7 +55,7 @@ final class NullCache implements CacheInterface
      */
     public function deleteMultiple($keys)
     {
-        return true;
+        return false;
     }
 
     public function has($key)
