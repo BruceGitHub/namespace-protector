@@ -2,19 +2,29 @@
 namespace NamespaceProtector;
 
 use NamespaceProtector\Analyser;
+use NamespaceProtector\Config\Config;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Scanner\FileSystemScanner;
+use NamespaceProtector\EnvironmentDataLoaderInterface;
 
 class NamespaceProtectorProcessor
 {
     private const NAMESPACE_PROTECTOR_CACHE = 'namespace-protector-cache';
 
+    /** @var Config */
     private $config;
+
+    /** @var ComposerJson */
     private $composerJson;
+
+    /** @var FileSystemScanner */
     private $fileSystemScanner;
+
+    /** @var Analyser */
     private $analyser;
+
+    /** @var EnvironmentDataLoaderInterface */
     private $environmentDataLoader;
-    private $context = [];
 
     public function __construct(
         ComposerJson $composerJson,

@@ -23,18 +23,17 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
         $resultOutput = \ob_get_clean();
         $this->assertEquals(5, $namespaceProtectorProcessor->getCountErrors());
 
-        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Second.php\n",$resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n",$resultOutput);
+        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Second.php\n", $resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);
 
-        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Foo.php\n",$resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n",$resultOutput);
+        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Foo.php\n", $resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);
 
-        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Bar.php\n",$resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n",$resultOutput);
+        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Bar.php\n", $resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);
 
-        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/First.php\n",$resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n",$resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some\n",$resultOutput);
-
+        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/First.php\n", $resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some\n", $resultOutput);
     }
 }
