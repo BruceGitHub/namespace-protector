@@ -29,7 +29,6 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        //todo: verify bug Symfony\Console with argument
         ConfigTemplateCreator::createJsonTemplateConfig(ComposerJson::detectComposerJsonDirectory());
 
         return self::SUCCESS;

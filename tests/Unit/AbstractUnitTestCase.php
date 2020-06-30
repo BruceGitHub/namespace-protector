@@ -14,21 +14,41 @@ abstract class AbstractUnitTestCase extends TestCase
     protected function getVirtualFileSystem()
     {
         $directory = [
-      'json' => [
-        'composer.json' => \file_get_contents(__DIR__ . '/../Stub/json/composer.json'),
-        'namespace-protector-config.json' => \file_get_contents(__DIR__ . '/../Stub/json/namespace-protector-config.json'),
-        'namespace-protector-config-mod-public.json' => \file_get_contents(__DIR__ . '/../Stub/json/namespace-protector-config-mod-public.json'),
-      ],
-      'files' => [
-        'first.php' => \file_get_contents(__DIR__ . '/../Stub/php/first.php'),
-        'no_violation.php' => \file_get_contents(__DIR__ . '/../Stub/php/no_violation.php'),
-        'ClassPsr4Composer.php' => \file_get_contents(__DIR__ . '/../Stub/php/ClassPsr4Composer.php'),
-        'FileThatUsePrivateNamespace.php' => \file_get_contents(__DIR__ . '/../Stub/php/FileThatUsePrivateNamespace.php'),
-      ]
-    ];
+            'json' => [
+                'composer.json' => \file_get_contents(__DIR__ . '/../Stub/json/composer.json'),
+                'namespace-protector-config.json' => \file_get_contents(__DIR__ . '/../Stub/json/namespace-protector-config.json'),
+                'namespace-protector-config-mod-public.json' => \file_get_contents(__DIR__ . '/../Stub/json/namespace-protector-config-mod-public.json'),
+            ],
+            'files' => [
+                'first.php' => \file_get_contents(__DIR__ . '/../Stub/php/first.php'),
+                'no_violation.php' => \file_get_contents(__DIR__ . '/../Stub/php/no_violation.php'),
+                'ClassPsr4Composer.php' => \file_get_contents(__DIR__ . '/../Stub/php/ClassPsr4Composer.php'),
+                'FileThatUsePrivateNamespace.php' => \file_get_contents(__DIR__ . '/../Stub/php/FileThatUsePrivateNamespace.php'),
+            ]
+        ];
 
         return vfsStream::setup('root', 777, $directory);
     }
+
+    // protected function getTargetFileSystemStructure()
+    // {
+    //     $directory = [
+    //         'json' => [
+    //             'namespace-protector-config.json' => \file_get_contents(__DIR__ . '/../Stub/targetProject/json/namespace-protector-config.json'),
+    //         ],
+    //         'src' => [
+    //             'First.php' => \file_get_contents(__DIR__ . '/../Stub/targetProject/src/First.php'),
+    //             'Second.php' => \file_get_contents(__DIR__ . '/../Stub/targetProject/src/Second.php'),
+    //             'Foo.php' => \file_get_contents(__DIR__ . '/../Stub/targetProject/src/Foo.php'),
+    //             'Bar.php' => \file_get_contents(__DIR__ . '/../Stub/targetProject/src/Bar.php'),
+    //         ]
+    //     ];
+
+    //     return vfsStream::setup('root', 777, $directory)->url();
+    // }
+
+
+
 
     //builder todo: move in specific class
     private $fileSystemtoBuild;
@@ -45,16 +65,16 @@ abstract class AbstractUnitTestCase extends TestCase
         return $this;
     }
 
-    protected function addFile(string $pathFile, string $directoryReal='', string $directoryVirtual): self
+    protected function addFile(string $pathFile, string $directoryReal = '', string $directoryVirtual): self
     {
-        $this->fileSystemtoBuild[$directoryVirtual][$pathFile] = \file_get_contents(__DIR__ . '/../Stub/'.$directoryReal.'/'.$pathFile) ;
+        $this->fileSystemtoBuild[$directoryVirtual][$pathFile] = \file_get_contents(__DIR__ . '/../Stub/' . $directoryReal . '/' . $pathFile);
 
         return $this;
     }
 
-    protected function addFileWithCallable(string $pathFile, string $directoryReal='', string $directoryVirtual, callable $callable): self
+    protected function addFileWithCallable(string $pathFile, string $directoryReal = '', string $directoryVirtual, callable $callable): self
     {
-        $this->fileSystemtoBuild[$directoryVirtual][$pathFile] = $callable($directoryReal, $pathFile) ;
+        $this->fileSystemtoBuild[$directoryVirtual][$pathFile] = $callable($directoryReal, $pathFile);
         return $this;
     }
 

@@ -56,7 +56,7 @@ final class FileSystemScanner implements ScannerInterface
     }
 
     /**
-     * @return array<PathInterface> //todo: use PathInterface
+     * @return array<PathInterface>
      */
     public function getFileLoaded(): array
     {

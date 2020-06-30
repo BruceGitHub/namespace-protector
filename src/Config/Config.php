@@ -141,8 +141,6 @@ final class Config
 
     private function validateLoadedConfig(): void
     {
-        //todo: adds more complex validation structure
-
         Assert::inArray($this->getMode(), [self::MODE_PUBLIC, self::MODE_MAKE_VENDOR_PRIVATE], "Mode not valid");
         Assert::eq('0.1.0', $this->getVersion(), "Version not valid");
         Assert::directory($this->getStartPath()->get(), "Start directory not valid");

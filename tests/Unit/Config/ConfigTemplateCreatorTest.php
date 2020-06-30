@@ -7,6 +7,6 @@ class ConfigTemplateCreatorTest extends AbstractUnitTestCase
     /** @test */
     public function it_create_json_template_work(): void
     {
-        $this->markTestIncomplete('Todo when implement fs');
+        $this->markTestIncomplete('Todo when implement fs abstraction');
     }
 }

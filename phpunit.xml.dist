@@ -3,6 +3,7 @@
          backupGlobals="false"
          cacheResult="false"
          colors="true"
+         processIsolation="true"
          bootstrap="vendor/autoload.php"
         >
     <testsuites>
