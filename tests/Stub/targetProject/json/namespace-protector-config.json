@@ -1,0 +1,13 @@
+{
+    "version": "0.1.0",
+    "start-path": "./tests/Stub/targetProject/src",
+    "composer-json-path":".",
+    "public-entries": [
+
+    ],
+    "private-entries": [
+
+    ],
+    "mode": "MODE_MAKE_VENDOR_PRIVATE",
+    "cache": false
+}
