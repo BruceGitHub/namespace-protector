@@ -78,7 +78,7 @@ final class PhpFileParser implements ParserInterface
         $keyEntryForCache = sha1($code).'.'.base64_encode($pathFile->get());
 
         if (!$this->cache->has($keyEntryForCache)) {
-            $code = file_get_contents($pathFile->get());
+            $code = \file_get_contents($pathFile->get());
             if ($code === false) {
                 throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_FILE_GET_CONTENT);
             }

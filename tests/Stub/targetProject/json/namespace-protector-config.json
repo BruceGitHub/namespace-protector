@@ -1,7 +1,7 @@
 {
     "version": "0.1.0",
     "start-path": "./tests/Stub/targetProject/src",
-    "composer-json-path":".",
+    "composer-json-path": "./tests/Stub/targetProject",
     "public-entries": [
 
     ],

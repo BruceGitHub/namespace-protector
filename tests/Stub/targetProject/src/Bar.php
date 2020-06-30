@@ -2,7 +2,7 @@
 
 namespace Personal;
 
-use org\bovigo\vfs\vfsStream;
+use dummy\bovigo\vfs\vfsStream;
 
 class Bar
 {

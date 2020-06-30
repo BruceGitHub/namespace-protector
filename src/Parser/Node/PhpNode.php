@@ -17,8 +17,6 @@ use NamespaceProtector\Db\MatchCollectionInterface;
 use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
 
-use function Safe\strtotime;
-
 final class PhpNode extends NameResolver
 {
     public const ERR = 1;

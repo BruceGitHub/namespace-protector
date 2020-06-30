@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Common\FileSystemPath;
@@ -24,16 +25,16 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
 
         $exptected = "";
         $exptected .="Process file: ./tests/Stub/targetProject/src/Second.php\n";
-        $exptected .="\t > ERROR Line: 5 of use org\bovigo\\vfs\\vfsStream\n";
+        $exptected .="\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n";
 
         $exptected .="Process file: ./tests/Stub/targetProject/src/Foo.php\n";
-        $exptected .="\t > ERROR Line: 5 of use org\bovigo\\vfs\\vfsStream\n";
+        $exptected .="\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n";
 
         $exptected .="Process file: ./tests/Stub/targetProject/src/Bar.php\n";
-        $exptected .="\t > ERROR Line: 5 of use org\bovigo\\vfs\\vfsStream\n";
+        $exptected .="\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n";
 
         $exptected .="Process file: ./tests/Stub/targetProject/src/First.php\n";
-        $exptected .="\t > ERROR Line: 5 of use org\bovigo\\vfs\\vfsStream\n";
+        $exptected .="\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n";
         $exptected .="\t > ERROR Line: 11 of use \Some\n";
 
         $this->assertEquals($exptected,$resultOutput);
