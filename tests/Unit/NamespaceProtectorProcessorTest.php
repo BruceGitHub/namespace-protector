@@ -12,7 +12,7 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
     /** @test */
     public function it_process_work(): void
     {
-        $config = Config::loadFromFile(new FileSystemPath('tests/Stub/targetProject/json/namespace-protector-config.json'));
+        $config = Config::loadFromFile(new FileSystemPath(__DIR__.'/../../tests/Stub/targetProject/json/namespace-protector-config.json'));
         $factory = new NamespaceProtectorProcessorFactory();
         $namespaceProtectorProcessor = $factory->create($config);
         $namespaceProtectorProcessor->load();
