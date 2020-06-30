@@ -23,20 +23,18 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
         $resultOutput = \ob_get_clean();
         $this->assertEquals(5, $namespaceProtectorProcessor->getCountErrors());
 
-        $exptected = "";
-        $exptected .="Process file: ./tests/Stub/targetProject/src/Second.php\n";
-        $exptected .="\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n";
+        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Second.php\n",$resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n",$resultOutput);
 
-        $exptected .="Process file: ./tests/Stub/targetProject/src/Foo.php\n";
-        $exptected .="\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n";
+        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Foo.php\n",$resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n",$resultOutput);
 
-        $exptected .="Process file: ./tests/Stub/targetProject/src/Bar.php\n";
-        $exptected .="\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n";
+        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Bar.php\n",$resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n",$resultOutput);
 
-        $exptected .="Process file: ./tests/Stub/targetProject/src/First.php\n";
-        $exptected .="\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n";
-        $exptected .="\t > ERROR Line: 11 of use \Some\n";
+        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/First.php\n",$resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n",$resultOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some\n",$resultOutput);
 
-        $this->assertEquals($exptected,$resultOutput);
     }
 }
