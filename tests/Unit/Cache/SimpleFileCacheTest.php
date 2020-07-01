@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Cache;
 
-use RuntimeException;
 use Psr\SimpleCache\CacheInterface;
 use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Cache\SimpleFileCache;
@@ -10,6 +9,57 @@ use NamespaceProtector\Common\FileSystemPath;
 
 class SimpleFileCacheTest extends AbstractUnitTestCase
 {
+    /** @test */
+    public function it_clear_item(): void
+    {
+        $simppleFileCache = $this->getSUT();
+        $return = $simppleFileCache->clear();
+        $this->assertTrue($return);
+
+        $return = $simppleFileCache->get('ast.json');
+        $this->assertEquals(null, $return);
+    }
+
+    /** @test */
+    public function it_delete_item(): void
+    {
+        $simppleFileCache = $this->getSUT();
+        $return = $simppleFileCache->delete('ast.json');
+        $this->assertTrue($return);
+
+        $return = $simppleFileCache->get('ast.json');
+        $this->assertEquals(null, $return);
+    }
+
+    /** @test */
+    public function it_set_item(): void
+    {
+        $simppleFileCache = $this->getSUT();
+        $return = $simppleFileCache->set('ast.json', '{"field":"name"}');
+        $this->assertTrue($return);
+
+        $json = $simppleFileCache->get('ast.json');
+        $this->assertEquals('{"field":"name"}', $json);
+    }
+
+    /** @test */
+    public function it_get_item_if_exist(): void
+    {
+        $simppleFileCache = $this->getSUT();
+        $json = $simppleFileCache->get('ast.json');
+
+        $this->assertEquals(['name' => 'value'], $json);
+    }
+
+    /** @test */
+    public function it_get_default_if_not_exist(): void
+    {
+        $simppleFileCache = $this->getSUT();
+        $return = $simppleFileCache->get('astNotExist.json', 'default');
+
+        $this->assertEquals('default', $return);
+    }
+
     /** @test */
     public function it_get_multiple_raise_exception(): void
     {
@@ -38,10 +88,11 @@ class SimpleFileCacheTest extends AbstractUnitTestCase
     {
         $fileSystem = $this->StartBuildFileSystem()
             ->addFile('first.php', 'php', 'files')
+            ->addFile('ast.json', 'json', 'files')
             ->buildFileSystemUrl();
 
 
-        $simppleFileCache = new SimpleFileCache(new FileSystemPath($fileSystem . '/files'));
+        $simppleFileCache = new SimpleFileCache(new FileSystemPath($fileSystem . '/files/'));
 
         return $simppleFileCache;
     }

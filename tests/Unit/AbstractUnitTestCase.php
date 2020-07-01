@@ -30,26 +30,6 @@ abstract class AbstractUnitTestCase extends TestCase
         return vfsStream::setup('root', 777, $directory);
     }
 
-    // protected function getTargetFileSystemStructure()
-    // {
-    //     $directory = [
-    //         'json' => [
-    //             'namespace-protector-config.json' => \file_get_contents(__DIR__ . '/../Stub/targetProject/json/namespace-protector-config.json'),
-    //         ],
-    //         'src' => [
-    //             'First.php' => \file_get_contents(__DIR__ . '/../Stub/targetProject/src/First.php'),
-    //             'Second.php' => \file_get_contents(__DIR__ . '/../Stub/targetProject/src/Second.php'),
-    //             'Foo.php' => \file_get_contents(__DIR__ . '/../Stub/targetProject/src/Foo.php'),
-    //             'Bar.php' => \file_get_contents(__DIR__ . '/../Stub/targetProject/src/Bar.php'),
-    //         ]
-    //     ];
-
-    //     return vfsStream::setup('root', 777, $directory)->url();
-    // }
-
-
-
-
     //builder todo: move in specific class
     private $fileSystemtoBuild;
     protected function StartBuildFileSystem(): self

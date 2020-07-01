@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace NamespaceProtector\Cache;
 
+use Webmozart\Assert\Assert;
 use NamespaceProtector\Common\PathInterface;
 
 final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
@@ -27,7 +29,7 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
 
         $jsonDecoder = new \PhpParser\JsonDecoder();
 
-        $content = \safe\file_get_contents($fileCached);
+        $content = \Safe\file_get_contents($fileCached);
 
         return $jsonDecoder->decode($content);
     }
@@ -35,7 +37,7 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
     public function set($key, $value, $ttl = null)
     {
         $fileCached = $this->createFileNameFromKey($key);
-        file_put_contents($fileCached, json_encode($value, JSON_PRETTY_PRINT));
+        \file_put_contents($fileCached, json_encode($value, JSON_PRETTY_PRINT));
 
         return true;
     }
@@ -43,14 +45,14 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
     public function delete($key)
     {
         $fileCached = $this->createFileNameFromKey($key);
-        unlink($fileCached);
+        \unlink($fileCached);
 
         return true;
     }
 
     public function clear()
     {
-        rmdir($this->path->get());
+        $this->delete_directory($this->path->get());
         return true;
     }
 
@@ -84,7 +86,7 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
     public function has($key)
     {
         $fileCached = $this->createFileNameFromKey($key);
-        if (file_exists($fileCached)) {
+        if (\file_exists($fileCached)) {
             return true;
         }
 
@@ -94,5 +96,24 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
     private function createFileNameFromKey(string $key): string
     {
         return $this->path->get() . '/' . $key;
+    }
+
+    private function delete_directory(string $dirname): bool
+    {
+        $dir_handle = \Safe\opendir($dirname);
+        Assert::notNull($dir_handle);
+
+        while ($file = readdir($dir_handle)) {
+            if ($file != "." && $file != "..") {
+                if (!is_dir($dirname . \DIRECTORY_SEPARATOR . $file)) {
+                    \Safe\unlink($dirname . \DIRECTORY_SEPARATOR . $file);
+                } else {
+                    $this->delete_directory($dirname . \DIRECTORY_SEPARATOR . $file);
+                }
+            }
+        }
+        closedir($dir_handle);
+        \rmdir($dirname);
+        return true;
     }
 }

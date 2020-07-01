@@ -23,7 +23,7 @@ final class ConfigTemplateCreator
 
     private static function createFileWithBackup(string $fileName, string $templateFile): void
     {
-        @rename($fileName, $fileName . '_backup.json');
+        @\rename($fileName, $fileName . '_backup.json');
 
         $content = \safe\file_get_contents(__DIR__ . '/' . $templateFile);
         \safe\file_put_contents($fileName, $content);
