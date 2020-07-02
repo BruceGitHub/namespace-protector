@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use NamespaceProtector\Analyser;
@@ -11,7 +12,6 @@ use NamespaceProtector\OutputDevice\ConsoleDevice;
 
 class AnalyserTest extends AbstractUnitTestCase
 {
-
     /** @test */
     public function it_create_work(): void
     {
@@ -70,7 +70,6 @@ class AnalyserTest extends AbstractUnitTestCase
         $resultCollector->addResult(
             new Result('Message', 1)
         );
-        
 
         return $resultCollector;
     }
@@ -80,9 +79,8 @@ class AnalyserTest extends AbstractUnitTestCase
         $fileSystem = $this->StartBuildFileSystem()
             ->addFile('ClassPsr4Composer.php', 'php', 'files')
             ->buildFileSystemUrl();
-        
-        $file = new FileSystemPath($fileSystem.'/files/ClassPsr4Composer.php');
-        
+
+        $file = new FileSystemPath($fileSystem . '/files/ClassPsr4Composer.php');
 
         return $file;
     }

@@ -13,7 +13,7 @@ class BooleanMatchPos implements MatchCollectionInterface
     public function evaluate(Iterable $data, Entry $matchMe): bool
     {
         foreach ($data as $entry => $value) {
-            if (strpos($matchMe->get(), $entry) !==false) {
+            if (strpos($matchMe->get(), $entry) !== false) {
                 return true;
             }
         }

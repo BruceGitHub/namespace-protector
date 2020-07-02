@@ -1,4 +1,5 @@
 <?php
+
 namespace NamespaceProtector\OutputDevice;
 
 final class ConsoleDevice implements OutputDeviceInterface

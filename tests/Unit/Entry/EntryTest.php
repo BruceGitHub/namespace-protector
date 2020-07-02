@@ -20,7 +20,7 @@ class EntryTest extends AbstractUnitTestCase
     {
         $entry = new Entry('value');
         $entry2 = new Entry('value');
- 
+
         $this->assertTrue($entry->equalTo($entry2));
     }
 
@@ -29,7 +29,7 @@ class EntryTest extends AbstractUnitTestCase
     {
         $entry = new Entry('value');
         $entry2 = new Entry('different value');
- 
+
         $this->assertFalse($entry->equalTo($entry2));
     }
 }

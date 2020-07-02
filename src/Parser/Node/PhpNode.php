@@ -60,13 +60,11 @@ final class PhpNode extends NameResolver
         $this->matchValue = new BooleanMatchValue();
 
         $this->listNodeProcessor[UseUse::class] = static function (Node $node): string {
-
             /** @var UseUse $node*/
             return $node->name->toCodeString();
         };
 
         $this->listNodeProcessor[FullyQualified::class] = static function (Node $node): string {
-
             /** @var FullyQualified $node*/
             return $node->toCodeString();
         };
@@ -160,7 +158,7 @@ final class PhpNode extends NameResolver
 
     private function pushError(Entry $val, Node $node): void
     {
-        $err = new ErrorResult($node->getLine(), $val->get(). \PHP_EOL, self::ERR);
+        $err = new ErrorResult($node->getLine(), $val->get() . \PHP_EOL, self::ERR);
         $this->resultCollector->addResult($err);
     }
 

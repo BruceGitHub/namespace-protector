@@ -26,25 +26,25 @@ abstract class AbstractValidateNamespaceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("Boot validate analysis....");
-        $config = Config::loadFromFile(new FileSystemPath(\getcwd().'/namespace-protector-config.json'));
+        $output->writeln('Boot validate analysis....');
+        $config = Config::loadFromFile(new FileSystemPath(\getcwd() . '/namespace-protector-config.json'));
         $factory = new NamespaceProtectorProcessorFactory();
         $namespaceProtectorProcessor = $factory->create($config);
 
         $namespaceProtectorProcessor->load();
 
         $output->writeln($config->print());
-        
-        $output->writeln("Load data....");
+
+        $output->writeln('Load data....');
         $output->writeln('Loaded ' . $namespaceProtectorProcessor->getFilesLoaded() . ' files to validate');
         $output->writeln('Loaded ' . $namespaceProtectorProcessor->totalSymbolsLoaded() . ' built in symbols');
-        
+
         $output->writeln('Start analysis...');
         $namespaceProtectorProcessor->process();
 
-        $output->writeln('<fg=red>Total errors: ' . $namespaceProtectorProcessor->getCountErrors().'</>');
+        $output->writeln('<fg=red>Total errors: ' . $namespaceProtectorProcessor->getCountErrors() . '</>');
 
-        if ($namespaceProtectorProcessor->getCountErrors()>0) {
+        if ($namespaceProtectorProcessor->getCountErrors() > 0) {
             return self::FAILURE;
         }
 

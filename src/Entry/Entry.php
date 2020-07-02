@@ -1,11 +1,11 @@
 <?php
+
 namespace NamespaceProtector\Entry;
 
 use Webmozart\Assert\Assert;
 
 final class Entry
 {
-
     /** @var string */
     private $entry;
 
@@ -17,7 +17,7 @@ final class Entry
         Assert::notEmpty($entry);
 
         $this->originalEntry = $entry;
-        $this->entry =  $entry;
+        $this->entry = $entry;
     }
 
     public function equalTo(self $other): bool

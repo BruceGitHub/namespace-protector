@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Scanner;
 
 use Tests\Unit\AbstractUnitTestCase;
@@ -7,7 +8,6 @@ use NamespaceProtector\Scanner\FileSystemScanner;
 
 class FileSystemScannerTest extends AbstractUnitTestCase
 {
-
     /** @test */
     public function it_create_work(): void
     {
@@ -27,9 +27,8 @@ class FileSystemScannerTest extends AbstractUnitTestCase
             ->addFile('composer.json', 'json', 'files')
             ->addFile('namespace-protector-config.json', 'json', 'files')
             ->buildFileSystemUrl();
-        
-        $file = new FileSystemPath($fileSystem.'/files');
-        
+
+        $file = new FileSystemPath($fileSystem . '/files');
 
         return $file;
     }

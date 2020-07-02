@@ -9,7 +9,7 @@ final class FileSystemPath implements PathInterface
     /** @var string  */
     private $path;
 
-    public function __construct(string $path, bool $noCheck=false)
+    public function __construct(string $path, bool $noCheck = false)
     {
         if ($noCheck === false) {
             Assert::readable($path);

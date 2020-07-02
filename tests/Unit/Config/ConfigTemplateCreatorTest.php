@@ -14,7 +14,7 @@ class ConfigTemplateCreatorTest extends AbstractUnitTestCase
         $path = $this->getDirectory();
         ConfigTemplateCreator::createJsonTemplateConfig($path);
 
-        $bool = \file_exists($path->get().DIRECTORY_SEPARATOR.'namespace-protector-config.json');
+        $bool = \file_exists($path->get() . DIRECTORY_SEPARATOR . 'namespace-protector-config.json');
         $this->assertTrue($bool);
     }
 
@@ -25,7 +25,7 @@ class ConfigTemplateCreatorTest extends AbstractUnitTestCase
         ConfigTemplateCreator::createJsonTemplateConfig($path);
         ConfigTemplateCreator::createJsonTemplateConfig($path);
 
-        $bool = \file_exists($path->get().DIRECTORY_SEPARATOR.'namespace-protector-config.json_backup.json');
+        $bool = \file_exists($path->get() . DIRECTORY_SEPARATOR . 'namespace-protector-config.json_backup.json');
         $this->assertTrue($bool);
     }
 
@@ -34,7 +34,6 @@ class ConfigTemplateCreatorTest extends AbstractUnitTestCase
         $fileSystem = $this->StartBuildFileSystem()
             ->addFile('ast.json', 'json', 'files')
             ->buildFileSystemUrl();
-
 
         return new FileSystemPath($fileSystem . '/files/');
     }

@@ -104,7 +104,7 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
         Assert::notNull($dir_handle);
 
         while ($file = readdir($dir_handle)) {
-            if ($file != "." && $file != "..") {
+            if ($file != '.' && $file != '..') {
                 if (!is_dir($dirname . \DIRECTORY_SEPARATOR . $file)) {
                     \Safe\unlink($dirname . \DIRECTORY_SEPARATOR . $file);
                 } else {

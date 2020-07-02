@@ -4,7 +4,6 @@ namespace NamespaceProtector\Result;
 
 final class ResultCollector
 {
-
     /** @var array<ResultInterface>  */
     private $listResult ;
 

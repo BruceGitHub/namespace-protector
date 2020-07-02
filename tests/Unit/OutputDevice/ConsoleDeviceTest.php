@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\OutputDevice;
 
 use NamespaceProtector\OutputDevice\ConsoleDevice;

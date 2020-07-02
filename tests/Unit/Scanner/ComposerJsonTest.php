@@ -37,7 +37,6 @@ class ComposerJsonTest extends AbstractUnitTestCase
 
         $path = new FileSystemPath($fileSystem . '/files');
 
-
         return $path;
     }
 }

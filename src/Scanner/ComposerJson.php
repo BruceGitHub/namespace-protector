@@ -7,7 +7,6 @@ use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use Webmozart\Assert\Assert;
-
 use function Safe\realpath;
 
 final class ComposerJson implements ScannerInterface
@@ -26,7 +25,7 @@ final class ComposerJson implements ScannerInterface
         $this->fileSystemPathComposerJson = new FileSystemPath(
             $fileSystemPathComposerJson->get()
             . DIRECTORY_SEPARATOR
-            .self::COMPOSER_JSON
+            . self::COMPOSER_JSON
         );
 
         Assert::readable($this->fileSystemPathComposerJson->get(), NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSER_JSON_NOT_READABLE);
@@ -38,22 +37,21 @@ final class ComposerJson implements ScannerInterface
         $countMax = 5;
         $relativePath = '';
 
-
         for ($i = 0; $i < $countMax; $i++) {
-            $pathComposer = \getcwd() .DIRECTORY_SEPARATOR. $relativePath;
+            $pathComposer = \getcwd() . DIRECTORY_SEPARATOR . $relativePath;
             $realPath = \safe\realpath($pathComposer . self::COMPOSER_JSON);
 
             if (\is_readable($realPath) === false) {
-                $relativePath .= '..'.DIRECTORY_SEPARATOR;
+                $relativePath .= '..' . DIRECTORY_SEPARATOR;
                 continue;
             }
 
             $jsonArray = \safe\json_decode(
-                \safe\file_get_contents($pathComposer.DIRECTORY_SEPARATOR.self::COMPOSER_JSON),
+                \safe\file_get_contents($pathComposer . DIRECTORY_SEPARATOR . self::COMPOSER_JSON),
                 true
             );
 
-            if ($jsonArray['name']!==self::NAME_PROJECT) {
+            if ($jsonArray['name'] !== self::NAME_PROJECT) {
                 return new FileSystemPath($pathComposer);
             }
         }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Db;
 
 use Tests\Unit\AbstractUnitTestCase;
@@ -12,7 +13,7 @@ class BooleanMatchValueTest extends AbstractUnitTestCase
     {
         $entry = new Entry('bar');
         $collections = ['foo' => 'bar'];
-        
+
         $mach = new BooleanMatchValue();
         $result = $mach->evaluate($collections, $entry);
 
@@ -24,7 +25,7 @@ class BooleanMatchValueTest extends AbstractUnitTestCase
     {
         $entry = new Entry('bar2');
         $collections = ['foo' => 'bar'];
-        
+
         $mach = new BooleanMatchValue();
         $result = $mach->evaluate($collections, $entry);
 

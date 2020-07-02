@@ -1,4 +1,5 @@
 <?php
+
 namespace NamespaceProtector;
 
 use NamespaceProtector\Analyser;
@@ -32,18 +33,18 @@ class NamespaceProtectorProcessorFactory
             $analyser,
             $metaDataLoader
         );
-        
+
         return $namespaceProtectorProcessor;
     }
 
     private function createCacheObject(Config $config): CacheInterface
     {
         if ($config->enabledCache()) {
-            $directory = \sys_get_temp_dir().self::NAMESPACE_PROTECTOR_CACHE;
+            $directory = \sys_get_temp_dir() . self::NAMESPACE_PROTECTOR_CACHE;
 
             return new SimpleFileCache(new FileSystemPath($directory, true));
         }
-        
+
         return new NullCache();
     }
 }

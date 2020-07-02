@@ -14,7 +14,7 @@ use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 
 final class PhpFileParser implements ParserInterface
 {
-    private const ONLY_ONE_ENTRY=1;
+    private const ONLY_ONE_ENTRY = 1;
 
     /** @var \PhpParser\Parser  */
     private $parser;
@@ -53,7 +53,7 @@ final class PhpFileParser implements ParserInterface
         $ast = $this->fetchAst($pathFile);
 
         $this->traverser->traverse($ast);
-                
+
         $this->emptyLogIfNoErrorEntry();
     }
 
@@ -75,7 +75,7 @@ final class PhpFileParser implements ParserInterface
     private function fetchAst(PathInterface $pathFile): array
     {
         $code = $pathFile->get();
-        $keyEntryForCache = sha1($code).'.'.base64_encode($pathFile->get());
+        $keyEntryForCache = sha1($code) . '.' . base64_encode($pathFile->get());
 
         if (!$this->cache->has($keyEntryForCache)) {
             $code = \file_get_contents($pathFile->get());

@@ -91,7 +91,6 @@ class SimpleFileCacheTest extends AbstractUnitTestCase
             ->addFile('ast.json', 'json', 'files')
             ->buildFileSystemUrl();
 
-
         $simppleFileCache = new SimpleFileCache(new FileSystemPath($fileSystem . '/files/'));
 
         return $simppleFileCache;

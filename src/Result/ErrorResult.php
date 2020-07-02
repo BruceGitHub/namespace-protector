@@ -13,10 +13,9 @@ final class ErrorResult implements ResultInterface
     /** @var string */
     private $use;
 
-
     public function __construct(int $line, string $use, int $type)
     {
-        $this->line =  $line;
+        $this->line = $line;
         $this->use = $use;
         $this->type = $type;
     }

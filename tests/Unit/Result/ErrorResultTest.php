@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Result;
 
 use NamespaceProtector\Result\ErrorResult;

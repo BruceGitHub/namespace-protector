@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Db;
 
 use NamespaceProtector\Db\BooleanMatchKey;
@@ -12,7 +13,7 @@ class BooleanMatchKeyTest extends AbstractUnitTestCase
     {
         $entry = new Entry('foo');
         $collections = ['foo' => 'bar'];
-        
+
         $mach = new BooleanMatchKey();
         $result = $mach->evaluate($collections, $entry);
 
@@ -24,7 +25,7 @@ class BooleanMatchKeyTest extends AbstractUnitTestCase
     {
         $entry = new Entry('foo2');
         $collections = ['foo' => 'bar'];
-        
+
         $mach = new BooleanMatchKey();
         $result = $mach->evaluate($collections, $entry);
 

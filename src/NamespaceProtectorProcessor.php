@@ -1,4 +1,5 @@
 <?php
+
 namespace NamespaceProtector;
 
 use NamespaceProtector\Analyser;

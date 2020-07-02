@@ -8,5 +8,6 @@ use NamespaceProtector\Result\ResultCollector;
 interface ParserInterface
 {
     public function parseFile(PathInterface $pathInterface): void;
+
     public function getListResult(): ResultCollector;
 }

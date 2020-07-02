@@ -15,7 +15,7 @@ class ConfigTest extends AbstractUnitTestCase
             ->addDirectory('composer_json_path')
             ->buildFileSystem();
 
-        $fileConfigJson =  $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
+        $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
 
         $configLoaded = Config::loadFromFile(new FileSystemPath($fileConfigJson));
 
@@ -45,7 +45,7 @@ class ConfigTest extends AbstractUnitTestCase
             ->addDirectory('composer_json_path')
             ->buildFileSystem();
 
-        $fileConfigJson =  $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
+        $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
 
         $configLoaded = Config::loadFromFile(new FileSystemPath($fileConfigJson));
 
@@ -68,7 +68,7 @@ class ConfigTest extends AbstractUnitTestCase
             ->addDirectory('composer_json_path')
             ->buildFileSystem();
 
-        $fileConfigJson =  $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
+        $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
 
         $configLoaded = Config::loadFromFile(new FileSystemPath($fileConfigJson));
 
@@ -91,9 +91,9 @@ class ConfigTest extends AbstractUnitTestCase
         Config::loadFromFile(
             new FileSystemPath(
                 __DIR__
-                                .'/..'
-                                .'/..'
-                                .'/../src/Config/template-config-json'
+                                . '/..'
+                                . '/..'
+                                . '/../src/Config/template-config-json'
             )
         );
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Db;
 
 use NamespaceProtector\Entry\Entry;
@@ -26,7 +27,6 @@ class DbKeyValueTest extends AbstractUnitTestCase
 
         $this->assertEquals(2, $db->count());
     }
-
 
     /** @test */
     public function it_boolean_search_work(): void

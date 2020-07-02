@@ -9,13 +9,13 @@ final class NamespaceProtectorCommand extends AbstractValidateNamespaceCommand
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $script_start =  $this->startWatch();
+        $script_start = $this->startWatch();
 
         $returnValue = parent::execute($input, $output);
 
         $elapsed_time = $this->stopWatch($script_start);
 
-        $output->writeln("<fg=green>Elapsed time: ".$elapsed_time.'</>');
+        $output->writeln('<fg=green>Elapsed time: ' . $elapsed_time . '</>');
 
         return $returnValue ;
     }

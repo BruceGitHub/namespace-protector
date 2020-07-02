@@ -1,4 +1,5 @@
 <?php
+
 namespace NamespaceProtector\OutputDevice;
 
 interface OutputDeviceInterface

@@ -57,7 +57,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
     public function it_parse_return_empty_result_when_no_violation(): void
     {
         $fsPath = $this->getVirtualFileSystem()->url() . '/json';
-        $files =  $this->getVirtualFileSystem()->url() . '/files';
+        $files = $this->getVirtualFileSystem()->url() . '/files';
         $file = new FileSystemPath($fsPath . '/namespace-protector-config.json');
 
         $composerJson = new ComposerJson(new FileSystemPath($fsPath));
@@ -136,8 +136,8 @@ class PhpFileParserTest extends AbstractUnitTestCase
             ->addFile('ClassPsr4Composer.php', 'php', 'files')
             ->buildFileSystem();
 
-        $fileConfigJson =  $fileSystem->url() . '/json/namespace-protector-config-mod-public.json';
-        $pathStubClass =  $fileSystem->url() . '/files/ClassPsr4Composer.php';
+        $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-mod-public.json';
+        $pathStubClass = $fileSystem->url() . '/files/ClassPsr4Composer.php';
 
         $environmentDataLoader = $this->getEnvironmentMock();
         $config = Config::loadFromFile(new FileSystemPath($fileConfigJson));
@@ -174,8 +174,8 @@ class PhpFileParserTest extends AbstractUnitTestCase
             ->addFile('ClassPsr4Composer.php', 'php', 'files')
             ->buildFileSystem();
 
-        $fileConfigJson =  $fileSystem->url() . '/json/namespace-protector-config-mod-public.json';
-        $pathStubClass =  $fileSystem->url() . '/files/ClassPsr4Composer.php';
+        $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-mod-public.json';
+        $pathStubClass = $fileSystem->url() . '/files/ClassPsr4Composer.php';
 
         $environmentDataLoader = $this->getEnvironmentMock();
         $config = Config::loadFromFile(new FileSystemPath($fileConfigJson));
@@ -203,7 +203,6 @@ class PhpFileParserTest extends AbstractUnitTestCase
         return $data;
     }
 
-
     /** @test */
     public function it_violations_with_mod_vendor_private(): void
     {
@@ -212,8 +211,8 @@ class PhpFileParserTest extends AbstractUnitTestCase
             ->addFile('ClassPsr4Composer.php', 'php', 'files')
             ->buildFileSystem();
 
-        $fileConfigJson =  $fileSystem->url() . '/json/namespace-protector-config-mod-private.json';
-        $pathStubClass =  $fileSystem->url() . '/files/ClassPsr4Composer.php';
+        $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-mod-private.json';
+        $pathStubClass = $fileSystem->url() . '/files/ClassPsr4Composer.php';
 
         $environmentDataLoader = $this->getEnvironmentMock();
         $config = Config::loadFromFile(new FileSystemPath($fileConfigJson));
@@ -321,7 +320,6 @@ class PhpFileParserTest extends AbstractUnitTestCase
             ->willReturn(new DbKeyValue());
 
         $environmentDataLoader = $environmentDataLoader->reveal();
-
 
         return $environmentDataLoader;
     }

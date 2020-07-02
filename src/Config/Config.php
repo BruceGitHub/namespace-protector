@@ -85,7 +85,6 @@ final class Config
         return $this->pathComposerJson;
     }
 
-
     public function print(): string
     {
         //todo: automatic dump config
@@ -97,7 +96,7 @@ final class Config
             '' . PHP_EOL .
             '|Dump config:' . PHP_EOL .
             '|> Version: ' . $this->getVersion() . PHP_EOL .
-            '|> Cache: ' . ($this->enabledCache() === true ? "TRUE": "FALSE")  . PHP_EOL .
+            '|> Cache: ' . ($this->enabledCache() === true ? 'TRUE' : 'FALSE') . PHP_EOL .
             '|> Path start: ' . $this->pathStart->get() . PHP_EOL .
             '|> Composer Json path: ' . $this->pathComposerJson->get() . PHP_EOL .
             '|> Mode: ' . $this->getMode() . PHP_EOL .
@@ -114,7 +113,7 @@ final class Config
     {
         $prettyPrintNamespaceToValidate = "\n";
         foreach ($entries as $namespace) {
-            $prettyPrintNamespaceToValidate .= "|       >" . $namespace;
+            $prettyPrintNamespaceToValidate .= '|       >' . $namespace;
         }
         return $prettyPrintNamespaceToValidate;
     }
@@ -123,7 +122,7 @@ final class Config
     {
         $content = \safe\file_get_contents($path->get());
         $arrayConfig = \safe\json_decode($content, true);
-        
+
         $self = new self(
             $arrayConfig['version'],
             new FileSystemPath($arrayConfig['start-path']),
@@ -141,11 +140,11 @@ final class Config
 
     private function validateLoadedConfig(): void
     {
-        Assert::inArray($this->getMode(), [self::MODE_PUBLIC, self::MODE_MAKE_VENDOR_PRIVATE], "Mode not valid");
-        Assert::eq('0.1.0', $this->getVersion(), "Version not valid");
-        Assert::directory($this->getStartPath()->get(), "Start directory not valid");
-        Assert::directory($this->getPathComposerJson()->get(), "Composer json directory not valid");
-        Assert::boolean($this->enabledCache(), "Cache flag must be boolean");
+        Assert::inArray($this->getMode(), [self::MODE_PUBLIC, self::MODE_MAKE_VENDOR_PRIVATE], 'Mode not valid');
+        Assert::eq('0.1.0', $this->getVersion(), 'Version not valid');
+        Assert::directory($this->getStartPath()->get(), 'Start directory not valid');
+        Assert::directory($this->getPathComposerJson()->get(), 'Composer json directory not valid');
+        Assert::boolean($this->enabledCache(), 'Cache flag must be boolean');
     }
 
     private function getVersion(): string

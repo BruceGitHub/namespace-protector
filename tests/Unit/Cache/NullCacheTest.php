@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Cache;
 
 use Tests\Unit\AbstractUnitTestCase;
@@ -29,7 +30,7 @@ class NullCacheTest extends AbstractUnitTestCase
         $result = $nullCache->delete('value');
         $this->assertFalse($result);
     }
-    
+
     /** @test */
     public function it_clear_work(): void
     {

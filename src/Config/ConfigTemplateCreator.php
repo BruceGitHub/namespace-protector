@@ -8,12 +8,12 @@ use NamespaceProtector\Common\PathInterface;
 final class ConfigTemplateCreator
 {
     private const FILENAME = 'namespace-protector-config.json';
-    private const FILENAME_VISIBILITY =  'namespace-protector-visibility.json';
+    private const FILENAME_VISIBILITY = 'namespace-protector-visibility.json';
     private const TEMPLATE_CONFIG_JSON = 'template-config-json';
 
     public static function createJsonTemplateConfig(PathInterface $baseComposerJsonDirectory): void
     {
-        self::createFileWithBackup($baseComposerJsonDirectory().self::FILENAME, self::TEMPLATE_CONFIG_JSON);
+        self::createFileWithBackup($baseComposerJsonDirectory() . self::FILENAME, self::TEMPLATE_CONFIG_JSON);
     }
 
     public static function createJsonTemplateVisibility(): void

@@ -7,7 +7,6 @@ use NamespaceProtector\Common\PathInterface;
 
 final class FileSystemScanner implements ScannerInterface
 {
-
     /** @var array<PathInterface>  */
     private $startPaths;
 
@@ -46,7 +45,7 @@ final class FileSystemScanner implements ScannerInterface
                 if ($file->getExtension() !== $this->extensions) {
                     continue;
                 }
-    
+
                 $pathDescriptor = $file->getPathname();
                 $fileLoaded[] = new FileSystemPath($pathDescriptor);
             }

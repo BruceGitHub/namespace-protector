@@ -10,5 +10,5 @@ interface MatchCollectionInterface extends MatchInterface
     /**
      * @param Iterable<mixed> $data
      */
-    public function evaluate(Iterable  $data, Entry $matchMe): bool;
+    public function evaluate(Iterable $data, Entry $matchMe): bool;
 }

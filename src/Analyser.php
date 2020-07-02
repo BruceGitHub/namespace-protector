@@ -33,7 +33,7 @@ final class Analyser
     {
         foreach ($this->listParser as $currentParser) {
             $currentParser->parseFile($pathInterface);
-            
+
             foreach ($currentParser->getListResult()->get() as $result) {
                 $this->outputDevice->output(($result->get()));
                 if ($result->getType() === PhpNode::ERR) {

@@ -4,14 +4,13 @@ namespace NamespaceProtector\Result;
 
 final class Result implements ResultInterface
 {
-
     /** @var string  */
     private $value;
 
     /** @var int  */
     private $type;
 
-    public function __construct(string $value, int $type=0)
+    public function __construct(string $value, int $type = 0)
     {
         $this->value = $value;
         $this->type = $type;

@@ -26,7 +26,6 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
             ->setHelp('Create config template with default values');
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         ConfigTemplateCreator::createJsonTemplateConfig(ComposerJson::detectComposerJsonDirectory());

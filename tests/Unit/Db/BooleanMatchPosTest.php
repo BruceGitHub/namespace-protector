@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit\Db;
 
 use NamespaceProtector\Db\BooleanMatchPos;
@@ -12,7 +13,7 @@ class BooleanMatchPosTest extends AbstractUnitTestCase
     {
         $entry = new Entry('fooBar');
         $collections = ['fooBar' => 'bar'];
-        
+
         $mach = new BooleanMatchPos();
         $result = $mach->evaluate($collections, $entry);
 
@@ -24,7 +25,7 @@ class BooleanMatchPosTest extends AbstractUnitTestCase
     {
         $entry = new Entry('barFoo');
         $collections = ['foo' => 'bar'];
-        
+
         $mach = new BooleanMatchPos();
         $result = $mach->evaluate($collections, $entry);
 
