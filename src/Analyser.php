@@ -2,9 +2,10 @@
 
 namespace NamespaceProtector;
 
+use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Parser\ParserInterface;
-use NamespaceProtector\Parser\Node\PhpNode;
+use NamespaceProtector\OutputDevice\OutputDeviceInterface;
 
 final class Analyser
 {
@@ -17,8 +18,12 @@ final class Analyser
     /** @var int  */
     private $countErrors;
 
-    public function __construct(ParserInterface ...$listParser)
+    /** @var OutputDeviceInterface */
+    private $outputDevice;
+
+    public function __construct(OutputDeviceInterface $outputDevice, ParserInterface ...$listParser)
     {
+        $this->outputDevice = $outputDevice;
         $this->listParser = $listParser;
         $this->countErrors = 0;
         $this->withError = false;
@@ -30,7 +35,7 @@ final class Analyser
             $currentParser->parseFile($pathInterface);
             
             foreach ($currentParser->getListResult()->get() as $result) {
-                echo $result->get(); //todo: use output device
+                $this->outputDevice->output(($result->get()));
                 if ($result->getType() === PhpNode::ERR) {
                     $this->withError = true;
                     $this->incrementError();

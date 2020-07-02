@@ -2,10 +2,12 @@
 namespace Tests\Unit;
 
 use NamespaceProtector\Analyser;
+use Tests\Unit\AbstractUnitTestCase;
+use NamespaceProtector\Result\Result;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Parser\ParserInterface;
-use NamespaceProtector\Result\Result;
 use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\OutputDevice\ConsoleDevice;
 
 class AnalyserTest extends AbstractUnitTestCase
 {
@@ -28,8 +30,14 @@ class AnalyserTest extends AbstractUnitTestCase
 
         $parser = $parser->reveal();
 
-        $analyser = new Analyser($parser);
+        $analyser = $this->createAnalyser($parser, $file);
         $analyser->execute($file);
+    }
+
+    private function createAnalyser($parser, $file): Analyser
+    {
+        $analyser = new Analyser(new ConsoleDevice(),$parser);
+        return $analyser;
     }
 
     /** @test */
@@ -49,7 +57,7 @@ class AnalyserTest extends AbstractUnitTestCase
 
         $parser = $parser->reveal();
 
-        $analyser = new Analyser($parser);
+        $analyser = $this->createAnalyser($parser, $file);
         $analyser->execute($file);
 
         $this->assertTrue($analyser->withError());

@@ -11,6 +11,7 @@ use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Scanner\FileSystemScanner;
+use NamespaceProtector\OutputDevice\ConsoleDevice;
 use NamespaceProtector\NamespaceProtectorProcessor;
 
 class NamespaceProtectorProcessorFactory
@@ -23,7 +24,7 @@ class NamespaceProtectorProcessorFactory
         $fileSystem = new FileSystemScanner([$config->getStartPath()]);
         $metaDataLoader = new EnvironmentDataLoader($composerJson);
         $cacheClass = $this->createCacheObject($config);
-        $analyser = new Analyser(new PhpFileParser($config, $metaDataLoader, $cacheClass));
+        $analyser = new Analyser(new ConsoleDevice(), new PhpFileParser($config, $metaDataLoader, $cacheClass));
 
         $namespaceProtectorProcessor = new NamespaceProtectorProcessor(
             $composerJson,
