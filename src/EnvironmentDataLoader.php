@@ -91,7 +91,7 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
     {
         $db = new DbKeyValue();
         foreach ($collections as $key => $value) {
-            $db->add((string)$key, (string)$value);
+            $db->add((string) $key, (string) $value);
         }
 
         return $db;
