@@ -17,7 +17,7 @@ final class NamespaceProtectorCommand extends AbstractValidateNamespaceCommand
 
         $output->writeln('<fg=green>Elapsed time: ' . $elapsed_time . '</>');
 
-        return $returnValue ;
+        return $returnValue;
     }
 
     private function startWatch(): float

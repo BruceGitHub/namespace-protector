@@ -5,7 +5,7 @@ namespace NamespaceProtector\Result;
 final class ResultCollector
 {
     /** @var array<ResultInterface>  */
-    private $listResult ;
+    private $listResult;
 
     public function __construct()
     {
