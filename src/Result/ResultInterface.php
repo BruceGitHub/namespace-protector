@@ -1,7 +1,7 @@
-<?php 
+<?php
 namespace NamespaceProtector\Result;
 
-interface ResultInterface 
+interface ResultInterface
 {
     public function get(): string;
     public function getType(): int;

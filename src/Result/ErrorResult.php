@@ -4,9 +4,6 @@ namespace NamespaceProtector\Result;
 
 final class ErrorResult implements ResultInterface
 {
-    /** @var string  */
-    private $value;
-
     /** @var int  */
     private $type;
 
@@ -14,10 +11,10 @@ final class ErrorResult implements ResultInterface
     private $line;
 
     /** @var string */
-    private $use; 
+    private $use;
 
 
-    public function __construct(int $line, string $use,int $type)
+    public function __construct(int $line, string $use, int $type)
     {
         $this->line =  $line;
         $this->use = $use;
@@ -26,7 +23,7 @@ final class ErrorResult implements ResultInterface
 
     public function get(): String
     {
-        return \Safe\sprintf("\t > ERROR Line: %d of use %s ",$this->line,$this->use);
+        return \Safe\sprintf("\t > ERROR Line: %d of use %s ", $this->line, $this->use);
     }
 
     public function getType(): int

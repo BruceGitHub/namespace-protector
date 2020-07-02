@@ -160,7 +160,7 @@ final class PhpNode extends NameResolver
 
     private function pushError(Entry $val, Node $node): void
     {
-        $err = new ErrorResult($node->getLine(),$val->get(). \PHP_EOL, self::ERR);
+        $err = new ErrorResult($node->getLine(), $val->get(). \PHP_EOL, self::ERR);
         $this->resultCollector->addResult($err);
     }
 
