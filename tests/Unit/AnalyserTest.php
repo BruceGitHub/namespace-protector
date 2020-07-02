@@ -36,7 +36,7 @@ class AnalyserTest extends AbstractUnitTestCase
 
     private function createAnalyser($parser, $file): Analyser
     {
-        $analyser = new Analyser(new ConsoleDevice(),$parser);
+        $analyser = new Analyser(new ConsoleDevice(), $parser);
         return $analyser;
     }
 

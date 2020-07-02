@@ -14,7 +14,6 @@ class ConsoleDeviceTest extends AbstractUnitTestCase
         $consoleDevice->output('hello device');
         $output = \ob_get_clean();
 
-        $this->assertEquals('hello device',$output);
+        $this->assertEquals('hello device', $output);
     }
-
 }

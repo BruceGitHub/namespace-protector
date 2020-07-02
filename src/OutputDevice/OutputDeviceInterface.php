@@ -1,7 +1,7 @@
-<?php 
+<?php
 namespace NamespaceProtector\OutputDevice;
 
-interface OutputDeviceInterface 
+interface OutputDeviceInterface
 {
-    public function output(string $value): void;    
+    public function output(string $value): void;
 }
