@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Common\PathInterface;
