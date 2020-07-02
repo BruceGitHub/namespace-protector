@@ -5,7 +5,7 @@ namespace NamespaceProtector\Result;
 final class ResultCollector
 {
 
-    /** @var array<Result>  */
+    /** @var array<ResultInterface>  */
     private $listResult ;
 
     public function __construct()
@@ -13,12 +13,12 @@ final class ResultCollector
         $this->listResult = [];
     }
 
-    public function addResult(Result $result): void
+    public function addResult(ResultInterface $result): void
     {
         $this->listResult[] = $result;
     }
 
-    /** @return  array<Result>  */
+    /** @return  array<ResultInterface>  */
     public function get(): array
     {
         return $this->listResult;

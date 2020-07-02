@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Result;
 
-final class Result
+final class Result implements ResultInterface
 {
 
     /** @var string  */

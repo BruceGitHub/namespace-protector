@@ -4,17 +4,17 @@ namespace NamespaceProtector\Parser\Node;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\UseUse;
+use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\Config\Config;
-use NamespaceProtector\Result\Result;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\NodeVisitor\NameResolver;
 use NamespaceProtector\Db\BooleanMatchKey;
 use NamespaceProtector\Db\BooleanMatchPos;
+use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Db\BooleanMatchValue;
 use NamespaceProtector\Db\DbKeyValueInterface;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Db\MatchCollectionInterface;
-use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
 
 final class PhpNode extends NameResolver
@@ -160,8 +160,8 @@ final class PhpNode extends NameResolver
 
     private function pushError(Entry $val, Node $node): void
     {
-        $err = "\t > ERROR Line: " . $node->getLine() . " of use " . $val->get() . \PHP_EOL; //todo: output data no context
-        $this->resultCollector->addResult(new Result($err, self::ERR));
+        $err = new ErrorResult($node->getLine(),$val->get(). \PHP_EOL, self::ERR);
+        $this->resultCollector->addResult($err);
     }
 
     private function isInConfiguredComposerPsr4Namespaces(Entry $val): bool
