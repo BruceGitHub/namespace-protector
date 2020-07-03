@@ -10,6 +10,7 @@ use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
+use NamespaceProtector\Result\ResultCollectorReadable;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 
 final class PhpFileParser implements ParserInterface
@@ -57,9 +58,9 @@ final class PhpFileParser implements ParserInterface
         $this->emptyLogIfNoErrorEntry();
     }
 
-    public function getListResult(): ResultCollector //todo: use immutable
+    public function getListResult(): ResultCollectorReadable
     {
-        return $this->resultCollector;
+        return new ResultCollectorReadable($this->resultCollector);
     }
 
     private function emptyLogIfNoErrorEntry(): void

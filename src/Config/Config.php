@@ -130,7 +130,7 @@ final class Config
             $arrayConfig['private-entries'],
             $arrayConfig['public-entries'],
             $arrayConfig['mode'],
-            $arrayConfig['cache']
+            $arrayConfig['cache'] //todo: if missing bug
         );
 
         $self->validateLoadedConfig();

@@ -3,11 +3,11 @@
 namespace NamespaceProtector\Parser;
 
 use NamespaceProtector\Common\PathInterface;
-use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollectorReadable;
 
 interface ParserInterface
 {
     public function parseFile(PathInterface $pathInterface): void;
 
-    public function getListResult(): ResultCollector;
+    public function getListResult(): ResultCollectorReadable;
 }

@@ -8,6 +8,7 @@ use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
+use NamespaceProtector\Result\ResultCollectorReadable;
 
 class AnalyserTest extends AbstractUnitTestCase
 {
@@ -63,14 +64,12 @@ class AnalyserTest extends AbstractUnitTestCase
         $this->assertEquals(1, $analyser->getCountErrors());
     }
 
-    private function resultCollectorWithError()
+    private function resultCollectorWithError(): ResultCollectorReadable
     {
         $resultCollector = new ResultCollector();
-        $resultCollector->addResult(
-            new Result('Message', 1)
-        );
+        $resultCollector->addResult(new Result('Message', 1));
 
-        return $resultCollector;
+        return new ResultCollectorReadable($resultCollector);
     }
 
     private function getFileToParse()

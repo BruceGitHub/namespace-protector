@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Result;
 
-final class ResultCollector
+final class ResultCollector implements ResultCollectorInterface
 {
     /** @var array<ResultInterface>  */
     private $listResult;
