@@ -23,7 +23,7 @@ final class NamespaceProtectorCommand extends AbstractValidateNamespaceCommand
     private function startWatch(): float
     {
         list($usec, $sec) = explode(' ', microtime());
-        return  (float) $sec + (float) $usec;
+        return  (float)$sec + (float)$usec;
     }
 
     private function stopWatch(float $script_start): float

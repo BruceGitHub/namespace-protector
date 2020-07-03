@@ -22,7 +22,7 @@ return PhpCsFixer\Config::create()
         'braces' => array(
             'allow_single_line_closure' => true,
         ),
-        'cast_spaces' => true,
+        'cast_spaces' => false,
         'concat_space' => array('spacing' => 'one'),
         'declare_equal_normalize' => true,
         'function_typehint_space' => true,
