@@ -7,7 +7,6 @@ use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use Webmozart\Assert\Assert;
-use function Safe\realpath;
 
 final class ComposerJson implements ScannerInterface
 {

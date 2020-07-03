@@ -5,9 +5,7 @@ namespace Tests\Unit\Db;
 use NamespaceProtector\Entry\Entry;
 use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Db\DbKeyValue;
-use NamespaceProtector\Db\MatchInterface;
 use NamespaceProtector\Db\MatchCollectionInterface;
-use Prophecy\Argument;
 
 class DbKeyValueTest extends AbstractUnitTestCase
 {

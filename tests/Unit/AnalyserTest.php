@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use NamespaceProtector\Analyser;
-use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Result\Result;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Parser\ParserInterface;

@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use org\bovigo\vfs\vfsStreamDirectory;
 
 abstract class AbstractUnitTestCase extends TestCase
 {

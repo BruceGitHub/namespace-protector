@@ -30,7 +30,7 @@ final class PhpFileParser implements ParserInterface
 
     public function __construct(Config $config, EnvironmentDataLoaderInterface $environmentDataLoader, \Psr\SimpleCache\CacheInterface $cache)
     {
-        $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $this->traverser = new NodeTraverser();
         $this->resultCollector = new ResultCollector();
 

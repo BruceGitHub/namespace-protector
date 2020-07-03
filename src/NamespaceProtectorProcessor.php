@@ -2,11 +2,9 @@
 
 namespace NamespaceProtector;
 
-use NamespaceProtector\Analyser;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Scanner\FileSystemScanner;
-use NamespaceProtector\EnvironmentDataLoaderInterface;
 
 class NamespaceProtectorProcessor
 {

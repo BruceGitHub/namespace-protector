@@ -2,7 +2,6 @@
 
 namespace NamespaceProtector;
 
-use NamespaceProtector\Analyser;
 use Psr\SimpleCache\CacheInterface;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Cache\NullCache;
@@ -10,10 +9,8 @@ use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
-use NamespaceProtector\EnvironmentDataLoader;
 use NamespaceProtector\Scanner\FileSystemScanner;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
-use NamespaceProtector\NamespaceProtectorProcessor;
 
 class NamespaceProtectorProcessorFactory
 {

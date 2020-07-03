@@ -2,7 +2,6 @@
 
 use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Common\PathInterface;
-use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Config\ConfigTemplateCreator;
 

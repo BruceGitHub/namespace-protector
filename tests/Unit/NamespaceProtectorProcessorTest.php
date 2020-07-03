@@ -2,8 +2,6 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
-use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\NamespaceProtectorProcessorFactory;
