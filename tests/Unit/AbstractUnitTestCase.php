@@ -24,7 +24,7 @@ abstract class AbstractUnitTestCase extends TestCase
                 'no_violation.php' => \file_get_contents(__DIR__ . '/../Stub/php/no_violation.php'),
                 'ClassPsr4Composer.php' => \file_get_contents(__DIR__ . '/../Stub/php/ClassPsr4Composer.php'),
                 'FileThatUsePrivateNamespace.php' => \file_get_contents(__DIR__ . '/../Stub/php/FileThatUsePrivateNamespace.php'),
-            ]
+            ],
         ];
 
         return vfsStream::setup('root', 777, $directory);
