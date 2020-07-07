@@ -5,6 +5,8 @@ os: linux
 php:
   - 7.4
   - 7.3
+  - 7.2
+  - 7.0
 
 before_install: 
 install: composer install --no-interaction
