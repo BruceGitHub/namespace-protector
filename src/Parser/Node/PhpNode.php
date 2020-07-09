@@ -5,7 +5,6 @@ namespace NamespaceProtector\Parser\Node;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\UseUse;
 use NamespaceProtector\Entry\Entry;
-use NamespaceProtector\Config\Config;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\NodeVisitor\NameResolver;
 use NamespaceProtector\Result\ErrorResult;
@@ -27,7 +26,6 @@ final class PhpNode extends NameResolver
      * @param array<string,mixed> $configParser
      */
     public function __construct(
-        Config $configGlobal,
         array $configParser,
         ResultCollector $resultCollector,
         EventDispatcherInterface $eventDispatcher

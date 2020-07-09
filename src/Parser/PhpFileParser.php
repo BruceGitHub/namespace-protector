@@ -30,7 +30,6 @@ final class PhpFileParser implements ParserInterface
     private $cache;
 
     public function __construct(
-        Config $config,
         \Psr\SimpleCache\CacheInterface $cache,
         EventDispatcherInterface $eventDispatcher
     ) {
@@ -40,7 +39,6 @@ final class PhpFileParser implements ParserInterface
         $this->resultCollector = new ResultCollector();
 
         $phpNode = new PhpNode(
-            $config,
             ['preserveOriginalNames' => true, 'replaceNodes' => true],
             $this->resultCollector,
             $eventDispatcher

@@ -35,7 +35,6 @@ final class NamespaceProtectorProcessorFactory
         $analyser = new Analyser(
             new ConsoleDevice(),
             new PhpFileParser(
-                $config,
                 $cacheClass,
                 $dispatcher
             )

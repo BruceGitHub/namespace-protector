@@ -285,7 +285,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $listener->addEventListener(FoundUseNamespace::class, $callableUseStatement);
         $dispatcher = new EventDispatcher($listener);
 
-        return new PhpFileParser($config, new NullCache(), $dispatcher);
+        return new PhpFileParser(new NullCache(), $dispatcher);
     }
 
     private function helperEditChangesEntries($directoryReal, $pathFile, array $nsPrivate = [], array $nsPublic = [])
