@@ -9,10 +9,14 @@ use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
+use NamespaceProtector\Event\EventDispatcher;
+use NamespaceProtector\Event\ListenerProvider;
 use NamespaceProtector\Scanner\FileSystemScanner;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
+use NamespaceProtector\Parser\Node\ProcessUseStatement;
+use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
 
-class NamespaceProtectorProcessorFactory
+final class NamespaceProtectorProcessorFactory
 {
     private const NAMESPACE_PROTECTOR_CACHE = 'namespace-protector-cache';
 
@@ -22,7 +26,20 @@ class NamespaceProtectorProcessorFactory
         $fileSystem = new FileSystemScanner([$config->getStartPath()]);
         $metaDataLoader = new EnvironmentDataLoader($composerJson);
         $cacheClass = $this->createCacheObject($config);
-        $analyser = new Analyser(new ConsoleDevice(), new PhpFileParser($config, $metaDataLoader, $cacheClass));
+
+        $listener = new ListenerProvider();
+        $callableUseStatement = new ProcessUseStatement($metaDataLoader, $config);
+        $listener->addEventListener(FoundUseNamespace::class, $callableUseStatement);
+        $dispatcher = new EventDispatcher($listener);
+
+        $analyser = new Analyser(
+            new ConsoleDevice(),
+            new PhpFileParser(
+                $config,
+                $cacheClass,
+                $dispatcher
+            )
+        );
 
         $namespaceProtectorProcessor = new NamespaceProtectorProcessor(
             $composerJson,

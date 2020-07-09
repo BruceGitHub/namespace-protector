@@ -6,7 +6,7 @@ use NamespaceProtector\Config\Config;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Scanner\FileSystemScanner;
 
-class NamespaceProtectorProcessor
+final class NamespaceProtectorProcessor
 {
     private const NAMESPACE_PROTECTOR_CACHE = 'namespace-protector-cache';
 

@@ -5,7 +5,7 @@ namespace NamespaceProtector\Db;
 
 use NamespaceProtector\Entry\Entry;
 
-class BooleanMatchValue implements MatchCollectionInterface
+final class BooleanMatchValue implements MatchCollectionInterface
 {
     /**
      * @param Iterable<mixed> $data

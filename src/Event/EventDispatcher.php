@@ -6,7 +6,7 @@ use Psr\EventDispatcher\StoppableEventInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
-class EventDispatcher implements EventDispatcherInterface
+final class EventDispatcher implements EventDispatcherInterface
 {
     /** @var ListenerProviderInterface*/
     private $listenerProvider;

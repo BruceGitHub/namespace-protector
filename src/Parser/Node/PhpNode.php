@@ -9,11 +9,9 @@ use NamespaceProtector\Config\Config;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\NodeVisitor\NameResolver;
 use NamespaceProtector\Result\ErrorResult;
-use NamespaceProtector\Event\EventDispatcher;
-use NamespaceProtector\Event\ListenerProvider;
 use NamespaceProtector\Result\ResultCollector;
-use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class PhpNode extends NameResolver
 {
@@ -32,25 +30,20 @@ final class PhpNode extends NameResolver
         Config $configGlobal,
         array $configParser,
         ResultCollector $resultCollector,
-        EnvironmentDataLoaderInterface $metadataLoader
+        EventDispatcherInterface $eventDispatcher
     ) {
         parent::__construct(null, $configParser);
 
         $this->resultCollector = $resultCollector;
 
-        $listener = new ListenerProvider();
-        $callableUseStatement = new ProcessUseStatement($metadataLoader, $configGlobal);
-        $listener->addEventListener(FoundUseNamespace::class, $callableUseStatement);
-        $dispatcher = new EventDispatcher($listener);
-
-        $this->listNodeProcessor[UseUse::class] = static function (Node $node) use ($dispatcher) {
+        $this->listNodeProcessor[UseUse::class] = static function (Node $node) use ($eventDispatcher) {
             /** @var UseUse $node */
-            return $dispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->name->toCodeString()));
+            return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->name->toCodeString()));
         };
 
-        $this->listNodeProcessor[FullyQualified::class] = static function (Node $node) use ($dispatcher) {
+        $this->listNodeProcessor[FullyQualified::class] = static function (Node $node) use ($eventDispatcher) {
             /** @var FullyQualified $node */
-            return $dispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->toCodeString()));
+            return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->toCodeString()));
         };
     }
 

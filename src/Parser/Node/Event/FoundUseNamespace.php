@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Parser\Node\Event;
 
-class FoundUseNamespace implements EventProcessNodeInterface
+final class FoundUseNamespace implements EventProcessNodeInterface
 {
     /** @var int */
     private $line;

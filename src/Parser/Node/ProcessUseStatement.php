@@ -14,7 +14,7 @@ use NamespaceProtector\Db\MatchCollectionInterface;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
-class ProcessUseStatement
+final class ProcessUseStatement
 {
     /** @var EnvironmentDataLoaderInterface  */
     private $metadataLoader;

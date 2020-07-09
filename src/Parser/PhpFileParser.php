@@ -9,7 +9,7 @@ use NamespaceProtector\Result\Result;
 use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultCollector;
-use NamespaceProtector\EnvironmentDataLoaderInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use NamespaceProtector\Result\ResultCollectorReadable;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 
@@ -29,17 +29,21 @@ final class PhpFileParser implements ParserInterface
     /** @var \Psr\SimpleCache\CacheInterface  */
     private $cache;
 
-    public function __construct(Config $config, EnvironmentDataLoaderInterface $environmentDataLoader, \Psr\SimpleCache\CacheInterface $cache)
-    {
+    public function __construct(
+        Config $config,
+        \Psr\SimpleCache\CacheInterface $cache,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $this->traverser = new NodeTraverser();
+
         $this->resultCollector = new ResultCollector();
 
         $phpNode = new PhpNode(
             $config,
             ['preserveOriginalNames' => true, 'replaceNodes' => true],
             $this->resultCollector,
-            $environmentDataLoader
+            $eventDispatcher
         );
 
         $this->traverser->addVisitor($phpNode);

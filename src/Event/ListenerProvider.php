@@ -4,7 +4,7 @@ namespace NamespaceProtector\Event;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
 
-class ListenerProvider implements ListenerProviderInterface
+final class ListenerProvider implements ListenerProviderInterface
 {
     /** @var array<array<object>> */
     private $map = [];

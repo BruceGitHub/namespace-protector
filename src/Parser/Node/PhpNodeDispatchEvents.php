@@ -2,6 +2,6 @@
 
 namespace NamespaceProtector\Parser\Node;
 
-class PhpNodeDispatchEvents
+final class PhpNodeDispatchEvents
 {
 }
