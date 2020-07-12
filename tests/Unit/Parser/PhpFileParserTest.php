@@ -34,10 +34,10 @@ class PhpFileParserTest extends AbstractUnitTestCase
     {
         $fileSystem = $this->StartBuildFileSystem()
             ->addFile('namespace-protector-config-mod-public.json', 'json', 'json')
-            ->addFile('first.php', 'php', 'files')
+            ->addFile('First.php', 'php', 'files')
             ->buildFileSystemUrl();
 
-        $pathStubClass = new FileSystemPath($fileSystem . '/files/first.php');
+        $pathStubClass = new FileSystemPath($fileSystem . '/files/First.php');
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-public.json');
 
         //act
@@ -66,13 +66,13 @@ class PhpFileParserTest extends AbstractUnitTestCase
     {
         $fileSystem = $this->StartBuildFileSystem()
             ->addFile('namespace-protector-config-with-pub-class.json', 'json', 'json')
-            ->addFile('first.php', 'php', 'files')
-            ->addFile('second.php', 'php', 'files')
+            ->addFile('First.php', 'php', 'files')
+            ->addFile('Second.php', 'php', 'files')
             ->buildFileSystemUrl();
 
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-pub-class.json');
 
-        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/second.php'));
+        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/Second.php'));
         $rsCollector = $phpFileParser->getListResult();
 
         $this->assertEquals([], $rsCollector->get());
@@ -98,17 +98,17 @@ class PhpFileParserTest extends AbstractUnitTestCase
                         );
                     }
                 )
-                ->addFile('first.php', 'php', 'files')
-                ->addFile('second.php', 'php', 'files') //use Privates
+                ->addFile('First.php', 'php', 'files')
+                ->addFile('Second.php', 'php', 'files') //use Privates
                 ->buildFileSystemUrl();
 
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-class.json');
 
-        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/second.php'));
+        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/Second.php'));
         $rsCollector = $phpFileParser->getListResult();
 
         $this->assertCount(2, $rsCollector->get());
-        $this->assertStringContainsString('Process file: vfs://root/files/second.php', $rsCollector->get()[0]->get());
+        $this->assertStringContainsString('Process file: vfs://root/files/Second.php', $rsCollector->get()[0]->get());
         $this->assertStringContainsString('> ERROR Line: 6 of use Personal\Privates', $rsCollector->get()[1]->get());
     }
 
@@ -132,7 +132,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
                         );
                     }
                 )
-                ->addFile('first.php', 'php', 'files')
+                ->addFile('First.php', 'php', 'files')
                 ->addFile('UsePublicNsAndOnePrivateClass.php', 'php', 'files') //use Privates
                 ->buildFileSystemUrl();
 
