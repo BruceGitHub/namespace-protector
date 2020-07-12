@@ -87,7 +87,7 @@ class SimpleFileCacheTest extends AbstractUnitTestCase
     private function getSUT(): CacheInterface
     {
         $fileSystem = $this->StartBuildFileSystem()
-            ->addFile('first.php', 'php', 'files')
+            ->addFile('First.php', 'php', 'files')
             ->addFile('ast.json', 'json', 'files')
             ->buildFileSystemUrl();
 
