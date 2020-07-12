@@ -19,7 +19,7 @@ abstract class AbstractUnitTestCase extends TestCase
                 'namespace-protector-config-mod-public.json' => \file_get_contents(__DIR__ . '/../Stub/json/namespace-protector-config-mod-public.json'),
             ],
             'files' => [
-                'first.php' => \file_get_contents(__DIR__ . '/../Stub/php/first.php'),
+                'First.php' => \file_get_contents(__DIR__ . '/../Stub/php/First.php'),
                 'no_violation.php' => \file_get_contents(__DIR__ . '/../Stub/php/no_violation.php'),
                 'ClassPsr4Composer.php' => \file_get_contents(__DIR__ . '/../Stub/php/ClassPsr4Composer.php'),
                 'FileThatUsePrivateNamespace.php' => \file_get_contents(__DIR__ . '/../Stub/php/FileThatUsePrivateNamespace.php'),
