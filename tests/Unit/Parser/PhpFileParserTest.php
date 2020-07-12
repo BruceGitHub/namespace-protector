@@ -62,6 +62,91 @@ class PhpFileParserTest extends AbstractUnitTestCase
     }
 
     /** @test */
+    public function it_parse_with_public_class(): void
+    {
+        $fileSystem = $this->StartBuildFileSystem()
+            ->addFile('namespace-protector-config-with-pub-class.json', 'json', 'json')
+            ->addFile('first.php', 'php', 'files')
+            ->addFile('second.php', 'php', 'files')
+            ->buildFileSystemUrl();
+
+        $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-pub-class.json');
+
+        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/second.php'));
+        $rsCollector = $phpFileParser->getListResult();
+
+        $this->assertEquals([], $rsCollector->get());
+    }
+
+    /** @test */
+    public function it_parse_with_public_class_with_name_inside_another_class_name(): void
+    {
+        $fileSystem = $this->StartBuildFileSystem()
+                ->addFileWithCallable(
+                    'namespace-protector-config-with-class.json',
+                    'json',
+                    'json',
+                    function ($directoryReal, $pathFile) {
+                        return $this->helperEditChangesEntries(
+                            $directoryReal,
+                            $pathFile,
+                            [],
+                            [
+                                'Personal\\First',
+                                'Personal\\Private',
+                            ]
+                        );
+                    }
+                )
+                ->addFile('first.php', 'php', 'files')
+                ->addFile('second.php', 'php', 'files') //use Privates
+                ->buildFileSystemUrl();
+
+        $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-class.json');
+
+        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/second.php'));
+        $rsCollector = $phpFileParser->getListResult();
+
+        $this->assertCount(2, $rsCollector->get());
+        $this->assertStringContainsString('Process file: vfs://root/files/second.php', $rsCollector->get()[0]->get());
+        $this->assertStringContainsString('> ERROR Line: 6 of use Personal\Privates', $rsCollector->get()[1]->get());
+    }
+
+    /** @test */
+    public function it_parse_with_public_class_with_name_inside_another_namespace(): void
+    {
+        $fileSystem = $this->StartBuildFileSystem()
+                ->addFileWithCallable(
+                    'namespace-protector-config-with-class.json',
+                    'json',
+                    'json',
+                    function ($directoryReal, $pathFile) {
+                        return $this->helperEditChangesEntries(
+                            $directoryReal,
+                            $pathFile,
+                            [],
+                            [
+                                'Personal\\First',
+                                'Personal\Privates\PrivatesB',
+                            ]
+                        );
+                    }
+                )
+                ->addFile('first.php', 'php', 'files')
+                ->addFile('UsePublicNsAndOnePrivateClass.php', 'php', 'files') //use Privates
+                ->buildFileSystemUrl();
+
+        $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-class.json');
+
+        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/UsePublicNsAndOnePrivateClass.php'));
+        $rsCollector = $phpFileParser->getListResult();
+
+        $this->assertCount(2, $rsCollector->get());
+        $this->assertStringContainsString('Process file: vfs://root/files/UsePublicNsAndOnePrivateClass.php', $rsCollector->get()[0]->get());
+        $this->assertStringContainsString('> ERROR Line: 8 of use Personal\Privates', $rsCollector->get()[1]->get());
+    }
+
+    /** @test */
     public function it_violation_when_entry_and_target_are_different_case_mod_vendor_private(): void
     {
         $fileSystem = $this->StartBuildFileSystem()

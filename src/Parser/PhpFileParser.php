@@ -4,7 +4,6 @@ namespace NamespaceProtector\Parser;
 
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
-use NamespaceProtector\Config\Config;
 use NamespaceProtector\Result\Result;
 use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Common\PathInterface;
@@ -33,27 +32,27 @@ final class PhpFileParser implements ParserInterface
         \Psr\SimpleCache\CacheInterface $cache,
         EventDispatcherInterface $eventDispatcher
     ) {
+        $this->cache = $cache;
         $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $this->traverser = new NodeTraverser();
 
         $this->resultCollector = new ResultCollector();
 
         $phpNode = new PhpNode(
-            ['preserveOriginalNames' => true, 'replaceNodes' => true],
+            ['preserveOriginalNames' => true, 'replaceNodes' => false],
             $this->resultCollector,
             $eventDispatcher
         );
 
         $this->traverser->addVisitor($phpNode);
-        $this->cache = $cache;
     }
 
     public function parseFile(PathInterface $pathFile): void
     {
         $this->resultCollector->emptyResult();
-        $this->resultCollector->addResult(new Result('Process file: ' . $pathFile->get() . PHP_EOL));
+        $this->resultCollector->addResult(new Result('Process file: ' . $pathFile() . PHP_EOL));
 
-        $ast = $this->fetchAst($pathFile);
+        $ast = $this->fetchAstAfterParse($pathFile);
 
         $this->traverser->traverse($ast);
 
@@ -75,13 +74,13 @@ final class PhpFileParser implements ParserInterface
     /**
      * @return array<mixed>
      */
-    private function fetchAst(PathInterface $pathFile): array
+    private function fetchAstAfterParse(PathInterface $pathFile): array
     {
-        $code = $pathFile->get();
-        $keyEntryForCache = sha1($code) . '.' . base64_encode($pathFile->get());
+        $code = $pathFile();
+        $keyEntryForCache = sha1($code) . '.' . base64_encode($pathFile());
 
         if (!$this->cache->has($keyEntryForCache)) {
-            $code = \file_get_contents($pathFile->get());
+            $code = \file_get_contents($pathFile());
             if ($code === false) {
                 throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_FILE_GET_CONTENT);
             }

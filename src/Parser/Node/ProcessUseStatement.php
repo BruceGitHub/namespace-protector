@@ -7,7 +7,7 @@ namespace NamespaceProtector\Parser\Node;
 use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Db\BooleanMatchKey;
-use NamespaceProtector\Db\BooleanMatchPos;
+use NamespaceProtector\Db\BooleanMatchNameSpace;
 use NamespaceProtector\Db\BooleanMatchValue;
 use NamespaceProtector\Db\DbKeyValueInterface;
 use NamespaceProtector\Db\MatchCollectionInterface;
@@ -22,10 +22,8 @@ final class ProcessUseStatement
     /** @var Config  */
     private $globalConfig;
 
-    public function __construct(
-        EnvironmentDataLoaderInterface $metadataLoader,
-        Config $configGlobal
-    ) {
+    public function __construct(EnvironmentDataLoaderInterface $metadataLoader, Config $configGlobal)
+    {
         $this->globalConfig = $configGlobal;
         $this->metadataLoader = $metadataLoader;
     }
@@ -42,11 +40,11 @@ final class ProcessUseStatement
             return;
         }
 
-        if (true === $this->isInConfiguredComposerPsr4Namespaces($val)) {
+        if (true === $this->isInConfiguredComposerPsr4Namespaces($val, new BooleanMatchNameSpace())) {
             return;
         }
 
-        if (true === $this->isInPrivateConfiguredEntries($val)) {
+        if (true === $this->isInPrivateConfiguredEntries($val, new BooleanMatchNameSpace())) {
             $event->foundError();
             return;
         }
@@ -54,11 +52,11 @@ final class ProcessUseStatement
 
     private function withModeVendorPrivate(Entry $currentNamespaceAccess, EventProcessNodeInterface $event): void
     {
-        if ($this->isInPublicConfiguredEntries($currentNamespaceAccess)) {
+        if ($this->isInPublicConfiguredEntries($currentNamespaceAccess, new BooleanMatchNameSpace())) {
             return;
         }
 
-        if (true === $this->isInConfiguredComposerPsr4Namespaces($currentNamespaceAccess)) {
+        if ($this->isInConfiguredComposerPsr4Namespaces($currentNamespaceAccess, new BooleanMatchNameSpace())) {
             return;
         }
 
@@ -107,42 +105,22 @@ final class ProcessUseStatement
         return $token;
     }
 
-    private function isInPublicConfiguredEntries(Entry $currentNamespaceAccess): bool
+    //todo: Use MatchedResultInterface
+    private function isInPublicConfiguredEntries(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): bool
     {
-        foreach ($this->globalConfig->getPublicEntries() as $publicEntry) {
-            $publicEntry = \strtolower($publicEntry);
-            $current = \strtolower($currentNamespaceAccess->get());
-            if (strpos($current, $publicEntry) !== false) {
-                return true;
-            }
-        }
-
-        return false;
+        return $macher->evaluate($this->globalConfig->getPublicEntries(), $currentNamespaceAccess);
     }
 
-    private function isInPrivateConfiguredEntries(Entry $currentNamespaceAccess): bool
+    //todo: Use MatchedResultInterface
+    private function isInPrivateConfiguredEntries(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): bool
     {
-        foreach ($this->globalConfig->getPrivateEntries() as $privateEntry) {
-            $privateEntry = \strtolower($privateEntry);
-            $current = \strtolower($currentNamespaceAccess->get());
-            if (strpos($current, $privateEntry) !== false) {
-                return true;
-            }
-        }
-        return false;
+        return $macher->evaluate($this->globalConfig->getPrivateEntries(), $currentNamespaceAccess);
     }
 
-    private function isInConfiguredComposerPsr4Namespaces(Entry $val): bool
+    private function isInConfiguredComposerPsr4Namespaces(Entry $val, MatchCollectionInterface $macher): bool
     {
         $val = $this->stripFirstSlash($val);
 
-        if ($this->metadataLoader
-            ->getCollectComposerNamespace()
-            ->booleanSearch(new BooleanMatchPos(), $val)
-        ) {
-            return true;
-        }
-
-        return false;
+        return $this->metadataLoader->getCollectComposerNamespace()->booleanSearch($macher, $val);
     }
 }
