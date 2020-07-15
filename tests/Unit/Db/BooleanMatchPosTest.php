@@ -2,9 +2,11 @@
 
 namespace Tests\Unit\Db;
 
-use NamespaceProtector\Db\BooleanMatchPos;
-use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Entry\Entry;
+use Tests\Unit\AbstractUnitTestCase;
+use NamespaceProtector\Db\BooleanMatchPos;
+use NamespaceProtector\Parser\Node\MatchedResult;
+use NamespaceProtector\Parser\Node\EmptyMatchedResult;
 
 class BooleanMatchPosTest extends AbstractUnitTestCase
 {
@@ -17,7 +19,7 @@ class BooleanMatchPosTest extends AbstractUnitTestCase
         $mach = new BooleanMatchPos();
         $result = $mach->evaluate($collections, $entry);
 
-        $this->assertTrue($result);
+        $this->assertInstanceOf(MatchedResult::class, $result);
     }
 
     /** @test */
@@ -29,6 +31,6 @@ class BooleanMatchPosTest extends AbstractUnitTestCase
         $mach = new BooleanMatchPos();
         $result = $mach->evaluate($collections, $entry);
 
-        $this->assertFalse($result);
+        $this->assertInstanceOf(EmptyMatchedResult::class, $result);
     }
 }

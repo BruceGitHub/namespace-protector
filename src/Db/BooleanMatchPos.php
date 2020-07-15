@@ -4,20 +4,23 @@ declare(strict_types=1);
 namespace NamespaceProtector\Db;
 
 use NamespaceProtector\Entry\Entry;
+use NamespaceProtector\Parser\Node\MatchedResult;
+use NamespaceProtector\Parser\Node\EmptyMatchedResult;
+use NamespaceProtector\Parser\Node\MatchedResultInterface;
 
 final class BooleanMatchPos implements MatchCollectionInterface
 {
     /**
      * @param Iterable<mixed> $data
      */
-    public function evaluate(Iterable $data, Entry $matchMe): bool
+    public function evaluate(Iterable $data, Entry $matchMe): MatchedResultInterface
     {
         foreach ($data as $entry => $value) {
             if (strpos($matchMe->get(), $entry) !== false) {
-                return true;
+                return new MatchedResult($matchMe());
             }
         }
 
-        return false;
+        return new EmptyMatchedResult();
     }
 }

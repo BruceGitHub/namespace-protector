@@ -6,6 +6,7 @@ use NamespaceProtector\Entry\Entry;
 use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Db\MatchCollectionInterface;
+use NamespaceProtector\Parser\Node\MatchedResult;
 
 class DbKeyValueTest extends AbstractUnitTestCase
 {
@@ -35,7 +36,7 @@ class DbKeyValueTest extends AbstractUnitTestCase
         $machCriteria = $this->prophesize(MatchCollectionInterface::class);
         $machCriteria->evaluate($collections, $entry)
                       ->shouldBeCalled()
-                      ->willReturn(true);
+                      ->willReturn(new MatchedResult('dummy'));
 
         $db = new DbKeyValue($collections);
 

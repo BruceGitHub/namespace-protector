@@ -10,6 +10,9 @@ final class FoundUseNamespace implements EventProcessNodeInterface
     /** @var string */
     private $nodeName;
 
+    /** @var string */
+    private $additionalInformation;
+
     /** @var bool */
     private $erroDetect = false;
 
@@ -29,13 +32,19 @@ final class FoundUseNamespace implements EventProcessNodeInterface
         return $this->nodeName;
     }
 
-    public function foundError(): void
+    public function foundError(string $addtionalInformation=''): void
     {
+        $this->additionalInformation = $addtionalInformation;
         $this->erroDetect = true;
     }
 
     public function withError(): bool
     {
         return $this->erroDetect;
+    }
+
+    public function getAdditionalInformation(): string 
+    {
+        return $this->additionalInformation;
     }
 }

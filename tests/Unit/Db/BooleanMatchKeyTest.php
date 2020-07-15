@@ -2,9 +2,11 @@
 
 namespace Tests\Unit\Db;
 
-use NamespaceProtector\Db\BooleanMatchKey;
-use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Entry\Entry;
+use Tests\Unit\AbstractUnitTestCase;
+use NamespaceProtector\Db\BooleanMatchKey;
+use NamespaceProtector\Parser\Node\MatchedResult;
+use NamespaceProtector\Parser\Node\EmptyMatchedResult;
 
 class BooleanMatchKeyTest extends AbstractUnitTestCase
 {
@@ -17,7 +19,7 @@ class BooleanMatchKeyTest extends AbstractUnitTestCase
         $mach = new BooleanMatchKey();
         $result = $mach->evaluate($collections, $entry);
 
-        $this->assertTrue($result);
+        $this->assertInstanceOf(MatchedResult::class, $result);
     }
 
     /** @test */
@@ -29,6 +31,6 @@ class BooleanMatchKeyTest extends AbstractUnitTestCase
         $mach = new BooleanMatchKey();
         $result = $mach->evaluate($collections, $entry);
 
-        $this->assertFalse($result);
+        $this->assertInstanceOf(EmptyMatchedResult::class, $result);
     }
 }

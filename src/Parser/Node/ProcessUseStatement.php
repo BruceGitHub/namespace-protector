@@ -40,19 +40,21 @@ final class ProcessUseStatement
             return;
         }
 
-        if (true === $this->isInConfiguredComposerPsr4Namespaces($val, new BooleanMatchNameSpace())) {
+        if ($this->isInConfiguredComposerPsr4Namespaces($val, new BooleanMatchNameSpace())) {
             return;
         }
 
-        if (true === $this->isInPrivateConfiguredEntries($val, new BooleanMatchNameSpace())) {
-            $event->foundError();
+        $result = $this->isInPrivateConfiguredEntries($val, new BooleanMatchNameSpace());
+
+        if ($result instanceof MatchedResult) {
+            $event->foundError($result->getInfo());
             return;
         }
     }
 
     private function withModeVendorPrivate(Entry $currentNamespaceAccess, EventProcessNodeInterface $event): void
     {
-        if ($this->isInPublicConfiguredEntries($currentNamespaceAccess, new BooleanMatchNameSpace())) {
+        if ($this->isInPublicConfiguredEntries($currentNamespaceAccess, new BooleanMatchNameSpace()) instanceof MatchedResult) {
             return;
         }
 
@@ -105,14 +107,12 @@ final class ProcessUseStatement
         return $token;
     }
 
-    //todo: Use MatchedResultInterface
-    private function isInPublicConfiguredEntries(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): bool
+    private function isInPublicConfiguredEntries(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): MatchedResultInterface
     {
         return $macher->evaluate($this->globalConfig->getPublicEntries(), $currentNamespaceAccess);
     }
 
-    //todo: Use MatchedResultInterface
-    private function isInPrivateConfiguredEntries(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): bool
+    private function isInPrivateConfiguredEntries(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): MatchedResultInterface
     {
         return $macher->evaluate($this->globalConfig->getPrivateEntries(), $currentNamespaceAccess);
     }

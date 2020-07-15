@@ -12,7 +12,7 @@ class MatchedResult implements MatchedResultInterface
         $this->info = $info;
     }
 
-    public function __invoke(): string
+    public function getInfo(): string
     {
         return $this->info;
     }

@@ -3,7 +3,10 @@
   "start-path": "src",
   "composer-json-path": "./",
   "public-entries": [],
-  "private-entries": [],
-  "mode": "MODE_MAKE_VENDOR_PRIVATE",
+  "private-entries": [
+    "PhpParser\\Node",
+    "\\safe\\"
+  ],
+  "mode": "PUBLIC",
   "cache": false
 }
