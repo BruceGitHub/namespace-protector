@@ -127,7 +127,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
                             [],
                             [
                                 'Personal\\First',
-                                'Personal\Privates\PrivatesB',
+                                'Personal\Privates\PrivatesA',
                             ]
                         );
                     }
@@ -143,7 +143,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $this->assertCount(2, $rsCollector->get());
         $this->assertStringContainsString('Process file: vfs://root/files/UsePublicNsAndOnePrivateClass.php', $rsCollector->get()[0]->get());
-        $this->assertStringContainsString('> ERROR Line: 8 of use Personal\Privates', $rsCollector->get()[1]->get());
+        $this->assertStringContainsString('> ERROR Line: 9 of use Personal\Privates\PrivatesB', $rsCollector->get()[1]->get());
     }
 
     /** @test */
