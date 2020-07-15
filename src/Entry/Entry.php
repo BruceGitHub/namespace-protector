@@ -29,4 +29,9 @@ final class Entry
     {
         return $this->entry;
     }
+
+    public function __invoke(): string
+    {
+        return $this->get();
+    }
 }
