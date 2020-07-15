@@ -2,13 +2,11 @@
 
 namespace NamespaceProtector\Parser;
 
-use PhpParser\NodeTraverser;
-use PhpParser\ParserFactory;
+use PhpParser\Parser;
 use NamespaceProtector\Result\Result;
-use NamespaceProtector\Parser\Node\PhpNode;
+use PhpParser\NodeTraverserInterface;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultCollector;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use NamespaceProtector\Result\ResultCollectorReadable;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 
@@ -19,7 +17,7 @@ final class PhpFileParser implements ParserInterface
     /** @var \PhpParser\Parser  */
     private $parser;
 
-    /** @var NodeTraverser  */
+    /** @var NodeTraverserInterface.  */
     private $traverser;
 
     /** @var ResultCollector  */
@@ -30,21 +28,14 @@ final class PhpFileParser implements ParserInterface
 
     public function __construct(
         \Psr\SimpleCache\CacheInterface $cache,
-        EventDispatcherInterface $eventDispatcher
+        NodeTraverserInterface $nodeTraverserInterface,
+        Parser $parser,
+        ResultCollector $resultCollector
     ) {
         $this->cache = $cache;
-        $this->parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-        $this->traverser = new NodeTraverser();
-
-        $this->resultCollector = new ResultCollector();
-
-        $phpNode = new PhpNode(
-            ['preserveOriginalNames' => true, 'replaceNodes' => false],
-            $this->resultCollector,
-            $eventDispatcher
-        );
-
-        $this->traverser->addVisitor($phpNode);
+        $this->traverser = $nodeTraverserInterface;
+        $this->resultCollector = $resultCollector;
+        $this->parser = $parser;
     }
 
     public function parseFile(PathInterface $pathFile): void

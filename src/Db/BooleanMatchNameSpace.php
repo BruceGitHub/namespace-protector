@@ -16,7 +16,6 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
      */
     public function evaluate(iterable $data, Entry $matchMe): MatchedResultInterface
     {
-
         foreach ($data as $item) {
             $currentEntry = \strtolower($item);
             $current = \strtolower($matchMe->get());
@@ -30,8 +29,7 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
     }
 
     private function isCurrentNamespaceInsideAPublicNamespace(string $current, string $publicEntry): bool
-    {        
-
+    {
         if ($current === $publicEntry) {
             return true;
         }

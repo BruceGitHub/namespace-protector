@@ -64,13 +64,12 @@ final class PhpNode extends NameResolver
         $resultProcessNode = $func($node);
 
         if ($resultProcessNode->withError()) {
-            
             $additionalInformation = '';
             if ($resultProcessNode->getAdditionalInformation() !== '') {
-                $additionalInformation='( '.$resultProcessNode->getAdditionalInformation().' )';
+                $additionalInformation = '( ' . $resultProcessNode->getAdditionalInformation() . ' )';
             }
 
-            $val = new Entry($resultProcessNode->getNodeName().$additionalInformation);
+            $val = new Entry($resultProcessNode->getNodeName() . $additionalInformation);
             $this->pushError($val, $node);
             return;
         }

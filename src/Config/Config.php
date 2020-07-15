@@ -113,7 +113,7 @@ final class Config
     {
         $prettyPrintNamespaceToValidate = "\n";
         foreach ($entries as $namespace) {
-            $prettyPrintNamespaceToValidate .= '|       >' . $namespace.\PHP_EOL;
+            $prettyPrintNamespaceToValidate .= '|       >' . $namespace . \PHP_EOL;
         }
         return $prettyPrintNamespaceToValidate;
     }

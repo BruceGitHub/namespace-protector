@@ -32,7 +32,7 @@ final class FoundUseNamespace implements EventProcessNodeInterface
         return $this->nodeName;
     }
 
-    public function foundError(string $addtionalInformation=''): void
+    public function foundError(string $addtionalInformation = ''): void
     {
         $this->additionalInformation = $addtionalInformation;
         $this->erroDetect = true;
@@ -43,7 +43,7 @@ final class FoundUseNamespace implements EventProcessNodeInterface
         return $this->erroDetect;
     }
 
-    public function getAdditionalInformation(): string 
+    public function getAdditionalInformation(): string
     {
         return $this->additionalInformation;
     }

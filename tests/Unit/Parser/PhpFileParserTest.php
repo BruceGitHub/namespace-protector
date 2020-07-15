@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Unit\Parser;
 
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory;
 use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Cache\NullCache;
+use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Event\EventDispatcher;
 use NamespaceProtector\Event\ListenerProvider;
+use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
@@ -370,7 +374,21 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $listener->addEventListener(FoundUseNamespace::class, $callableUseStatement);
         $dispatcher = new EventDispatcher($listener);
 
-        return new PhpFileParser(new NullCache(), $dispatcher);
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $traverser = new NodeTraverser();
+        $resultCollector = new ResultCollector();
+
+        $phpNode = new PhpNode(
+            [
+                'preserveOriginalNames' => true,
+                'replaceNodes' => false,
+            ],
+            $resultCollector,
+            $dispatcher
+        );
+        $traverser->addVisitor($phpNode);
+
+        return new PhpFileParser(new NullCache(), $traverser, $parser, $resultCollector);
     }
 
     private function helperEditChangesEntries($directoryReal, $pathFile, array $nsPrivate = [], array $nsPublic = [])

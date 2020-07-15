@@ -6,7 +6,7 @@ use NamespaceProtector\Event\EventInterface;
 
 interface EventProcessNodeInterface extends EventInterface
 {
-    public function foundError(string $additionalInfo=''): void;
+    public function foundError(string $additionalInfo = ''): void;
 
     public function withError(): bool;
 

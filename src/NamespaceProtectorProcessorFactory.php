@@ -1,16 +1,22 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector;
 
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory;
 use Psr\SimpleCache\CacheInterface;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Cache\NullCache;
+use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Event\EventDispatcher;
 use NamespaceProtector\Event\ListenerProvider;
+use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Scanner\FileSystemScanner;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
@@ -32,11 +38,27 @@ final class NamespaceProtectorProcessorFactory
         $listener->addEventListener(FoundUseNamespace::class, $callableUseStatement);
         $dispatcher = new EventDispatcher($listener);
 
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $traverser = new NodeTraverser();
+        $resultCollector = new ResultCollector();
+
+        $phpNode = new PhpNode(
+            [
+                'preserveOriginalNames' => true,
+                'replaceNodes' => false,
+            ],
+            $resultCollector,
+            $dispatcher
+        );
+        $traverser->addVisitor($phpNode);
+
         $analyser = new Analyser(
             new ConsoleDevice(),
             new PhpFileParser(
                 $cacheClass,
-                $dispatcher
+                $traverser,
+                $parser,
+                $resultCollector
             )
         );
 
