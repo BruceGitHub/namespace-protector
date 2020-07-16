@@ -33,7 +33,11 @@ final class PhpNode extends NameResolver
         parent::__construct(null, $configParser);
 
         $this->resultCollector = $resultCollector;
+        $this->configureEvents($eventDispatcher);
+    }
 
+    private function configureEvents(EventDispatcherInterface $eventDispatcher): void
+    {
         $this->listNodeProcessor[UseUse::class] = static function (Node $node) use ($eventDispatcher) {
             /** @var UseUse $node */
             return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->name->toCodeString()));
