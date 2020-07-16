@@ -13,7 +13,7 @@ final class ComposerJson implements ScannerInterface
     private const COMPOSER_JSON = 'composer.json';
     private const NAME_PROJECT = 'brucegithub/namespace-protector';
 
-    /** @var PathInterface */
+    /** @var string */
     private $fileSystemPathComposerJson;
 
     /** @var array<string> */
@@ -21,13 +21,11 @@ final class ComposerJson implements ScannerInterface
 
     public function __construct(PathInterface $fileSystemPathComposerJson)
     {
-        $this->fileSystemPathComposerJson = new FileSystemPath(
-            $fileSystemPathComposerJson->get()
+        $this->fileSystemPathComposerJson = $fileSystemPathComposerJson->get()
             . DIRECTORY_SEPARATOR
-            . self::COMPOSER_JSON
-        );
+            . self::COMPOSER_JSON;
 
-        Assert::readable($this->fileSystemPathComposerJson->get(), NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSER_JSON_NOT_READABLE);
+        Assert::readable($this->fileSystemPathComposerJson, NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSER_JSON_NOT_READABLE);
     }
 
     //todo: dirty implemetation
@@ -60,7 +58,7 @@ final class ComposerJson implements ScannerInterface
 
     public function load(): void
     {
-        $content = \safe\file_get_contents($this->fileSystemPathComposerJson->get());
+        $content = \safe\file_get_contents($this->fileSystemPathComposerJson);
 
         $data = \safe\json_decode($content, true);
 
