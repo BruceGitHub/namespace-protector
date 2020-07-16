@@ -17,7 +17,7 @@ final class PhpFileParser implements ParserInterface
     /** @var \PhpParser\Parser  */
     private $parser;
 
-    /** @var NodeTraverserInterface.  */
+    /** @var \PhpParser\NodeTraverserInterface.  */
     private $traverser;
 
     /** @var ResultCollector  */

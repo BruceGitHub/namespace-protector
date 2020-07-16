@@ -28,6 +28,11 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
     public function __construct(ComposerJson $composerJson)
     {
         $this->composerJson = $composerJson;
+        $this->initializeVars();
+    }
+
+    private function initializeVars(): void
+    {
         $this->collectBaseClasses = new DbKeyValue();
         $this->collectBaseInterfaces = new DbKeyValue();
         $this->collectBaseFunctions = new DbKeyValue();
