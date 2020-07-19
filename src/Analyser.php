@@ -4,19 +4,17 @@ namespace NamespaceProtector;
 
 use NamespaceProtector\Parser\Node\PhpNode;
 use NamespaceProtector\Common\PathInterface;
+use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Parser\ParserInterface;
+use NamespaceProtector\Result\ResultInterface;
+use NamespaceProtector\Result\ResultParserInterface;
 use NamespaceProtector\OutputDevice\OutputDeviceInterface;
+use NamespaceProtector\Result\ResultParserNamespaceValidate;
 
 final class Analyser
 {
     /** @var ParserInterface[]  */
     private $listParser;
-
-    /** @var bool  */
-    private $withError;
-
-    /** @var int  */
-    private $countErrors;
 
     /** @var OutputDeviceInterface */
     private $outputDevice;
@@ -25,37 +23,24 @@ final class Analyser
     {
         $this->outputDevice = $outputDevice;
         $this->listParser = $listParser;
-        $this->countErrors = 0;
-        $this->withError = false;
     }
 
-    public function execute(PathInterface $pathInterface): void
+    public function execute(PathInterface $pathInterface): ResultParserInterface
     {
+        $resultParserNamespaceValidate = new ResultParserNamespaceValidate(); //todo: specific parser result 
+
         foreach ($this->listParser as $currentParser) {
             $currentParser->parseFile($pathInterface);
 
+            //todo: specific parser result 
             foreach ($currentParser->getListResult()->get() as $result) {
-                $this->outputDevice->output(($result->get()));
-                if ($result->getType() === PhpNode::ERR) {
-                    $this->withError = true;
-                    $this->incrementError();
+                $this->outputDevice->output(($result->get())); 
+                if ($result->getType() === PhpNode::ERR) { //todo: coupling with PhpNode 
+                    $resultParserNamespaceValidate = $resultParserNamespaceValidate->incrementError(); //todo: specific operation processor
                 }
             }
         }
-    }
 
-    public function withError(): bool
-    {
-        return $this->withError;
-    }
-
-    private function incrementError(): void
-    {
-        ++$this->countErrors;
-    }
-
-    public function getCountErrors(): int
-    {
-        return $this->countErrors;
+        return $resultParserNamespaceValidate;
     }
 }

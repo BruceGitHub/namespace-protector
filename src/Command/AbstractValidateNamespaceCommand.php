@@ -40,11 +40,13 @@ abstract class AbstractValidateNamespaceCommand extends Command
         $output->writeln('Loaded ' . $namespaceProtectorProcessor->totalSymbolsLoaded() . ' built in symbols');
 
         $output->writeln('Start analysis...');
-        $namespaceProtectorProcessor->process();
 
-        $output->writeln('<fg=red>Total errors: ' . $namespaceProtectorProcessor->getCountErrors() . '</>');
+        /** @var ResultParserNamespaceValidate $result */
+        $result = $namespaceProtectorProcessor->process();
 
-        if ($namespaceProtectorProcessor->getCountErrors() > 0) {
+        $output->writeln('<fg=red>Total errors: ' . $result->getCountErrors() . '</>');
+
+        if ($result->getCountErrors() > 0) {
             return self::FAILURE;
         }
 

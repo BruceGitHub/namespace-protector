@@ -9,6 +9,8 @@ use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
 use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\OutputDevice\OutputDeviceInterface;
+use NamespaceProtector\Result\ResultParserNamespaceValidate;
 
 class AnalyserTest extends AbstractUnitTestCase
 {
@@ -18,25 +20,33 @@ class AnalyserTest extends AbstractUnitTestCase
         $file = $this->getFileToParse();
         $parser = $this->prophesize(ParserInterface::class);
         $parser->parseFile($file)
-                ->shouldBeCalled();
+                ->shouldBeCalled()
+                ->willReturn(new ResultParserNamespaceValidate())
+                ;
 
         $resultCollector = $this->resultCollectorWithError();
 
         $parser->getListResult()
                 ->shouldBeCalled()
-                ->willReturn(
-                    $resultCollector
-                );
+                ->willReturn($resultCollector)
+                ;
 
         $parser = $parser->reveal();
 
         $analyser = $this->createAnalyser($parser, $file);
-        $analyser->execute($file);
+        $result = $analyser->execute($file);
+
+        $this->assertInstanceOf(ResultParserNamespaceValidate::class,$result);
     }
 
     private function createAnalyser($parser, $file): Analyser
     {
-        $analyser = new Analyser(new ConsoleDevice(), $parser);
+        $console = $this->prophesize(OutputDeviceInterface::class);
+        $console->output('Message')
+                ->shouldBeCalled()
+                ;
+
+        $analyser = new Analyser($console->reveal(), $parser);
         return $analyser;
     }
 
@@ -58,10 +68,12 @@ class AnalyserTest extends AbstractUnitTestCase
         $parser = $parser->reveal();
 
         $analyser = $this->createAnalyser($parser, $file);
-        $analyser->execute($file);
 
-        $this->assertTrue($analyser->withError());
-        $this->assertEquals(1, $analyser->getCountErrors());
+        /** @var ResultParserNamespaceValidate $result */
+        $result = $analyser->execute($file);
+
+        $this->assertTrue($result->withError());
+        $this->assertEquals(1, $result->getCountErrors());
     }
 
     private function resultCollectorWithError(): ResultCollectorReadable

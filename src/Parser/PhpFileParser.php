@@ -7,7 +7,9 @@ use NamespaceProtector\Result\Result;
 use PhpParser\NodeTraverserInterface;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultParserInterface;
 use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultParserNamespaceValidate;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 
 final class PhpFileParser implements ParserInterface
@@ -38,7 +40,7 @@ final class PhpFileParser implements ParserInterface
         $this->parser = $parser;
     }
 
-    public function parseFile(PathInterface $pathFile): void
+    public function parseFile(PathInterface $pathFile): ResultParserInterface
     {
         $this->resultCollector->emptyResult();
         $this->resultCollector->addResult(new Result('Process file: ' . $pathFile() . PHP_EOL));
@@ -47,7 +49,9 @@ final class PhpFileParser implements ParserInterface
 
         $this->traverser->traverse($ast);
 
-        $this->emptyLogIfNoErrorEntry();
+        $this->emptyLogIfNoErrorEntry(); //todo: specific purpose
+
+        return new ResultParserNamespaceValidate(); 
     }
 
     public function getListResult(): ResultCollectorReadable

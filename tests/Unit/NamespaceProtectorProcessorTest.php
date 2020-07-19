@@ -17,9 +17,12 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
         $namespaceProtectorProcessor->load();
 
         \ob_start();
-        $namespaceProtectorProcessor->process();
-        $resultOutput = \ob_get_clean();
-        $this->assertEquals(5, $namespaceProtectorProcessor->getCountErrors());
+        
+        /** @var ResultParserNamespaceValidate $result */
+        $result = $namespaceProtectorProcessor->process();
+        
+        $resultOutput = \ob_get_clean(); //\var_dump($resultOutput); die;
+        $this->assertEquals(5, $result->getCountErrors());
 
         $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Second.php\n", $resultOutput);
         $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);

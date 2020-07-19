@@ -7,7 +7,7 @@
          beStrictAboutCoversAnnotation="false"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
-         verbose="false">
+         verbose="true">
     <testsuites>
         <testsuite name="default">
             <directory suffix="Test.php">tests</directory>

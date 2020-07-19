@@ -5,6 +5,8 @@ namespace NamespaceProtector;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Scanner\FileSystemScanner;
+use NamespaceProtector\Result\ResultParserInterface;
+use NamespaceProtector\Result\ResultParserNamespaceValidate;
 
 final class NamespaceProtectorProcessor
 {
@@ -49,11 +51,6 @@ final class NamespaceProtectorProcessor
         return \count($this->fileSystemScanner->getFileLoaded());
     }
 
-    public function getCountErrors(): int
-    {
-        return $this->analyser->getCountErrors();
-    }
-
     public function totalSymbolsLoaded(): int
     {
         return
@@ -63,21 +60,29 @@ final class NamespaceProtectorProcessor
             ($this->environmentDataLoader->getCollectBaseConstants()->count());
     }
 
-    public function process(): bool
-    {
-        $this->processEntries($this->fileSystemScanner, $this->analyser);
+    public function process(): ResultParserInterface //todo: bad 
+    { 
+        /** @var ResultParserNamespaceValidate $result */
+        $result = $this->processEntries($this->fileSystemScanner, $this->analyser);
 
-        if ($this->analyser->withError()) {
-            return false;
+        if ($result->withError()) {
+            return new ResultParserNamespaceValidate($result->getCountErrors());
         }
 
-        return true;
+        return $result;
     }
 
-    private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): void
+    private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultParserNamespaceValidate //todo: bad 
     {
+        $totalResult = new ResultParserNamespaceValidate();
         foreach ($fileSystemScanner->getFileLoaded() as $file) {
-            $analyser->execute($file);
+
+            /** @var ResultParserNamespaceValidate $result */
+            $result = $analyser->execute($file);
+
+            $totalResult = $totalResult->append($result);
         }
+
+        return $totalResult;
     }
 }
