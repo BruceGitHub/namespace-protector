@@ -2,9 +2,9 @@
 
 namespace NamespaceProtector\Result;
 
-interface ResultParserInterface
+interface ResultProcessorInterface
 {
-    public function append(ResultParserInterface $toAppendInstance): ResultParserInterface;
+    public function getOutputLines(): array;
 
     public function getResultCollectionReadable(): ResultCollectorReadable;
 }

@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Parser\Node;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\UseUse;
-use NamespaceProtector\Entry\Entry;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\NodeVisitor\NameResolver;
 use NamespaceProtector\Result\ErrorResult;
@@ -73,15 +74,14 @@ final class PhpNode extends NameResolver
                 $additionalInformation = '( ' . $resultProcessNode->getAdditionalInformation() . ' )';
             }
 
-            $val = new Entry($resultProcessNode->getNodeName() . $additionalInformation);
-            $this->pushError($val, $node);
+            $err = new ErrorResult(
+                $node->getLine(),
+                $resultProcessNode->getNodeName() . $additionalInformation . \PHP_EOL,
+                self::ERR
+            );
+
+            $this->resultCollector->addResult($err);
             return;
         }
-    }
-
-    private function pushError(Entry $val, Node $node): void
-    {
-        $err = new ErrorResult($node->getLine(), $val->get() . \PHP_EOL, self::ERR);
-        $this->resultCollector->addResult($err);
     }
 }

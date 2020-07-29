@@ -4,14 +4,16 @@ namespace NamespaceProtector;
 
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Scanner\ComposerJson;
+use NamespaceProtector\Result\ResultAnalyser;
+use NamespaceProtector\Result\ResultProcessor;
 use NamespaceProtector\Scanner\FileSystemScanner;
-use NamespaceProtector\Result\ResultParserInterface;
-use NamespaceProtector\Result\ResultParserNamespaceValidate;
+use NamespaceProtector\Result\ResultAnalyserInterface;
+use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultProcessorInterface;
 
 final class NamespaceProtectorProcessor
 {
-    private const NAMESPACE_PROTECTOR_CACHE = 'namespace-protector-cache';
-
     /** @var Config */
     private $config;
 
@@ -60,27 +62,28 @@ final class NamespaceProtectorProcessor
             ($this->environmentDataLoader->getCollectBaseConstants()->count());
     }
 
-    public function process(): ResultParserInterface //todo: bad 
-    { 
-        /** @var ResultParserNamespaceValidate $result */
+    public function process(): ResultProcessorInterface
+    {
+        /** @var ResultAnalyser $result */
         $result = $this->processEntries($this->fileSystemScanner, $this->analyser);
-
-        if ($result->withError()) {
-            return new ResultParserNamespaceValidate($result->getCountErrors());
+        if ($result->withResults()) {
+            return new ResultProcessor(
+                ['<fg=red>Total errors: ' . $result->count() . '</>'],
+                $result->getResultCollector()
+            );
         }
 
-        return $result;
+        return new ResultProcessor(['<fg=blue>No output</>'], $result->getResultCollector());
     }
 
-    private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultParserNamespaceValidate //todo: bad 
+    private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultAnalyserInterface
     {
-        $totalResult = new ResultParserNamespaceValidate();
+        /** @var ResultAnalyserInterface */
+        $totalResult = new ResultAnalyser(new ResultCollectorReadable(new ResultCollector()));
+
         foreach ($fileSystemScanner->getFileLoaded() as $file) {
-
-            /** @var ResultParserNamespaceValidate $result */
-            $result = $analyser->execute($file);
-
-            $totalResult = $totalResult->append($result);
+            $currentResult = $analyser->execute($file);
+            $totalResult = $totalResult->append($currentResult);
         }
 
         return $totalResult;

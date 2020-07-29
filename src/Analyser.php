@@ -2,45 +2,32 @@
 
 namespace NamespaceProtector;
 
-use NamespaceProtector\Parser\Node\PhpNode;
+use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Parser\ParserInterface;
-use NamespaceProtector\Result\ResultInterface;
-use NamespaceProtector\Result\ResultParserInterface;
-use NamespaceProtector\OutputDevice\OutputDeviceInterface;
-use NamespaceProtector\Result\ResultParserNamespaceValidate;
+use NamespaceProtector\Result\ResultAnalyserInterface;
+use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollectorReadable;
 
 final class Analyser
 {
     /** @var ParserInterface[]  */
     private $listParser;
 
-    /** @var OutputDeviceInterface */
-    private $outputDevice;
-
-    public function __construct(OutputDeviceInterface $outputDevice, ParserInterface ...$listParser)
+    public function __construct(ParserInterface ...$listParser)
     {
-        $this->outputDevice = $outputDevice;
         $this->listParser = $listParser;
     }
 
-    public function execute(PathInterface $pathInterface): ResultParserInterface
+    public function execute(PathInterface $filePath): ResultAnalyserInterface
     {
-        $resultParserNamespaceValidate = new ResultParserNamespaceValidate(); //todo: specific parser result 
-
+        $totalParserResult = new ResultParser(new ResultCollectorReadable(new ResultCollector()));
         foreach ($this->listParser as $currentParser) {
-            $currentParser->parseFile($pathInterface);
-
-            //todo: specific parser result 
-            foreach ($currentParser->getListResult()->get() as $result) {
-                $this->outputDevice->output(($result->get())); 
-                if ($result->getType() === PhpNode::ERR) { //todo: coupling with PhpNode 
-                    $resultParserNamespaceValidate = $resultParserNamespaceValidate->incrementError(); //todo: specific operation processor
-                }
-            }
+            $result = $currentParser->parseFile($filePath);
+            $totalParserResult = $totalParserResult->append($result);
         }
 
-        return $resultParserNamespaceValidate;
+        return new ResultAnalyser($totalParserResult->getResultCollectionReadable());
     }
 }

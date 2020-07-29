@@ -16,25 +16,20 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
         $namespaceProtectorProcessor = $factory->create($config);
         $namespaceProtectorProcessor->load();
 
-        \ob_start();
-        
-        /** @var ResultParserNamespaceValidate $result */
         $result = $namespaceProtectorProcessor->process();
-        
-        $resultOutput = \ob_get_clean(); //\var_dump($resultOutput); die;
-        $this->assertEquals(5, $result->getCountErrors());
 
-        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Second.php\n", $resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);
+        $items = $result->getResultCollectionReadable()->get();
+        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Second.php', $items[0]->get());
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $items[1]->get());
 
-        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Foo.php\n", $resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);
+        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Foo.php', $items[2]->get());
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo", $items[3]->get());
 
-        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/Bar.php\n", $resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);
+        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Bar.php', $items[4]->get());
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $items[5]->get());
 
-        $this->assertStringContainsString("Process file: ./tests/Stub/targetProject/src/First.php\n", $resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream\n", $resultOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some\n", $resultOutput);
+        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/First.php', $items[6]->get());
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $items[7]->get());
+        $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some", $items[8]->get());
     }
 }

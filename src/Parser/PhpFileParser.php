@@ -5,11 +5,11 @@ namespace NamespaceProtector\Parser;
 use PhpParser\Parser;
 use NamespaceProtector\Result\Result;
 use PhpParser\NodeTraverserInterface;
+use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Result\ResultParserInterface;
 use NamespaceProtector\Result\ResultCollectorReadable;
-use NamespaceProtector\Result\ResultParserNamespaceValidate;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 
 final class PhpFileParser implements ParserInterface
@@ -46,12 +46,10 @@ final class PhpFileParser implements ParserInterface
         $this->resultCollector->addResult(new Result('Process file: ' . $pathFile() . PHP_EOL));
 
         $ast = $this->fetchAstAfterParse($pathFile);
-
         $this->traverser->traverse($ast);
+        $this->emptyIfOneResult();
 
-        $this->emptyLogIfNoErrorEntry(); //todo: specific purpose
-
-        return new ResultParserNamespaceValidate(); 
+        return new ResultParser($this->getListResult());
     }
 
     public function getListResult(): ResultCollectorReadable
@@ -59,7 +57,7 @@ final class PhpFileParser implements ParserInterface
         return new ResultCollectorReadable($this->resultCollector);
     }
 
-    private function emptyLogIfNoErrorEntry(): void
+    private function emptyIfOneResult(): void
     {
         if (\count($this->resultCollector->get()) === self::ONLY_ONE_ENTRY) {
             $this->resultCollector->emptyResult();

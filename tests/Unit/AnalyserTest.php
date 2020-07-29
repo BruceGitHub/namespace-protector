@@ -4,12 +4,12 @@ namespace Tests\Unit;
 
 use NamespaceProtector\Analyser;
 use NamespaceProtector\Result\Result;
+use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultCollector;
-use NamespaceProtector\OutputDevice\ConsoleDevice;
+use NamespaceProtector\Result\ResultAnalyserInterface;
 use NamespaceProtector\Result\ResultCollectorReadable;
-use NamespaceProtector\OutputDevice\OutputDeviceInterface;
 use NamespaceProtector\Result\ResultParserNamespaceValidate;
 
 class AnalyserTest extends AbstractUnitTestCase
@@ -20,33 +20,20 @@ class AnalyserTest extends AbstractUnitTestCase
         $file = $this->getFileToParse();
         $parser = $this->prophesize(ParserInterface::class);
         $parser->parseFile($file)
-                ->shouldBeCalled()
-                ->willReturn(new ResultParserNamespaceValidate())
-                ;
-
-        $resultCollector = $this->resultCollectorWithError();
-
-        $parser->getListResult()
-                ->shouldBeCalled()
-                ->willReturn($resultCollector)
-                ;
+            ->shouldBeCalled()
+            ->willReturn(new ResultParser(new ResultCollectorReadable(new ResultCollector())));
 
         $parser = $parser->reveal();
 
-        $analyser = $this->createAnalyser($parser, $file);
+        $analyser = $this->createAnalyser($parser);
         $result = $analyser->execute($file);
 
-        $this->assertInstanceOf(ResultParserNamespaceValidate::class,$result);
+        $this->assertInstanceOf(ResultAnalyserInterface::class, $result);
     }
 
-    private function createAnalyser($parser, $file): Analyser
+    private function createAnalyser($parser): Analyser
     {
-        $console = $this->prophesize(OutputDeviceInterface::class);
-        $console->output('Message')
-                ->shouldBeCalled()
-                ;
-
-        $analyser = new Analyser($console->reveal(), $parser);
+        $analyser = new Analyser($parser);
         return $analyser;
     }
 

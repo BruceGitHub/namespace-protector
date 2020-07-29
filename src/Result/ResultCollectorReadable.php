@@ -13,7 +13,7 @@ final class ResultCollectorReadable implements ResultCollectorInterface
     }
 
     /** @return  array<ResultInterface>  */
-    public function get(): array
+    public function get(): iterable
     {
         return $this->resultCollector->get();
     }

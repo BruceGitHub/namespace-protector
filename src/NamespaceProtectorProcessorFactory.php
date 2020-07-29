@@ -18,7 +18,6 @@ use NamespaceProtector\Event\EventDispatcher;
 use NamespaceProtector\Event\ListenerProvider;
 use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Scanner\FileSystemScanner;
-use NamespaceProtector\OutputDevice\ConsoleDevice;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
 
@@ -53,7 +52,6 @@ final class NamespaceProtectorProcessorFactory
         $traverser->addVisitor($phpNode);
 
         $analyser = new Analyser(
-            new ConsoleDevice(),
             new PhpFileParser(
                 $cacheClass,
                 $traverser,
