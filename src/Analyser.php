@@ -25,6 +25,7 @@ final class Analyser
         $totalParserResult = new ResultParser(new ResultCollectorReadable(new ResultCollector()));
         foreach ($this->listParser as $currentParser) {
             $result = $currentParser->parseFile($filePath);
+
             $totalParserResult = $totalParserResult->append($result);
         }
 

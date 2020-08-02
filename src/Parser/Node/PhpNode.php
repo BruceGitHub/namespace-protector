@@ -68,20 +68,21 @@ final class PhpNode extends NameResolver
         /** @var FoundUseNamespace */
         $resultProcessNode = $func($node);
 
-        if ($resultProcessNode->withError()) {
-            $additionalInformation = '';
-            if ($resultProcessNode->getAdditionalInformation() !== '') {
-                $additionalInformation = '( ' . $resultProcessNode->getAdditionalInformation() . ' )';
-            }
-
-            $err = new ErrorResult(
-                $node->getLine(),
-                $resultProcessNode->getNodeName() . $additionalInformation . \PHP_EOL,
-                self::ERR
-            );
-
-            $this->resultCollector->addResult($err);
+        if (!$resultProcessNode->withError()) {
             return;
         }
+
+        $additionalInformation = '';
+        if ($resultProcessNode->getAdditionalInformation() !== '') {
+            $additionalInformation = '( ' . $resultProcessNode->getAdditionalInformation() . ' )';
+        }
+
+        $err = new ErrorResult(
+            $node->getLine(),
+            $resultProcessNode->getNodeName() . $additionalInformation . \PHP_EOL,
+            self::ERR
+        );
+
+        $this->resultCollector->addResult($err);
     }
 }

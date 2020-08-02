@@ -7,14 +7,22 @@ final class ResultCollector implements ResultCollectorInterface
     /** @var array<ResultInterface>  */
     private $listResult;
 
-    public function __construct()
+    /**
+     * @param array<ResultInterface> $result
+     */
+    public function __construct(array $result = [])
     {
-        $this->listResult = [];
+        $this->listResult = $result;
     }
 
     public function addResult(ResultInterface $result): void
     {
         $this->listResult[] = $result;
+    }
+
+    public function count(): int
+    {
+        return \count($this->listResult);
     }
 
     /** @return  array<ResultInterface>  */

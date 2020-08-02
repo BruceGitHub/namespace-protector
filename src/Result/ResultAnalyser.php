@@ -28,7 +28,7 @@ class ResultAnalyser implements ResultAnalyserInterface
 
     public function withResults(): bool
     {
-        return ($this->count()) >= 1 ? true : false;
+        return ($this->count()) >= 0 ? true : false;
     }
 
     public function getResultCollector(): ResultCollectorReadable
@@ -38,6 +38,6 @@ class ResultAnalyser implements ResultAnalyserInterface
 
     public function count(): int
     {
-        return \count($this->resultCollectorReadable->get());
+        return \count($this->resultCollectorReadable);
     }
 }

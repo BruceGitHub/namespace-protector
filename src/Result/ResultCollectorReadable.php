@@ -2,14 +2,21 @@
 
 namespace NamespaceProtector\Result;
 
-final class ResultCollectorReadable implements ResultCollectorInterface
+use Countable;
+
+final class ResultCollectorReadable implements Countable, ResultCollectorInterface
 {
-    /** @var ResultCollector */
+    /** @var ResultCollectorInterface */
     private $resultCollector;
 
-    public function __construct(ResultCollector $resultCollector)
+    public function __construct(ResultCollectorInterface $resultCollector)
     {
         $this->resultCollector = $resultCollector;
+    }
+
+    public function count(): int
+    {
+        return \count($this->resultCollector);
     }
 
     /** @return  array<ResultInterface>  */
