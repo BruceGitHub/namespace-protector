@@ -17,19 +17,22 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
         $namespaceProtectorProcessor->load();
 
         $result = $namespaceProtectorProcessor->process();
+        $totalOutput = '';
+        foreach ($result->getResultCollectionReadable()->get() AS $item) {
+            $totalOutput .= $item->get();
+        }
 
-        $items = $result->getResultCollectionReadable()->get();
-        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Second.php', $items[0]->get());
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $items[1]->get());
+        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Second.php', $totalOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $totalOutput);
 
-        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Foo.php', $items[2]->get());
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo", $items[3]->get());
+        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Foo.php', $totalOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo", $totalOutput);
 
-        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Bar.php', $items[4]->get());
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $items[5]->get());
+        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Bar.php', $totalOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $totalOutput);
 
-        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/First.php', $items[6]->get());
-        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $items[7]->get());
-        $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some", $items[8]->get());
+        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/First.php', $totalOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $totalOutput);
+        $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some", $totalOutput);
     }
 }
