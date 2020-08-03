@@ -9,7 +9,7 @@ use PhpParser\ParserFactory;
 use Psr\SimpleCache\CacheInterface;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Cache\NullCache;
-use NamespaceProtector\Parser\Node\PhpNode;
+use NamespaceProtector\Parser\Node\NamespaceVisitor;
 use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Cache\SimpleFileCache;
@@ -41,7 +41,7 @@ final class NamespaceProtectorProcessorFactory
         $traverser = new NodeTraverser();
         $resultCollector = new ResultCollector();
 
-        $phpNode = new PhpNode(
+        $namespaceVisitor = new NamespaceVisitor(
             [
                 'preserveOriginalNames' => true,
                 'replaceNodes' => false,
@@ -49,7 +49,7 @@ final class NamespaceProtectorProcessorFactory
             $resultCollector,
             $dispatcher
         );
-        $traverser->addVisitor($phpNode);
+        $traverser->addVisitor($namespaceVisitor);
 
         $analyser = new Analyser(
             new PhpFileParser(

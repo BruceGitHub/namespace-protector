@@ -13,7 +13,7 @@ use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-final class PhpNode extends NameResolver
+final class NamespaceVisitor extends NameResolver
 {
     public const ERR = 1;
 
@@ -65,6 +65,7 @@ final class PhpNode extends NameResolver
 
         $func = $this->listNodeProcessor[$class];
 
+        
         /** @var FoundUseNamespace */
         $resultProcessNode = $func($node);
 

@@ -10,7 +10,7 @@ use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Cache\NullCache;
-use NamespaceProtector\Parser\Node\PhpNode;
+use NamespaceProtector\Parser\Node\NamespaceVisitor;
 use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Event\EventDispatcher;
@@ -378,7 +378,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $traverser = new NodeTraverser();
         $resultCollector = new ResultCollector();
 
-        $phpNode = new PhpNode(
+        $namespaceVisitor = new NamespaceVisitor(
             [
                 'preserveOriginalNames' => true,
                 'replaceNodes' => false,
@@ -386,7 +386,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
             $resultCollector,
             $dispatcher
         );
-        $traverser->addVisitor($phpNode);
+        $traverser->addVisitor($namespaceVisitor);
 
         return new PhpFileParser(new NullCache(), $traverser, $parser, $resultCollector);
     }
