@@ -20,6 +20,7 @@ install:
 phpstan:
 	docker run --rm -v $(CURDIR):/app phpstan/phpstan analyse /app/src
 
+
 csf:
 	./bin/php-cs-fixer fix --verbose
 

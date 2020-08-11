@@ -9,14 +9,10 @@ final class Entry
     /** @var string */
     private $entry;
 
-    /** @var string */
-    private $originalEntry;
-
     public function __construct(string $entry)
     {
         Assert::notEmpty($entry);
 
-        $this->originalEntry = $entry;
         $this->entry = $entry;
     }
 

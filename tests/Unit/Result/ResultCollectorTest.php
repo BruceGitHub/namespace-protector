@@ -17,8 +17,8 @@ final class ResultCollectorTest extends TestCase
         $resultCollector = new ResultCollector();
         $resultCollector->addResult($result);
 
-        $this->assertCount(1, $resultCollector->get());
-        $this->assertEquals($result, $resultCollector->get()[0]);
+        $this->assertCount(1, $resultCollector->getIterator());
+        $this->assertEquals($result, $resultCollector->getIterator()->current());
     }
 
     /** @test */
@@ -30,6 +30,6 @@ final class ResultCollectorTest extends TestCase
         $resultCollector->addResult($result);
         $resultCollector->emptyResult();
 
-        $this->assertCount(0, $resultCollector->get());
+        $this->assertEquals(0, $resultCollector->count());
     }
 }

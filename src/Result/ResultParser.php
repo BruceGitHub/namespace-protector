@@ -4,29 +4,51 @@ namespace NamespaceProtector\Result;
 
 class ResultParser implements ResultParserInterface
 {
-    /** @var ResultCollectorReadable */
-    private $resultCollectorReadable;
+    /** @var ResultCollectorReadable<ResultProcessorInterface> */
+    private $resultCollectorReadableParser;
 
-    public function __construct(ResultCollectorReadable $resultCollectorReadable)
+    /**
+     * @param ResultCollectorReadable<ResultProcessorInterface> $resultCollectorReadableParser
+     */
+    public function __construct(ResultCollectorReadable $resultCollectorReadableParser = null)
     {
-        $this->resultCollectorReadable = $resultCollectorReadable;
+        if (null === $resultCollectorReadableParser) {
+            /** @var ResultCollectorReadable<ResultProcessorInterface> $resultCollectorReadableParser */
+            $resultCollectorReadableParser = new ResultCollectorReadable(new ResultCollector());
+            $this->resultCollectorReadableParser = $resultCollectorReadableParser;
+            return;
+        }
+
+        $this->resultCollectorReadableParser = $resultCollectorReadableParser;
     }
 
+    public function get(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return ResultCollectorReadable<ResultProcessorInterface>
+     */
     public function getResultCollectionReadable(): ResultCollectorReadable
     {
-        return $this->resultCollectorReadable;
+        return $this->resultCollectorReadableParser;
     }
 
-    public function append(ResultParserInterface $toAppendInstance): ResultParserInterface
+    public function append(ResultParserInterface $toAppendInstance): void
     {
+        /** @var ResultCollector<ResultProcessorInterface> $collector */
         $collector = new ResultCollector();
-        foreach ($this->getResultCollectionReadable()->get() as $item) {
+
+        foreach ($this->getResultCollectionReadable() as $item) {
             $collector->addResult($item);
         }
 
-        foreach ($toAppendInstance->getResultCollectionReadable()->get() as $item) {
+        foreach ($toAppendInstance->getResultCollectionReadable() as $item) {
             $collector->addResult($item);
         }
-        return new self(new ResultCollectorReadable($collector));
+        /** @var ResultCollectorReadable<ResultProcessorInterface> */
+        $resultCollectorReadableParser = new ResultCollectorReadable($collector);
+        $this->resultCollectorReadableParser = $resultCollectorReadableParser;
     }
 }

@@ -6,22 +6,26 @@ use Iterator;
 use ArrayIterator;
 
 /**
- * @implements ResultCollectorInterface<ResultInterface>
+ * @template T
+ * @implements ResultCollectorInterface<T>
  */
-final class ResultCollector implements ResultCollectorInterface
+final class ResultCollectionsTyped implements ResultCollectorInterface
 {
-    /** @var array<ResultInterface>  */
+    /** @var array<T>  */
     private $listResult;
 
     /**
-     * @param array<ResultInterface> $result
+     * @param array<T> $result
      */
     public function __construct(array $result = [])
     {
         $this->listResult = $result;
     }
 
-    public function addResult(ResultInterface $result): void
+    /**
+     * @param T $result
+     */
+    public function addResult($result): void
     {
         $this->listResult[] = $result;
     }
@@ -37,7 +41,7 @@ final class ResultCollector implements ResultCollectorInterface
     }
 
     /**
-     * @return Iterator<ResultInterface>
+     * @return Iterator<T>
      */
     public function getIterator(): Iterator
     {

@@ -2,13 +2,20 @@
 
 namespace NamespaceProtector\Result;
 
+use Iterator;
 use Countable;
 
+/**
+ * @implements ResultCollectorInterface<ResultInterface>
+ */
 final class ResultCollectorReadable implements Countable, ResultCollectorInterface
 {
-    /** @var ResultCollectorInterface */
+    /** @var ResultCollectorInterface<ResultInterface> */
     private $resultCollector;
 
+    /**
+     * @param ResultCollectorInterface<ResultInterface> $resultCollector
+     */
     public function __construct(ResultCollectorInterface $resultCollector)
     {
         $this->resultCollector = $resultCollector;
@@ -19,9 +26,11 @@ final class ResultCollectorReadable implements Countable, ResultCollectorInterfa
         return \count($this->resultCollector);
     }
 
-    /** @return  array<ResultInterface>  */
-    public function get(): iterable
+    /**
+     * @return Iterator<ResultInterface>
+     */
+    public function getIterator(): Iterator
     {
-        return $this->resultCollector->get();
+        return $this->resultCollector->getIterator();
     }
 }

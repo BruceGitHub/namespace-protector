@@ -2,12 +2,12 @@
 
 namespace NamespaceProtector\Result;
 
-interface ResultProcessorInterface
+interface ResultProcessorInterface extends ResultInterface
 {
     /**
-     * @return array<string>
+     * @return ResultCollectorReadable<ResultProcessedFile>
      */
-    public function getOutputLines(): array;
+    public function getProcessedResult(): ResultCollectorReadable;
 
-    public function getResultCollectionReadable(): ResultCollectorReadable;
+    public function get(): string;
 }

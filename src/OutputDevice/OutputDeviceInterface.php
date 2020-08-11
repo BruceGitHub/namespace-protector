@@ -2,7 +2,9 @@
 
 namespace NamespaceProtector\OutputDevice;
 
+use NamespaceProtector\Result\ResultProcessorInterface;
+
 interface OutputDeviceInterface
 {
-    public function output(string $value): void;
+    public function output(ResultProcessorInterface $value): void;
 }

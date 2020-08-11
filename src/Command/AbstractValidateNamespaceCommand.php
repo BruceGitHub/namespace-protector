@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\NamespaceProtectorProcessorFactory;
+use NamespaceProtector\OutputDevice\ConsoleDevice;
 
 abstract class AbstractValidateNamespaceCommand extends Command
 {
@@ -43,9 +44,8 @@ abstract class AbstractValidateNamespaceCommand extends Command
         /** @var ResultProcessorInterface $result */
         $result = $namespaceProtectorProcessor->process();
 
-        foreach ($result->getOutputLines() as $line) {
-            $output->writeln($line);
-        }
+        $console = new ConsoleDevice($output);
+        $console->output($result);
 
         return self::SUCCESS;
     }

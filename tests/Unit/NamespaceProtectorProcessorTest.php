@@ -4,6 +4,8 @@ namespace Tests\Unit;
 
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Common\FileSystemPath;
+use NamespaceProtector\OutputDevice\ConsoleDevice;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use NamespaceProtector\NamespaceProtectorProcessorFactory;
 
 class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
@@ -18,20 +20,22 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
 
         $result = $namespaceProtectorProcessor->process();
         $totalOutput = '';
-        foreach ($result->getResultCollectionReadable()->get() AS $item) {
-            $totalOutput .= $item->get();
-        }
+        $console = new ConsoleDevice(new ConsoleOutput());
 
-        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Second.php', $totalOutput);
+        \ob_start();
+        $console->output($result);
+        $totalOutput = \ob_get_clean();
+
+        $this->assertStringContainsString('Processed file: ./tests/Stub/targetProject/src/Second.php', $totalOutput);
         $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $totalOutput);
 
-        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Foo.php', $totalOutput);
+        $this->assertStringContainsString('Processed file: ./tests/Stub/targetProject/src/Foo.php', $totalOutput);
         $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo", $totalOutput);
 
-        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/Bar.php', $totalOutput);
+        $this->assertStringContainsString('Processed file: ./tests/Stub/targetProject/src/Bar.php', $totalOutput);
         $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $totalOutput);
 
-        $this->assertStringContainsString('Process file: ./tests/Stub/targetProject/src/First.php', $totalOutput);
+        $this->assertStringContainsString('Processed file: ./tests/Stub/targetProject/src/First.php', $totalOutput);
         $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $totalOutput);
         $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some", $totalOutput);
     }

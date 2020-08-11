@@ -2,12 +2,18 @@
 
 namespace NamespaceProtector\Result;
 
+use Iterator;
 use Countable;
+use IteratorAggregate;
 
-interface ResultCollectorInterface extends Countable
+/**
+ * @template T
+ * @extends IteratorAggregate<T>
+ */
+interface ResultCollectorInterface extends Countable, IteratorAggregate
 {
-    /** @return  array<ResultInterface>  */
-    public function get(): iterable;
-
     public function count(): int;
+
+    /** @return Iterator<T> */
+    public function getIterator(): Iterator;
 }

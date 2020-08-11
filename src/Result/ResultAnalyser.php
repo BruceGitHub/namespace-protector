@@ -15,11 +15,11 @@ class ResultAnalyser implements ResultAnalyserInterface
     public function append(ResultAnalyserInterface $toAppendInstance): ResultAnalyserInterface
     {
         $collector = new ResultCollector();
-        foreach ($this->getResultCollector()->get() as $item) {
+        foreach ($this->getResultCollector() as $item) {
             $collector->addResult($item);
         }
 
-        foreach ($toAppendInstance->getResultCollector()->get() as $item) {
+        foreach ($toAppendInstance->getResultCollector() as $item) {
             $collector->addResult($item);
         }
 

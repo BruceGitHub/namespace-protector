@@ -3,19 +3,20 @@
 namespace NamespaceProtector\Parser;
 
 use PhpParser\Parser;
-use NamespaceProtector\Result\Result;
 use PhpParser\NodeTraverserInterface;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultInterface;
+use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultParserInterface;
 use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
+use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
 
 final class PhpFileParser implements ParserInterface
 {
-    private const ONLY_ONE_ENTRY = 1;
-
     /** @var \PhpParser\Parser  */
     private $parser;
 
@@ -28,40 +29,54 @@ final class PhpFileParser implements ParserInterface
     /** @var \Psr\SimpleCache\CacheInterface  */
     private $cache;
 
+    /** @var NamespaceProtectorVisitorInterface */
+    private $namespaceProtectorVisitor;
+
     public function __construct(
         \Psr\SimpleCache\CacheInterface $cache,
         NodeTraverserInterface $nodeTraverserInterface,
-        Parser $parser,
-        ResultCollector $resultCollector
+        NamespaceProtectorVisitorInterface $visitor,
+        Parser $parser
     ) {
         $this->cache = $cache;
         $this->traverser = $nodeTraverserInterface;
-        $this->resultCollector = $resultCollector;
         $this->parser = $parser;
+        $this->namespaceProtectorVisitor = $visitor;
+        $this->resultCollector = $this->createResultCollector();
+        $nodeTraverserInterface->addVisitor($visitor);
     }
 
-    public function parseFile(PathInterface $pathFile): ResultParserInterface
+    /**
+     * @return ResultCollector
+     */
+    private function createResultCollector(): ResultCollector
     {
-        $this->resultCollector->emptyResult();
-        $this->resultCollector->addResult(new Result('Process file: ' . $pathFile() . PHP_EOL));
+        return new ResultCollector();
+    }
+
+    public function parseFile(PathInterface $pathFile): void
+    {
+        $this->resultCollector = $this->createResultCollector();
 
         $ast = $this->fetchAstAfterParse($pathFile);
         $this->traverser->traverse($ast);
-        $this->emptyIfOneResult();
 
-        return new ResultParser($this->getListResult());
-    }
+        $visitorCollectorResult = $this->namespaceProtectorVisitor->getStoreProcessNodeResult();
+        $processFileResult = new ResultProcessedFile($pathFile());
 
-    public function getListResult(): ResultCollectorReadable
-    {
-        return new ResultCollectorReadable($this->resultCollector);
-    }
-
-    private function emptyIfOneResult(): void
-    {
-        if (\count($this->resultCollector->get()) === self::ONLY_ONE_ENTRY) {
-            $this->resultCollector->emptyResult();
+        /** @var ResultInterface $singleResult */
+        foreach ($visitorCollectorResult as $singleResult) {
+            $processFileResult->add($singleResult);
         }
+
+        $this->resultCollector->addResult($processFileResult);
+    }
+
+    public function getListResult(): ResultParserInterface
+    {
+        /** @var ResultCollectorReadable<ResultProcessorInterface> */
+        $collector = new ResultCollectorReadable($this->resultCollector);
+        return new ResultParser($collector);
     }
 
     /**

@@ -12,7 +12,7 @@ class ErrorResultTest extends AbstractUnitTestCase
     {
         $err = new ErrorResult(111, 'minny', 999);
 
-        $this->assertEquals("\t > ERROR Line: 111 of use minny ", $err->get());
+        $this->assertEquals('minny', $err->get());
         $this->assertEquals(999, $err->getType());
     }
 }

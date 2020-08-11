@@ -22,11 +22,21 @@ final class ErrorResult implements ResultInterface
 
     public function get(): String
     {
-        return \Safe\sprintf("\t > ERROR Line: %d of use %s ", $this->line, $this->use);
+        return $this->use;
     }
 
     public function getType(): int
     {
         return $this->type;
+    }
+
+    public function getUse(): string
+    {
+        return $this->use;
+    }
+
+    public function getLine(): int
+    {
+        return $this->line;
     }
 }

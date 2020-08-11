@@ -4,30 +4,26 @@ namespace NamespaceProtector\Result;
 
 class ResultProcessor implements ResultProcessorInterface
 {
-    /** @var array<string> */
-    private $lines;
-
-    /** @var ResultCollectorReadable */
+    /** @var ResultCollectorReadable<ResultProcessedFile> */
     private $resultCollectorReadable;
 
     /**
-     * @param array<string> $lines
+     * @param ResultCollectorReadable<ResultProcessedFile> $resultCollectorReadable
      */
-    public function __construct(array $lines, ResultCollectorReadable $resultCollectorReadable)
+    public function __construct(ResultCollectorReadable $resultCollectorReadable)
     {
-        $this->lines = $lines;
         $this->resultCollectorReadable = $resultCollectorReadable;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getOutputLines(): array
+    public function get(): string
     {
-        return $this->lines;
+        return '';
     }
 
-    public function getResultCollectionReadable(): ResultCollectorReadable
+    /**
+     * @return ResultCollectorReadable<ResultProcessedFile>
+     */
+    public function getProcessedResult(): ResultCollectorReadable
     {
         return $this->resultCollectorReadable;
     }

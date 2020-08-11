@@ -16,7 +16,6 @@ use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Event\EventDispatcher;
 use NamespaceProtector\Event\ListenerProvider;
-use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Scanner\FileSystemScanner;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
@@ -39,24 +38,21 @@ final class NamespaceProtectorProcessorFactory
 
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $traverser = new NodeTraverser();
-        $resultCollector = new ResultCollector();
 
         $namespaceVisitor = new NamespaceVisitor(
             [
                 'preserveOriginalNames' => true,
                 'replaceNodes' => false,
             ],
-            $resultCollector,
             $dispatcher
         );
-        $traverser->addVisitor($namespaceVisitor);
 
         $analyser = new Analyser(
             new PhpFileParser(
                 $cacheClass,
                 $traverser,
-                $parser,
-                $resultCollector
+                $namespaceVisitor,
+                $parser
             )
         );
 

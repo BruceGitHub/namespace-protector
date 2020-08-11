@@ -7,7 +7,6 @@ use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultAnalyserInterface;
-use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Result\ResultCollectorReadable;
 
 final class Analyser
@@ -15,20 +14,30 @@ final class Analyser
     /** @var ParserInterface[]  */
     private $listParser;
 
+    /** @var ResultParser */
+    private $result;
+
     public function __construct(ParserInterface ...$listParser)
     {
         $this->listParser = $listParser;
     }
 
-    public function execute(PathInterface $filePath): ResultAnalyserInterface
+    public function execute(PathInterface $filePath): void
     {
-        $totalParserResult = new ResultParser(new ResultCollectorReadable(new ResultCollector()));
+        $resultParser = new ResultParser();
+        $this->result = $resultParser;
         foreach ($this->listParser as $currentParser) {
-            $result = $currentParser->parseFile($filePath);
+            $currentParser->parseFile($filePath);
+            $resultOfcurrentParsedFile = $currentParser->getListResult();
 
-            $totalParserResult = $totalParserResult->append($result);
+            $this->result->append($resultOfcurrentParsedFile);
         }
+    }
 
-        return new ResultAnalyser($totalParserResult->getResultCollectionReadable());
+    public function getResult(): ResultAnalyserInterface
+    {
+        return new ResultAnalyser(
+            new ResultCollectorReadable($this->result->getResultCollectionReadable())
+        );
     }
 }

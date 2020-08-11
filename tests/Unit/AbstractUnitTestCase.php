@@ -5,6 +5,8 @@ namespace Tests\Unit;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use NamespaceProtector\Result\ResultProcessedFile;
+use NamespaceProtector\Result\ResultCollectorReadable;
 
 abstract class AbstractUnitTestCase extends TestCase
 {
@@ -69,4 +71,29 @@ abstract class AbstractUnitTestCase extends TestCase
     }
 
     //builder todo: move in specific class
+
+    public function assertContainsProcessFile(string $expected, ResultCollectorReadable $iterable): void
+    {
+        $iterable->getIterator()->rewind();
+
+        /** @var ResultProcessedFile $item */
+        foreach ($iterable as $item) {
+            $this->assertStringContainsString($expected, $item->get());
+        }
+    }
+
+    public function assertContainsConflicts(string $expected, ResultCollectorReadable $iterable): void
+    {
+        $iterable->getIterator()->rewind();
+
+        /** @var ResultProcessedFile $item */
+        foreach ($iterable as $item) {
+            $arr = [];
+            foreach ($item->getConflicts() as $c) {
+                $arr[] = $c->get();
+            }
+
+            $this->assertContains($expected, $arr);
+        }
+    }
 }

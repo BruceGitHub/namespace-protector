@@ -5,10 +5,11 @@ namespace NamespaceProtector;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Result\ResultAnalyser;
+use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Result\ResultProcessor;
 use NamespaceProtector\Scanner\FileSystemScanner;
+use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultAnalyserInterface;
-use NamespaceProtector\Result\ResultCollector;
 use NamespaceProtector\Result\ResultCollectorReadable;
 use NamespaceProtector\Result\ResultProcessorInterface;
 
@@ -66,24 +67,22 @@ final class NamespaceProtectorProcessor
     {
         /** @var ResultAnalyser $result */
         $result = $this->processEntries($this->fileSystemScanner, $this->analyser);
-        if ($result->withResults()) {
-            return new ResultProcessor(
-                ['<fg=red>Total errors: ' . $result->count() . '</>'],
-                $result->getResultCollector()
-            );
-        }
 
-        return new ResultProcessor(['<fg=blue>No output</>'], $result->getResultCollector());
+        /** @var ResultCollectorReadable<ResultProcessedFile> $resultCollector */
+        $resultCollector = $result->getResultCollector();
+
+        return new ResultProcessor(
+            $resultCollector
+        );
     }
 
     private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultAnalyserInterface
     {
-        /** @var ResultAnalyserInterface */
         $totalResult = new ResultAnalyser(new ResultCollectorReadable(new ResultCollector()));
 
         foreach ($fileSystemScanner->getFileLoaded() as $file) {
-            $currentResult = $analyser->execute($file);
-            $totalResult = $totalResult->append($currentResult);
+            $analyser->execute($file);
+            $totalResult = $totalResult->append($analyser->getResult());
         }
 
         return $totalResult;
