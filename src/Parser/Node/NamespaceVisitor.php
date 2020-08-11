@@ -9,10 +9,10 @@ use PhpParser\Node\Stmt\UseUse;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\NodeVisitor\NameResolver;
 use NamespaceProtector\Result\ErrorResult;
-use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollected;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
-use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultCollectedReadable;
 
 final class NamespaceVisitor extends NameResolver implements NamespaceProtectorVisitorInterface
 {
@@ -21,7 +21,7 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
     /** @var array<Callable> */
     private $listNodeProcessor;
 
-    /** @var ResultCollector */
+    /** @var ResultCollected */
     private $storeProcessNodeResult;
 
     /**
@@ -47,7 +47,7 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
             return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->toCodeString()));
         };
 
-        $this->storeProcessNodeResult = new ResultCollector();
+        $this->storeProcessNodeResult = new ResultCollected();
     }
 
     public function enterNode(Node $node)
@@ -86,8 +86,8 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
         $this->storeProcessNodeResult->addResult($err);
     }
 
-    public function getStoreProcessNodeResult(): ResultCollectorReadable
+    public function getStoreProcessNodeResult(): ResultCollectedReadable
     {
-        return new ResultCollectorReadable($this->storeProcessNodeResult);
+        return new ResultCollectedReadable($this->storeProcessNodeResult);
     }
 }

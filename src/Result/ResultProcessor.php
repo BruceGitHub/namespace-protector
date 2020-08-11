@@ -1,16 +1,18 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
 class ResultProcessor implements ResultProcessorInterface
 {
-    /** @var ResultCollectorReadable<ResultProcessedFile> */
+    /** @var ResultCollectedReadable<ResultProcessedFile> */
     private $resultCollectorReadable;
 
     /**
-     * @param ResultCollectorReadable<ResultProcessedFile> $resultCollectorReadable
+     * @param ResultCollectedReadable<ResultProcessedFile> $resultCollectorReadable
      */
-    public function __construct(ResultCollectorReadable $resultCollectorReadable)
+    public function __construct(ResultCollectedReadable $resultCollectorReadable)
     {
         $this->resultCollectorReadable = $resultCollectorReadable;
     }
@@ -21,9 +23,9 @@ class ResultProcessor implements ResultProcessorInterface
     }
 
     /**
-     * @return ResultCollectorReadable<ResultProcessedFile>
+     * @return ResultCollectedReadable<ResultProcessedFile>
      */
-    public function getProcessedResult(): ResultCollectorReadable
+    public function getProcessedResult(): ResultCollectedReadable
     {
         return $this->resultCollectorReadable;
     }

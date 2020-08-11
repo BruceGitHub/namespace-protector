@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
@@ -12,5 +14,5 @@ interface ResultAnalyserInterface extends Countable
 
     public function count(): int;
 
-    public function getResultCollector(): ResultCollectorReadable;
+    public function getResultCollector(): ResultCollectedReadable;
 }

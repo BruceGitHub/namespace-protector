@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector;
 
@@ -7,7 +9,7 @@ use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultAnalyserInterface;
-use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultCollectedReadable;
 
 final class Analyser
 {
@@ -37,7 +39,7 @@ final class Analyser
     public function getResult(): ResultAnalyserInterface
     {
         return new ResultAnalyser(
-            new ResultCollectorReadable($this->result->getResultCollectionReadable())
+            new ResultCollectedReadable($this->result->getResultCollectionReadable())
         );
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
@@ -8,7 +10,7 @@ use Countable;
 /**
  * @implements ResultCollectorInterface<ResultInterface>
  */
-final class ResultCollectorReadable implements Countable, ResultCollectorInterface
+final class ResultCollectedReadable implements Countable, ResultCollectorInterface
 {
     /** @var ResultCollectorInterface<ResultInterface> */
     private $resultCollector;

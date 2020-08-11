@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Parser;
 
@@ -6,11 +8,11 @@ use PhpParser\Parser;
 use PhpParser\NodeTraverserInterface;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
-use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultInterface;
 use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultParserInterface;
-use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultCollectedReadable;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
@@ -23,7 +25,7 @@ final class PhpFileParser implements ParserInterface
     /** @var \PhpParser\NodeTraverserInterface.  */
     private $traverser;
 
-    /** @var ResultCollector  */
+    /** @var ResultCollected  */
     private $resultCollector;
 
     /** @var \Psr\SimpleCache\CacheInterface  */
@@ -47,11 +49,11 @@ final class PhpFileParser implements ParserInterface
     }
 
     /**
-     * @return ResultCollector
+     * @return ResultCollected
      */
-    private function createResultCollector(): ResultCollector
+    private function createResultCollector(): ResultCollected
     {
-        return new ResultCollector();
+        return new ResultCollected();
     }
 
     public function parseFile(PathInterface $pathFile): void
@@ -74,9 +76,9 @@ final class PhpFileParser implements ParserInterface
 
     public function getListResult(): ResultParserInterface
     {
-        /** @var ResultCollectorReadable<ResultProcessorInterface> */
-        $collector = new ResultCollectorReadable($this->resultCollector);
-        return new ResultParser($collector);
+        /** @var ResultCollectedReadable<ResultProcessorInterface> */
+        $collected = new ResultCollectedReadable($this->resultCollector);
+        return new ResultParser($collected);
     }
 
     /**

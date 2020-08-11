@@ -1,29 +1,31 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
 class ResultAnalyser implements ResultAnalyserInterface
 {
-    /** @var ResultCollectorReadable */
+    /** @var ResultCollectedReadable */
     private $resultCollectorReadable;
 
-    public function __construct(ResultCollectorReadable $resultCollectorReadable)
+    public function __construct(ResultCollectedReadable $resultCollectorReadable)
     {
         $this->resultCollectorReadable = $resultCollectorReadable;
     }
 
     public function append(ResultAnalyserInterface $toAppendInstance): ResultAnalyserInterface
     {
-        $collector = new ResultCollector();
+        $collected = new ResultCollected();
         foreach ($this->getResultCollector() as $item) {
-            $collector->addResult($item);
+            $collected->addResult($item);
         }
 
         foreach ($toAppendInstance->getResultCollector() as $item) {
-            $collector->addResult($item);
+            $collected->addResult($item);
         }
 
-        return new self(new ResultCollectorReadable($collector));
+        return new self(new ResultCollectedReadable($collected));
     }
 
     public function withResults(): bool
@@ -31,7 +33,7 @@ class ResultAnalyser implements ResultAnalyserInterface
         return ($this->count()) >= 0 ? true : false;
     }
 
-    public function getResultCollector(): ResultCollectorReadable
+    public function getResultCollector(): ResultCollectedReadable
     {
         return $this->resultCollectorReadable;
     }

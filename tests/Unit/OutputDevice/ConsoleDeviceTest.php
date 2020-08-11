@@ -1,12 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Unit\OutputDevice;
 
 use Tests\Unit\AbstractUnitTestCase;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
 use NamespaceProtector\Result\ErrorResult;
-use NamespaceProtector\Result\ResultCollector;
-use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultCollected;
+use NamespaceProtector\Result\ResultCollectedReadable;
 use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -29,7 +31,7 @@ class ConsoleDeviceTest extends AbstractUnitTestCase
         $result->getProcessedResult()
             ->shouldBeCalled()
             ->willReturn(
-                new ResultCollectorReadable(new ResultCollector(
+                new ResultCollectedReadable(new ResultCollected(
                     [$rpf]
                 ))
             );

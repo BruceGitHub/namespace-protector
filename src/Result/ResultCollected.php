@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
@@ -8,7 +10,7 @@ use ArrayIterator;
 /**
  * @implements ResultCollectorInterface<ResultInterface>
  */
-final class ResultCollector implements ResultCollectorInterface
+final class ResultCollected implements ResultCollectorInterface
 {
     /** @var array<ResultInterface>  */
     private $listResult;

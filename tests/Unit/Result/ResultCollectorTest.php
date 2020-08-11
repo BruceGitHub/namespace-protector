@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Unit\Result;
 
 use NamespaceProtector\Result\Result;
-use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollected;
 use PHPUnit\Framework\TestCase;
 
 final class ResultCollectorTest extends TestCase
@@ -14,7 +15,7 @@ final class ResultCollectorTest extends TestCase
     {
         $result = new Result('a', 1);
 
-        $resultCollector = new ResultCollector();
+        $resultCollector = new ResultCollected();
         $resultCollector->addResult($result);
 
         $this->assertCount(1, $resultCollector->getIterator());
@@ -26,7 +27,7 @@ final class ResultCollectorTest extends TestCase
     {
         $result = new Result('a', 1);
 
-        $resultCollector = new ResultCollector();
+        $resultCollector = new ResultCollected();
         $resultCollector->addResult($result);
         $resultCollector->emptyResult();
 

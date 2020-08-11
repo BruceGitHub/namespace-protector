@@ -15,7 +15,7 @@ use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Event\EventDispatcher;
 use NamespaceProtector\Event\ListenerProvider;
-use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
@@ -86,25 +86,25 @@ class PhpFileParserTest extends AbstractUnitTestCase
     public function it_parse_with_public_class_with_name_inside_another_class_name(): void
     {
         $fileSystem = $this->StartBuildFileSystem()
-                ->addFileWithCallable(
-                    'namespace-protector-config-with-class.json',
-                    'json',
-                    'json',
-                    function ($directoryReal, $pathFile) {
-                        return $this->helperEditChangesEntries(
-                            $directoryReal,
-                            $pathFile,
-                            [],
-                            [
-                                'Personal\\First',
-                                'Personal\\Private',
-                            ]
-                        );
-                    }
-                )
-                ->addFile('First.php', 'php', 'files')
-                ->addFile('Second.php', 'php', 'files') //use Privates
-                ->buildFileSystemUrl();
+            ->addFileWithCallable(
+                'namespace-protector-config-with-class.json',
+                'json',
+                'json',
+                function ($directoryReal, $pathFile) {
+                    return $this->helperEditChangesEntries(
+                        $directoryReal,
+                        $pathFile,
+                        [],
+                        [
+                            'Personal\\First',
+                            'Personal\\Private',
+                        ]
+                    );
+                }
+            )
+            ->addFile('First.php', 'php', 'files')
+            ->addFile('Second.php', 'php', 'files') //use Privates
+            ->buildFileSystemUrl();
 
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-class.json');
 
@@ -120,25 +120,25 @@ class PhpFileParserTest extends AbstractUnitTestCase
     public function it_parse_with_public_class_with_name_inside_another_namespace(): void
     {
         $fileSystem = $this->StartBuildFileSystem()
-                ->addFileWithCallable(
-                    'namespace-protector-config-with-class.json',
-                    'json',
-                    'json',
-                    function ($directoryReal, $pathFile) {
-                        return $this->helperEditChangesEntries(
-                            $directoryReal,
-                            $pathFile,
-                            [],
-                            [
-                                'Personal\\First',
-                                'Personal\Privates\PrivatesA',
-                            ]
-                        );
-                    }
-                )
-                ->addFile('First.php', 'php', 'files')
-                ->addFile('UsePublicNsAndOnePrivateClass.php', 'php', 'files') //use Privates
-                ->buildFileSystemUrl();
+            ->addFileWithCallable(
+                'namespace-protector-config-with-class.json',
+                'json',
+                'json',
+                function ($directoryReal, $pathFile) {
+                    return $this->helperEditChangesEntries(
+                        $directoryReal,
+                        $pathFile,
+                        [],
+                        [
+                            'Personal\\First',
+                            'Personal\Privates\PrivatesA',
+                        ]
+                    );
+                }
+            )
+            ->addFile('First.php', 'php', 'files')
+            ->addFile('UsePublicNsAndOnePrivateClass.php', 'php', 'files') //use Privates
+            ->buildFileSystemUrl();
 
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-class.json');
 
@@ -377,7 +377,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $traverser = new NodeTraverser();
-        $resultCollector = new ResultCollector();
+        $resultCollector = new ResultCollected();
 
         $namespaceVisitor = new NamespaceVisitor(
             [

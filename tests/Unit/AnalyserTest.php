@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tests\Unit;
 
@@ -7,9 +9,9 @@ use NamespaceProtector\Result\Result;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Parser\ParserInterface;
-use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultAnalyserInterface;
-use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultCollectedReadable;
 
 class AnalyserTest extends AbstractUnitTestCase
 {
@@ -24,7 +26,7 @@ class AnalyserTest extends AbstractUnitTestCase
 
         $parser->getListResult()
             ->shouldBeCalled()
-            ->willReturn(new ResultParser(new ResultCollectorReadable(new ResultCollector())));
+            ->willReturn(new ResultParser(new ResultCollectedReadable(new ResultCollected())));
 
         $parser = $parser->reveal();
 
@@ -51,13 +53,13 @@ class AnalyserTest extends AbstractUnitTestCase
 
         $parser = $this->prophesize(ParserInterface::class);
         $parser->parseFile($file)
-                ->shouldBeCalled();
+            ->shouldBeCalled();
 
         $parser->getListResult()
-                ->shouldBeCalled()
-                ->willReturn(
-                    new ResultParser(new ResultCollectorReadable(new ResultCollector($result)))
-                );
+            ->shouldBeCalled()
+            ->willReturn(
+                new ResultParser(new ResultCollectedReadable(new ResultCollected($result)))
+            );
 
         $analyser = $this->createAnalyser($parser->reveal(), $file);
         $analyser->execute($file);

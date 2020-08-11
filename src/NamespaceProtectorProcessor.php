@@ -1,16 +1,18 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector;
 
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Result\ResultAnalyser;
-use NamespaceProtector\Result\ResultCollector;
+use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultProcessor;
 use NamespaceProtector\Scanner\FileSystemScanner;
 use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultAnalyserInterface;
-use NamespaceProtector\Result\ResultCollectorReadable;
+use NamespaceProtector\Result\ResultCollectedReadable;
 use NamespaceProtector\Result\ResultProcessorInterface;
 
 final class NamespaceProtectorProcessor
@@ -56,8 +58,7 @@ final class NamespaceProtectorProcessor
 
     public function totalSymbolsLoaded(): int
     {
-        return
-            ($this->environmentDataLoader->getCollectBaseClasses()->count()) +
+        return ($this->environmentDataLoader->getCollectBaseClasses()->count()) +
             ($this->environmentDataLoader->getCollectBaseInterfaces()->count()) +
             ($this->environmentDataLoader->getCollectBaseFunctions()->count()) +
             ($this->environmentDataLoader->getCollectBaseConstants()->count());
@@ -68,7 +69,7 @@ final class NamespaceProtectorProcessor
         /** @var ResultAnalyser $result */
         $result = $this->processEntries($this->fileSystemScanner, $this->analyser);
 
-        /** @var ResultCollectorReadable<ResultProcessedFile> $resultCollector */
+        /** @var ResultCollectedReadable<ResultProcessedFile> $resultCollector */
         $resultCollector = $result->getResultCollector();
 
         return new ResultProcessor(
@@ -78,7 +79,7 @@ final class NamespaceProtectorProcessor
 
     private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultAnalyserInterface
     {
-        $totalResult = new ResultAnalyser(new ResultCollectorReadable(new ResultCollector()));
+        $totalResult = new ResultAnalyser(new ResultCollectedReadable(new ResultCollected()));
 
         foreach ($fileSystemScanner->getFileLoaded() as $file) {
             $analyser->execute($file);
