@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace NamespaceProtector;
 
-use NamespaceProtector\Config\Config;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Result\ResultCollected;
@@ -17,9 +16,6 @@ use NamespaceProtector\Result\ResultProcessorInterface;
 
 final class NamespaceProtectorProcessor
 {
-    /** @var Config */
-    private $config;
-
     /** @var ComposerJson */
     private $composerJson;
 
