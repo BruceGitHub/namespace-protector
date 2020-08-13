@@ -14,5 +14,5 @@ interface ResultAnalyserInterface extends Countable
 
     public function count(): int;
 
-    public function getResultCollector(): ResultCollectedReadable;
+    public function getResultCollected(): ResultCollectedReadable;
 }

@@ -86,7 +86,7 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
         $this->storeProcessNodeResult->addResult($err);
     }
 
-    public function getStoreProcessNodeResult(): ResultCollectedReadable
+    public function getStoreProcessedVistorResult(): ResultCollectedReadable
     {
         return new ResultCollectedReadable($this->storeProcessNodeResult);
     }

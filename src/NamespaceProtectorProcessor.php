@@ -70,7 +70,7 @@ final class NamespaceProtectorProcessor
         $result = $this->processEntries($this->fileSystemScanner, $this->analyser);
 
         /** @var ResultCollectedReadable<ResultProcessedFile> $resultCollector */
-        $resultCollector = $result->getResultCollector();
+        $resultCollector = $result->getResultCollected();
 
         return new ResultProcessor(
             $resultCollector

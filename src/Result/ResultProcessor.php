@@ -17,11 +17,6 @@ class ResultProcessor implements ResultProcessorInterface
         $this->resultCollectorReadable = $resultCollectorReadable;
     }
 
-    public function get(): string
-    {
-        return '';
-    }
-
     /**
      * @return ResultCollectedReadable<ResultProcessedFile>
      */

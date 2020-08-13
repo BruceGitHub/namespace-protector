@@ -58,12 +58,10 @@ final class PhpFileParser implements ParserInterface
 
     public function parseFile(PathInterface $pathFile): void
     {
-        $this->resultCollector = $this->createResultCollector();
-
         $ast = $this->fetchAstAfterParse($pathFile);
         $this->traverser->traverse($ast);
 
-        $visitorCollectorResult = $this->namespaceProtectorVisitor->getStoreProcessNodeResult();
+        $visitorCollectorResult = $this->namespaceProtectorVisitor->getStoreProcessedVistorResult();
         $processFileResult = new ResultProcessedFile($pathFile());
 
         /** @var ResultInterface $singleResult */
@@ -71,6 +69,7 @@ final class PhpFileParser implements ParserInterface
             $processFileResult->add($singleResult);
         }
 
+        $this->resultCollector = $this->createResultCollector();
         $this->resultCollector->addResult($processFileResult);
     }
 

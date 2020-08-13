@@ -17,11 +17,11 @@ class ResultAnalyser implements ResultAnalyserInterface
     public function append(ResultAnalyserInterface $toAppendInstance): ResultAnalyserInterface
     {
         $collected = new ResultCollected();
-        foreach ($this->getResultCollector() as $item) {
+        foreach ($this->getResultCollected() as $item) {
             $collected->addResult($item);
         }
 
-        foreach ($toAppendInstance->getResultCollector() as $item) {
+        foreach ($toAppendInstance->getResultCollected() as $item) {
             $collected->addResult($item);
         }
 
@@ -33,7 +33,7 @@ class ResultAnalyser implements ResultAnalyserInterface
         return ($this->count()) >= 0 ? true : false;
     }
 
-    public function getResultCollector(): ResultCollectedReadable
+    public function getResultCollected(): ResultCollectedReadable
     {
         return $this->resultCollectorReadable;
     }

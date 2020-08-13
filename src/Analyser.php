@@ -26,8 +26,7 @@ final class Analyser
 
     public function execute(PathInterface $filePath): void
     {
-        $resultParser = new ResultParser();
-        $this->result = $resultParser;
+        $this->result = new ResultParser();
         foreach ($this->listParser as $currentParser) {
             $currentParser->parseFile($filePath);
             $resultOfcurrentParsedFile = $currentParser->getListResult();
