@@ -96,7 +96,8 @@ Elapsed time: 0.68148
 Example of output in png format.
 bin/namespace-protector validate-namespace plotter-png
 ```
-https://github.com/BruceGitHub/namespace-protector/blob/master/img/example_output.png
+![example output](https://github.com/BruceGitHub/namespace-protector/blob/master/img/example_output.png)
+
 
 
 For now it is a lab but...
