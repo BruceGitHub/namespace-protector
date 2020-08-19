@@ -94,10 +94,9 @@ Elapsed time: 0.68148
 
 ```bash 
 Example of output in png format.
-bin/namespace-protector validate-namespace plotter-png
+➜  bin/namespace-protector validate-namespace plotter-png
 ```
 ![example output](https://github.com/BruceGitHub/namespace-protector/blob/master/img/example_output.png)
-
 
 
 For now it is a lab but...
