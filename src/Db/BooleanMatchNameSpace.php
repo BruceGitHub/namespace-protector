@@ -14,13 +14,13 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
     /**
      * @param Iterable<mixed> $data
      */
-    public function evaluate(iterable $data, Entry $matchMe): MatchedResultInterface
+    public function evaluate(iterable $data, Entry $matchMeInData): MatchedResultInterface
     {
         foreach ($data as $item) {
-            $currentEntry = \strtolower($item);
-            $current = \strtolower($matchMe->get());
+            $currentEntry = \strtolower($this->stripQueueSlash($item));
+            $matchMeLiteral = \strtolower($this->stripQueueSlash($matchMeInData->get()));
 
-            if ($this->isCurrentNamespaceInsideAPublicNamespace($current, $currentEntry)) {
+            if ($this->isMatchMeNameSpaceInCheckEntry($matchMeLiteral, $currentEntry)) {
                 return new MatchedResult($item);
             }
         }
@@ -28,25 +28,29 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
         return new EmptyMatchedResult();
     }
 
-    private function isCurrentNamespaceInsideAPublicNamespace(string $current, string $publicEntry): bool
+    private function isMatchMeNameSpaceInCheckEntry(string $matchMeInData, string $checkEntry): bool
     {
-        if ($current === $publicEntry) {
+        if ($matchMeInData === $checkEntry) {
             return true;
         }
 
-        $blockEntry = \explode('\\', $publicEntry);
-        $blockCurrent = \explode('\\', $current);
-
-        foreach ($blockCurrent as $tokenCurrent) {
-            if ($tokenCurrent === '') {
-                continue;
-            }
-
-            if (!\in_array($tokenCurrent, $blockEntry, true)) {
-                return false;
-            }
+        $pos = \strpos($matchMeInData, $checkEntry);
+        if ($pos === false) {
+            return false;
         }
 
-        return \true;
+        if (\strlen($checkEntry) > \strlen($matchMeInData)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function stripQueueSlash(string $token): string
+    {
+        $tokenOne = ltrim($token, '\\');
+        $tokenTwo = rtrim($tokenOne, '\\');
+
+        return $tokenTwo;
     }
 }

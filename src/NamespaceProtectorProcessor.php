@@ -68,9 +68,7 @@ final class NamespaceProtectorProcessor
         /** @var ResultCollectedReadable<ResultProcessedFile> $resultCollector */
         $resultCollector = $result->getResultCollected();
 
-        return new ResultProcessor(
-            $resultCollector
-        );
+        return new ResultProcessor($resultCollector);
     }
 
     private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultAnalyserInterface

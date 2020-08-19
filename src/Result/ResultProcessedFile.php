@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Result;
 
-final class ResultProcessedFile implements ResultInterface
+final class ResultProcessedFile implements ResultProcessedFileEditableInterface
 {
     /** @var string  */
     private $file;
@@ -20,7 +20,7 @@ final class ResultProcessedFile implements ResultInterface
         return $this->file;
     }
 
-    public function add(ResultInterface $conflic): void
+    public function addConflic(ResultInterface $conflic): void
     {
         $this->conflicts[] = $conflic;
     }

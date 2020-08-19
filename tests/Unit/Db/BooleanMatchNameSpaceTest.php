@@ -14,29 +14,33 @@ class BooleanMatchNameSpaceTest extends AbstractUnitTestCase
      * @test
      * @dataProvider publicEntryProvider
     */
-    public function it_namespace_inside_another_namespace(array $publicEntry, string $matchMeFromSourceCode, string $expectedClass): void
+    public function it_namespace_inside_another_namespace(array $configuredEntry, string $tokenFromSourceCode, string $expectedClass): void
     {
         $booleanMatch = new BooleanMatchNameSpace();
 
-        $result = $booleanMatch->evaluate($publicEntry, new Entry($matchMeFromSourceCode));
+        $result = $booleanMatch->evaluate($configuredEntry, new Entry($tokenFromSourceCode));
 
         $this->assertInstanceOf($expectedClass, $result);
     }
 
     public function publicEntryProvider(): \Generator
     {
-        $data = [
-            'safe\sprintf',
-            'aa\bb\ccA',
-        ];
+        $configuredEntry = ['safe\\', '\\safe', '\\safe\\'];
+        yield [$configuredEntry, '\safe', MatchedResult::class];
 
-        yield [$data, '\safe', MatchedResult::class];
-        yield [$data, '\\safe\\', MatchedResult::class];
-        yield [$data, '\\safe\\sprintf', MatchedResult::class];
-        yield [$data, '\\safe\\sprintf\\', MatchedResult::class];
+        $configuredEntry = ['safe\\aa', '\\safe\\aa', '\\safe\\aa'];
+        yield [$configuredEntry, '\safe\\aa', MatchedResult::class];
 
-        yield [$data, '\\safe\\XXXsprintf\\', EmptyMatchedResult::class];
-        yield [$data, '\\safe\\sprintfs\\', EmptyMatchedResult::class];
-        yield [$data, '\\aa\\bb\\ccB', EmptyMatchedResult::class];
+        $configuredEntry = ['safe\sprintf'];
+        yield [$configuredEntry, '\safe', EmptyMatchedResult::class];
+
+        $configuredEntry = ['safe\loooong'];
+        yield [$configuredEntry, '\\safe\\', EmptyMatchedResult::class];
+
+        $configuredEntry = ['\\safe\\loooong\\'];
+        yield [$configuredEntry, '\\safe\\loooong', MatchedResult::class];
+
+        $configuredEntry = ['PhpParser'];
+        yield [$configuredEntry, 'PhpParser\\NodeTraverser', MatchedResult::class]; //MatchedResult
     }
 }

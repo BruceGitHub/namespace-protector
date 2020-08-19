@@ -24,7 +24,7 @@ class ConsoleDeviceTest extends AbstractUnitTestCase
         \ob_start();
 
         $rpf = new ResultProcessedFile('FileA');
-        $rpf->add(new ErrorResult(99, 'ConflicA', 1));
+        $rpf->addConflic(new ErrorResult(99, 'ConflicA', 1));
 
         $result = $this->prophesize(ResultProcessorInterface::class);
 

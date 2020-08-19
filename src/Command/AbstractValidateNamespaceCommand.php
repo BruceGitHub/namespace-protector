@@ -5,14 +5,19 @@ namespace NamespaceProtector\Command;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Common\FileSystemPath;
 use Symfony\Component\Console\Command\Command;
+use NamespaceProtector\OutputDevice\ConsoleDevice;
+use Symfony\Component\Console\Input\InputArgument;
+use NamespaceProtector\OutputDevice\GraphicsDevice;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\NamespaceProtectorProcessorFactory;
-use NamespaceProtector\OutputDevice\ConsoleDevice;
+use NamespaceProtector\OutputDevice\OutputDeviceInterface;
 
 abstract class AbstractValidateNamespaceCommand extends Command
 {
+    private const PLOTTER_ARGUMENT = 'plotter';
+
     public function __construct(string $name = null)
     {
         parent::__construct($name);
@@ -24,12 +29,20 @@ abstract class AbstractValidateNamespaceCommand extends Command
         $this->setName('validate-namespace')
             ->setDescription('Validate namespace')
             ->setHelp('Validate if some namespace access to one private namespace');
+
+        $this
+            ->addArgument(self::PLOTTER_ARGUMENT, InputArgument::OPTIONAL, 'How show the output?');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Boot validate analysis....');
         $config = Config::loadFromFile(new FileSystemPath(\getcwd() . '/namespace-protector-config.json'));
+        $plotter = $input->getArgument(self::PLOTTER_ARGUMENT);
+        if ($plotter && \is_string($plotter)) {
+            $config = Config::fromConfigWithOverride($config, ['plotter' => $plotter]);
+        }
+
         $factory = new NamespaceProtectorProcessorFactory();
         $namespaceProtectorProcessor = $factory->create($config);
 
@@ -44,9 +57,18 @@ abstract class AbstractValidateNamespaceCommand extends Command
         /** @var ResultProcessorInterface $result */
         $result = $namespaceProtectorProcessor->process();
 
-        $console = new ConsoleDevice($output);
-        $console->output($result);
+        $plotter = $this->createOutputObject($config, $output);
+        $plotter->output($result);
 
         return self::SUCCESS;
+    }
+
+    private function createOutputObject(Config $config, OutputInterface $outputInterface): OutputDeviceInterface
+    {
+        if ($config->getPlotter() === Config::PLOTTER_TERMINAL) {
+            return new ConsoleDevice($outputInterface);
+        }
+
+        return new GraphicsDevice();
     }
 }

@@ -30,18 +30,23 @@ final class ConsoleDevice implements OutputDeviceInterface
         }
 
         if ($output === '') {
-            $this->outputInterface->writeln('<fg=blue>No output</>');
+            echo "\n";
+            $this->outputInterface->writeln('');
         }
 
         echo $output;
-        $this->outputInterface->writeln('<fg=red>Total files: ' . $value->getProcessedResult()->count() . '</>');
+        $this->outputInterface->writeln('<fg=blue>Total files: ' . $value->getProcessedResult()->count() . '</>');
         $this->outputInterface->writeln('<fg=red>Total errors: ' . $this->totalErrors . '</>');
     }
 
     public function plot(ResultProcessedFile $processedFileResult): string
     {
         $resultbuffer = '';
-        $resultTitle = "\nProcessed file: " . $processedFileResult->get() . "\n";
+        $resultTitle = '';
+
+        if (\count($processedFileResult->getConflicts()) > 0) {
+            $resultTitle = "\nProcessed file: " . $processedFileResult->get() . "\n";
+        }
 
         foreach ($processedFileResult->getConflicts() as $conflict) {
             $resultbuffer .= $this->plotResult($conflict);

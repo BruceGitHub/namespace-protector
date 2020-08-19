@@ -1,11 +1,12 @@
 {
   "version": "0.1.0",
-  "start-path": "src",
+  "start-path": "tests/Stub/RealProject/src",
   "composer-json-path": "./",
   "public-entries": [],
   "private-entries": [
-    "PhpParser\\Node",
-    "\\safe\\"
+    "NamespaceProtector\\Common\\",
+    "NamespaceProtector\\Scanner\\",
+    "PhpParser"
   ],
   "mode": "PUBLIC",
   "cache": false

@@ -54,47 +54,44 @@ I think thta the in future the modes can be increase
 ## run 
 ```bash
 ➜  namespace-protector git:(master) ✗ bin/namespace-protector validate-namespace
-Boot validate analysis....
-
 |Dump config:
 |> Version: 0.1.0
-|> Path start: src
+|> Cache: FALSE
+|> Plotter: plotter-terminal
+|> Path start: tests/Stub/RealProject/src
 |> Composer Json path: ./
-|> Mode: MODE_MAKE_VENDOR_PRIVATE
+|> Mode: PUBLIC
 |> Private entries:
+|       >NamespaceProtector\Common\
+|       >NamespaceProtector\Scanner\
+|       >PhpParser
 
 |
 |> Public entries:
 
 
-Load data....
-Loaded 30 files to validate
-Loaded 5097 built in symbols
+Load data...
+Loaded 3 files to validate
+Loaded 5031 built in symbols
 Start analysis...
-Process file: src/Cache/SimpleFileCache.php
-	 > ERROR Line: 18 of use \safe\mkdir
-	 > ERROR Line: 29 of use \PhpParser\JsonDecoder
-	 > ERROR Line: 31 of use \safe\file_get_contents
-Process file: src/Config/ConfigTemplateCreator.php
-	 > ERROR Line: 32 of use \safe\file_get_contents
-	 > ERROR Line: 33 of use \safe\file_put_contents
-Process file: src/Config/Config.php
-	 > ERROR Line: 118 of use \safe\file_get_contents
-	 > ERROR Line: 119 of use \safe\json_decode
-Process file: src/Parser/Node/PhpNode.php
-	 > ERROR Line: 5 of use PhpParser\Node
-	 > ERROR Line: 6 of use PhpParser\Node\Stmt\UseUse
-	 > ERROR Line: 9 of use PhpParser\Node\Name\FullyQualified
-	 > ERROR Line: 20 of use Safe\strtotime
-Process file: src/Scanner/ComposerJson.php
-	 > ERROR Line: 11 of use Safe\realpath
-	 > ERROR Line: 44 of use \safe\realpath
-	 > ERROR Line: 51 of use \safe\json_decode
-	 > ERROR Line: 52 of use \safe\file_get_contents
-	 > ERROR Line: 66 of use \safe\file_get_contents
-	 > ERROR Line: 68 of use \safe\json_decode
-Total errors: 17
-Elapsed time: 0.4248
+
+Processed file: tests/Stub/RealProject/src/NamespaceProtectorProcessorFactory.php
+	 > ERROR Line: 7 of use PhpParser\NodeTraverser
+	 > ERROR Line: 8 of use PhpParser\ParserFactory
+	 > ERROR Line: 14 of use NamespaceProtector\Scanner\ComposerJson
+	 > ERROR Line: 16 of use NamespaceProtector\Common\FileSystemPath
+	 > ERROR Line: 19 of use NamespaceProtector\Scanner\FileSystemScanner
+
+Processed file: tests/Stub/RealProject/src/Analyser.php
+	 > ERROR Line: 8 of use NamespaceProtector\Common\PathInterface
+
+Processed file: tests/Stub/RealProject/src/EnvironmentDataLoader.php
+	 > ERROR Line: 8 of use NamespaceProtector\Scanner\ComposerJson
+Total files: 3
+Total errors: 7
+Elapsed time: 0.68148
 ```
+
+
 
 For now it is a lab but...

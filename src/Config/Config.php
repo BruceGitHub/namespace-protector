@@ -11,6 +11,9 @@ final class Config
     public const MODE_MAKE_VENDOR_PRIVATE = 'MODE_MAKE_VENDOR_PRIVATE';
     public const MODE_PUBLIC = 'PUBLIC';
 
+    public const PLOTTER_TERMINAL = 'plotter-terminal';
+    public const PLOTTER_PNG = 'plotter-png';
+
     /** @var PathInterface */
     private $pathStart;
 
@@ -32,18 +35,22 @@ final class Config
     /** @var bool */
     private $enabledCache;
 
+    /** @var string */
+    private $plotter;
+
     /**
      * @param array<string> $privateEntries
      * @param array<string> $publicEntries
      */
-    public function __construct(
+    private function __construct(
         string $version,
         PathInterface $pathStart,
         PathInterface $pathComposerJson,
         array $privateEntries,
         array $publicEntries,
         string $mode = self::MODE_PUBLIC,
-        bool $enabledCache = false
+        bool $enabledCache = false,
+        string $plotter = self::PLOTTER_TERMINAL
     ) {
         $this->version = $version;
         $this->pathStart = $pathStart;
@@ -52,6 +59,7 @@ final class Config
         $this->publicEntries = $publicEntries;
         $this->mode = $mode;
         $this->enabledCache = $enabledCache;
+        $this->plotter = $plotter;
     }
 
     public function getStartPath(): PathInterface
@@ -80,6 +88,11 @@ final class Config
         return $this->mode;
     }
 
+    public function getPlotter(): string
+    {
+        return $this->plotter;
+    }
+
     public function getPathComposerJson(): PathInterface
     {
         return $this->pathComposerJson;
@@ -97,6 +110,7 @@ final class Config
             '|Dump config:' . PHP_EOL .
             '|> Version: ' . $this->getVersion() . PHP_EOL .
             '|> Cache: ' . ($this->enabledCache() === true ? 'TRUE' : 'FALSE') . PHP_EOL .
+            '|> Plotter: ' . $this->getPlotter() . PHP_EOL .
             '|> Path start: ' . $this->pathStart->get() . PHP_EOL .
             '|> Composer Json path: ' . $this->pathComposerJson->get() . PHP_EOL .
             '|> Mode: ' . $this->getMode() . PHP_EOL .
@@ -125,12 +139,32 @@ final class Config
 
         $self = new self(
             $arrayConfig['version'],
-            new FileSystemPath($arrayConfig['start-path']),
-            new FileSystemPath($arrayConfig['composer-json-path']),
-            $arrayConfig['private-entries'],
-            $arrayConfig['public-entries'],
-            $arrayConfig['mode'],
-            $arrayConfig['cache'] //todo: if missing bug
+            new FileSystemPath($arrayConfig['start-path'] ?? '.'),
+            new FileSystemPath($arrayConfig['composer-json-path'] ?? '.'),
+            $arrayConfig['private-entries'] ?? [],
+            $arrayConfig['public-entries'] ?? [],
+            $arrayConfig['mode'] ?? self::MODE_PUBLIC,
+            $arrayConfig['cache'] ?? false,
+            $arrayConfig['plotter'] ?? self::PLOTTER_TERMINAL,
+        );
+
+        $self->validateLoadedConfig();
+
+        return $self;
+    }
+
+    /** @param array<string,string> $parameters */
+    public static function fromConfigWithOverride(self $config, array $parameters): self
+    {
+        $self = new self(
+            $config->getVersion(),
+            $config->getStartPath(),
+            $config->getPathComposerJson(),
+            $config->getPrivateEntries(),
+            $config->getPublicEntries(),
+            $config->getMode(),
+            $config->enabledCache(),
+            $parameters['plotter'] ?? $config->getPlotter(),
         );
 
         $self->validateLoadedConfig();
@@ -145,6 +179,7 @@ final class Config
         Assert::directory($this->getStartPath()->get(), 'Start directory not valid');
         Assert::directory($this->getPathComposerJson()->get(), 'Composer json directory not valid');
         Assert::boolean($this->enabledCache(), 'Cache flag must be boolean');
+        Assert::inArray($this->getPlotter(), [self::PLOTTER_TERMINAL, self::PLOTTER_PNG], 'Plotter not valid');
     }
 
     private function getVersion(): string

@@ -9,5 +9,7 @@ use NamespaceProtector\Result\ResultCollectedReadable;
 
 interface NamespaceProtectorVisitorInterface extends NodeVisitor
 {
-    public function getStoreProcessedVistorResult(): ResultCollectedReadable;
+    public function getStoreProcessedResult(): ResultCollectedReadable;
+
+    public function clearStoredProcessedResult(): void;
 }
