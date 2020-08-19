@@ -92,6 +92,11 @@ Total errors: 7
 Elapsed time: 0.68148
 ```
 
+```bash 
+Example of output in png format.
+bin/namespace-protector validate-namespace plotter-png
+```
+https://github.com/BruceGitHub/namespace-protector/blob/master/img/example_output.png
 
 
 For now it is a lab but...
