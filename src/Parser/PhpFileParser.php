@@ -6,18 +6,16 @@ namespace NamespaceProtector\Parser;
 
 use PhpParser\Parser;
 use PhpParser\NodeTraverserInterface;
+use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultCollected;
-use NamespaceProtector\Result\ResultInterface;
 use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultParserInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
-use NamespaceProtector\Result\ResultProcessedFileEmpty;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
-use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 final class PhpFileParser implements ParserInterface
 {
@@ -26,9 +24,6 @@ final class PhpFileParser implements ParserInterface
 
     /** @var \PhpParser\NodeTraverserInterface.  */
     private $traverser;
-
-    /** @var ResultProcessedFileInterface */
-    private $processFileResult;
 
     /** @var \Psr\SimpleCache\CacheInterface  */
     private $cache;
@@ -49,11 +44,10 @@ final class PhpFileParser implements ParserInterface
         $this->traverser = $nodeTraverserInterface;
         $this->parser = $parser;
         $this->namespaceProtectorVisitor = $visitor;
-        $this->processFileResult = new ResultProcessedFileEmpty();
         $nodeTraverserInterface->addVisitor($visitor);
     }
 
-    public function parseFile(PathInterface $pathFile): void
+    public function parseFile(PathInterface $pathFile): ResultParserInterface
     {
         $this->pathFileToParse = $pathFile;
 
@@ -61,23 +55,25 @@ final class PhpFileParser implements ParserInterface
         $this->namespaceProtectorVisitor->clearStoredProcessedResult();
 
         $this->traverser->traverse($ast);
+
+        return $this->getListResult();
     }
 
-    public function getListResult(): ResultParserInterface
+    private function getListResult(): ResultParserInterface
     {
         if (\count($this->namespaceProtectorVisitor->getStoreProcessedResult()) === 0) {
             return new ResultParser();
         }
 
-        $this->processFileResult = new ResultProcessedFile($this->pathFileToParse->get());
+        $processFileResult = new ResultProcessedFile($this->pathFileToParse->get());
 
-        /** @var ResultInterface $singleConflict */
+        /** @var ErrorResult $singleConflict */
         foreach ($this->namespaceProtectorVisitor->getStoreProcessedResult() as $singleConflict) {
-            $this->processFileResult->addConflic($singleConflict);
+            $processFileResult->addConflic($singleConflict);
         }
 
         /** @var ResultCollectedReadable<ResultProcessorInterface> */
-        $collected = new ResultCollectedReadable(new ResultCollected([$this->processFileResult]));
+        $collected = new ResultCollectedReadable(new ResultCollected([$processFileResult]));
         return new ResultParser($collected);
     }
 

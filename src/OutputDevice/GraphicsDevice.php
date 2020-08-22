@@ -7,7 +7,6 @@ use NamespaceProtector\Result\ResultProcessorInterface;
 
 final class GraphicsDevice implements OutputDeviceInterface
 {
-
     public function output(ResultProcessorInterface $value): void
     {
         $graph = new \Fhaculty\Graph\Graph();
@@ -25,7 +24,7 @@ final class GraphicsDevice implements OutputDeviceInterface
     public function plot(\Fhaculty\Graph\Graph $graph, ResultProcessedFile $processedFileResult): void
     {
         if (\count($processedFileResult->getConflicts()) > 0) {
-            $blue = $graph->createVertex($this->getIdFromNamespace($processedFileResult->get()), true);
+            $blue = $graph->createVertex($this->getIdFromNamespace($processedFileResult->getFileName()), true);
             $blue->setAttribute('graphviz.color', 'blue');
         }
 
@@ -38,9 +37,8 @@ final class GraphicsDevice implements OutputDeviceInterface
         }
     }
 
-    public function getIdFromNamespace(string $nameSpace): string 
+    public function getIdFromNamespace(string $nameSpace): string
     {
         return $nameSpace;
     }
-
 }

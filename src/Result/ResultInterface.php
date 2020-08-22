@@ -4,5 +4,4 @@ namespace NamespaceProtector\Result;
 
 interface ResultInterface
 {
-    public function get(): string;
 }

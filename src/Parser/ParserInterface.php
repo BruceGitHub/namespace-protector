@@ -7,7 +7,5 @@ use NamespaceProtector\Result\ResultParserInterface;
 
 interface ParserInterface
 {
-    public function parseFile(PathInterface $pathInterface): void;
-
-    public function getListResult(): ResultParserInterface;
+    public function parseFile(PathInterface $pathInterface): ResultParserInterface;
 }

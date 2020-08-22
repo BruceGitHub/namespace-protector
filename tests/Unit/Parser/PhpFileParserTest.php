@@ -30,7 +30,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $phpFileParser = $this->createPhpFileParser($file);
 
-        $this->assertCount(0, $phpFileParser->getListResult()->getResultCollectionReadable());
+        $result = $phpFileParser->parseFile(new FileSystemPath($file));
+
+        $this->assertCount(0, $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -45,10 +47,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-public.json');
 
         //act
-        $phpFileParser->parseFile($pathStubClass);
+        $result = $phpFileParser->parseFile($pathStubClass);
 
-        $rsCollector = $phpFileParser->getListResult();
-        $this->assertCount(0, $rsCollector->getResultCollectionReadable());
+        $this->assertCount(0, $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -59,10 +60,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $phpFileParser = $this->createPhpFileParser($fsPath . '/namespace-protector-config.json');
 
-        $phpFileParser->parseFile(new FileSystemPath($files . '/no_violation.php'));
-        $rsCollector = $phpFileParser->getListResult();
+        $result = $phpFileParser->parseFile(new FileSystemPath($files . '/no_violation.php'));
 
-        $this->assertCount(0, $rsCollector->getResultCollectionReadable());
+        $this->assertCount(0, $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -76,10 +76,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-pub-class.json');
 
-        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/Second.php'));
-        $rsCollector = $phpFileParser->getListResult();
+        $result = $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/Second.php'));
 
-        $this->assertCount(0, $rsCollector->getResultCollectionReadable());
+        $this->assertCount(0, $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -108,11 +107,10 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-class.json');
 
-        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/Second.php'));
-        $rsCollector = $phpFileParser->getListResult();
+        $result = $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/Second.php'));
 
-        $this->assertEquals(0, $rsCollector->getResultCollectionReadable()->count());
-        $this->assertContainsProcessFile('vfs://root/files/Second.php', $rsCollector->getResultCollectionReadable());
+        $this->assertEquals(0, $result->getResultCollectionReadable()->count());
+        $this->assertContainsProcessFile('vfs://root/files/Second.php', $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -141,12 +139,11 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-with-class.json');
 
-        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/UsePublicNsAndOnePrivateClass.php'));
-        $rsCollector = $phpFileParser->getListResult();
+        $result = $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/UsePublicNsAndOnePrivateClass.php'));
 
-        $this->assertEquals(1, $rsCollector->getResultCollectionReadable()->count());
-        $this->assertContainsProcessFile('vfs://root/files/UsePublicNsAndOnePrivateClass.php', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('Personal\Privates\PrivatesB', $rsCollector->getResultCollectionReadable());
+        $this->assertEquals(1, $result->getResultCollectionReadable()->count());
+        $this->assertContainsProcessFile('vfs://root/files/UsePublicNsAndOnePrivateClass.php', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('Personal\Privates\PrivatesB', $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -172,14 +169,13 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-private.json');
 
         //act
-        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUseLowerCaseNaspace.php'));
+        $result = $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUseLowerCaseNaspace.php'));
 
-        $rsCollector = $phpFileParser->getListResult();
-        $this->assertCount(1, $rsCollector->getResultCollectionReadable());
-        $this->assertContainsProcessFile('vfs://root/files/FileThatUseLowerCaseNaspace.php', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('inpublic\entries\ns', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('\inpublic\entries\NS', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('\inpublic\entries\ns', $rsCollector->getResultCollectionReadable());
+        $this->assertCount(1, $result->getResultCollectionReadable());
+        $this->assertContainsProcessFile('vfs://root/files/FileThatUseLowerCaseNaspace.php', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('inpublic\entries\ns', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('\inpublic\entries\NS', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('\inpublic\entries\ns', $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -193,14 +189,13 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-private.json');
 
         //act
-        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUsePrivateNamespace.php'));
+        $result = $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUsePrivateNamespace.php'));
 
-        $rsCollector = $phpFileParser->getListResult();
-        $this->assertCount(1, $rsCollector->getResultCollectionReadable());
-        $this->assertContainsProcessFile('files/FileThatUsePrivateNamespace.php', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('org\bovigo\vfs\vfsStream', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('\org\bovigo\vfs\vfsStream', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('\xxxx\vsf\vfsStream', $rsCollector->getResultCollectionReadable());
+        $this->assertCount(1, $result->getResultCollectionReadable());
+        $this->assertContainsProcessFile('files/FileThatUsePrivateNamespace.php', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('org\bovigo\vfs\vfsStream', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('\org\bovigo\vfs\vfsStream', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('\xxxx\vsf\vfsStream', $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -215,11 +210,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-public.json');
 
         //act
-        $phpFileParser->parseFile($pathStubClass);
+        $result = $phpFileParser->parseFile($pathStubClass);
 
-        $rsCollector = $phpFileParser->getListResult();
-
-        $this->assertCount(0, $rsCollector->getResultCollectionReadable());
+        $this->assertCount(0, $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -241,14 +234,12 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-public.json');
 
         //act
-        $phpFileParser->parseFile(new FileSystemPath($pathStubClass));
+        $result = $phpFileParser->parseFile(new FileSystemPath($pathStubClass));
 
-        $rsCollector = $phpFileParser->getListResult();
-
-        $this->assertCount(1, $rsCollector->getResultCollectionReadable());
-        $this->assertContainsProcessFile('vfs://root/files/ClassPsr4Composer.php', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('another\ns\vendor', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('\another\ns\vendor', $rsCollector->getResultCollectionReadable());
+        $this->assertCount(1, $result->getResultCollectionReadable());
+        $this->assertContainsProcessFile('vfs://root/files/ClassPsr4Composer.php', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('another\ns\vendor', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('\another\ns\vendor', $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -275,14 +266,12 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-public.json');
 
         //act
-        $phpFileParser->parseFile(new FileSystemPath($pathStubClass));
+        $result = $phpFileParser->parseFile(new FileSystemPath($pathStubClass));
 
-        $rsCollector = $phpFileParser->getListResult();
-
-        $this->assertCount(1, $rsCollector->getResultCollectionReadable());
-        $this->assertContainsProcessFile('vfs://root/files/ClassPsr4Composer.php', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('another\ns\vendor', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('\another\ns\vendor', $rsCollector->getResultCollectionReadable());
+        $this->assertCount(1, $result->getResultCollectionReadable());
+        $this->assertContainsProcessFile('vfs://root/files/ClassPsr4Composer.php', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('another\ns\vendor', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('\another\ns\vendor', $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -297,15 +286,13 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-private.json');
 
         //act
-        $phpFileParser->parseFile(new FileSystemPath($pathStubClass));
+        $result = $phpFileParser->parseFile(new FileSystemPath($pathStubClass));
 
-        $rsCollector = $phpFileParser->getListResult();
-
-        $this->assertCount(1, $rsCollector->getResultCollectionReadable());
-        $this->assertContainsProcessFile('vfs://root/files/ClassPsr4Composer.php', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('my\ns\psr4', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('another\ns\vendor', $rsCollector->getResultCollectionReadable());
-        $this->assertContainsConflicts('\another\ns\vendor', $rsCollector->getResultCollectionReadable());
+        $this->assertCount(1, $result->getResultCollectionReadable());
+        $this->assertContainsProcessFile('vfs://root/files/ClassPsr4Composer.php', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('my\ns\psr4', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('another\ns\vendor', $result->getResultCollectionReadable());
+        $this->assertContainsConflicts('\another\ns\vendor', $result->getResultCollectionReadable());
     }
 
     /** @test */
@@ -331,10 +318,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-private.json');
 
         //act
-        $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUsePublicEntry.php'));
+        $result = $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUsePublicEntry.php'));
 
-        $rsCollector = $phpFileParser->getListResult();
-        $this->assertCount(0, $rsCollector->getResultCollectionReadable());
+        $this->assertCount(0, $result->getResultCollectionReadable());
     }
 
     private function getEnvironmentMock(

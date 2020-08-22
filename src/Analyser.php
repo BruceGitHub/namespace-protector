@@ -16,29 +16,27 @@ final class Analyser
     /** @var ParserInterface[]  */
     private $parserList;
 
-    /** @var ResultParser */
-    private $cumulativeResultFromParser;
-
     public function __construct(ParserInterface ...$parserList)
     {
         $this->parserList = $parserList;
     }
 
-    public function execute(PathInterface $filePath): void
+    public function execute(PathInterface $filePath): ResultAnalyserInterface
     {
-        $this->cumulativeResultFromParser = new ResultParser();
+        $cumulativeResultFromParser = new ResultParser();
         foreach ($this->parserList as $currentParser) {
-            $currentParser->parseFile($filePath);
-            $resultOfcurrentParsedFile = $currentParser->getListResult();
+            $resultOfcurrentParsedFile = $currentParser->parseFile($filePath);
 
-            $this->cumulativeResultFromParser->append($resultOfcurrentParsedFile);
+            $cumulativeResultFromParser->append($resultOfcurrentParsedFile);
         }
+
+        return $this->getResult($cumulativeResultFromParser);
     }
 
-    public function getResult(): ResultAnalyserInterface
+    private function getResult(ResultParser $resultParser): ResultAnalyserInterface
     {
         return new ResultAnalyser(
-            new ResultCollectedReadable($this->cumulativeResultFromParser->getResultCollectionReadable())
+            new ResultCollectedReadable($resultParser->getResultCollectionReadable())
         );
     }
 }

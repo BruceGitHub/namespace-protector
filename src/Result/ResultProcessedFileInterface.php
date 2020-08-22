@@ -4,7 +4,7 @@ namespace NamespaceProtector\Result;
 
 interface ResultProcessedFileInterface extends ResultInterface
 {
-    public function get(): String;
+    public function getFileName(): String;
 
     /** @return array<ResultInterface> */
     public function getConflicts(): array;

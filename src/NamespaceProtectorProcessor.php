@@ -76,8 +76,8 @@ final class NamespaceProtectorProcessor
         $totalResult = new ResultAnalyser(new ResultCollectedReadable(new ResultCollected()));
 
         foreach ($fileSystemScanner->getFileLoaded() as $file) {
-            $analyser->execute($file);
-            $totalResult = $totalResult->append($analyser->getResult());
+            $tmp = $analyser->execute($file);
+            $totalResult = $totalResult->append($tmp);
         }
 
         return $totalResult;

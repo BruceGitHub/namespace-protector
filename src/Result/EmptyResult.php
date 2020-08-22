@@ -7,9 +7,4 @@ final class EmptyResult implements ResultInterface
     public function __construct()
     {
     }
-
-    public function get(): String
-    {
-        return '';
-    }
 }

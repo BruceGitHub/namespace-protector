@@ -22,17 +22,13 @@ class AnalyserTest extends AbstractUnitTestCase
         $parser = $this->prophesize(ParserInterface::class);
 
         $parser->parseFile($file)
-            ->shouldBeCalled();
-
-        $parser->getListResult()
             ->shouldBeCalled()
             ->willReturn(new ResultParser(new ResultCollectedReadable(new ResultCollected())));
 
         $parser = $parser->reveal();
 
         $analyser = $this->createAnalyser($parser);
-        $analyser->execute($file);
-        $result = $analyser->getResult();
+        $result = $analyser->execute($file);
 
         $this->assertInstanceOf(ResultAnalyserInterface::class, $result);
     }
@@ -53,17 +49,12 @@ class AnalyserTest extends AbstractUnitTestCase
 
         $parser = $this->prophesize(ParserInterface::class);
         $parser->parseFile($file)
-            ->shouldBeCalled();
-
-        $parser->getListResult()
-            ->shouldBeCalled()
             ->willReturn(
                 new ResultParser(new ResultCollectedReadable(new ResultCollected($result)))
             );
 
         $analyser = $this->createAnalyser($parser->reveal(), $file);
-        $analyser->execute($file);
-        $result = $analyser->getResult();
+        $result = $analyser->execute($file);
 
         $this->assertTrue($result->withResults());
         $this->assertEquals(1, $result->count());

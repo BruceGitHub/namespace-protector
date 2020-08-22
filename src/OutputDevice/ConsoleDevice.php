@@ -45,7 +45,7 @@ final class ConsoleDevice implements OutputDeviceInterface
         $resultTitle = '';
 
         if (\count($processedFileResult->getConflicts()) > 0) {
-            $resultTitle = "\nProcessed file: " . $processedFileResult->get() . "\n";
+            $resultTitle = "\nProcessed file: " . $processedFileResult->getFileName() . "\n";
         }
 
         foreach ($processedFileResult->getConflicts() as $conflict) {
@@ -66,6 +66,6 @@ final class ConsoleDevice implements OutputDeviceInterface
             return \Safe\sprintf("\t > ERROR Line: %d of use %s ", $result->getLine(), $result->getUse()) . "\n";
         }
 
-        return $result->get();
+        return 'xxx';
     }
 }

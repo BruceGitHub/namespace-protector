@@ -80,7 +80,7 @@ abstract class AbstractUnitTestCase extends TestCase
 
         /** @var ResultProcessedFile $item */
         foreach ($iterable as $item) {
-            $this->assertStringContainsString($expected, $item->get());
+            $this->assertStringContainsString($expected, $item->getFileName());
         }
     }
 

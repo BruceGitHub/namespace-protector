@@ -24,11 +24,6 @@ class ResultParser implements ResultParserInterface
         $this->resultCollectorReadableParser = $resultCollectorReadableParser;
     }
 
-    public function get(): string
-    {
-        return '';
-    }
-
     /**
      * @return ResultCollectedReadable<ResultProcessorInterface>
      */

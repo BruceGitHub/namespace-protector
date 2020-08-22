@@ -7,7 +7,7 @@ final class ResultProcessedFile implements ResultProcessedFileEditableInterface
     /** @var string  */
     private $file;
 
-    /** @var array<ResultInterface> */
+    /** @var array<ErrorResult> */
     private $conflicts = [];
 
     public function __construct(string $file)
@@ -15,17 +15,17 @@ final class ResultProcessedFile implements ResultProcessedFileEditableInterface
         $this->file = $file;
     }
 
-    public function get(): String
+    public function getFileName(): String
     {
         return $this->file;
     }
 
-    public function addConflic(ResultInterface $conflic): void
+    public function addConflic(ErrorResult $conflic): void
     {
         $this->conflicts[] = $conflic;
     }
 
-    /** @return array<ResultInterface> */
+    /** @return array<ErrorResult> */
     public function getConflicts(): array
     {
         return $this->conflicts;

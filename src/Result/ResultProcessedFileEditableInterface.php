@@ -4,10 +4,10 @@ namespace NamespaceProtector\Result;
 
 interface ResultProcessedFileEditableInterface extends ResultProcessedFileInterface
 {
-    public function get(): String;
+    public function getFileName(): String;
 
-    /** @return array<ResultInterface> */
+    /** @return array<ErrorResult> */
     public function getConflicts(): array;
 
-    public function addConflic(ResultInterface $conflic): void;
+    public function addConflic(ErrorResult $conflic): void;
 }
