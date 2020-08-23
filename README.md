@@ -17,7 +17,7 @@ Allow to improve the information hiding at level of namespace Like C#/Java pubbl
 The idea is that namespace in some situations can be private at all except for a specific entry point. 
 For example the namespace of third parts lib. 
 
-# Design of this project it's based 
+# The Design of this project it's based 
 
 - No NULL 
 - No instanceof 
