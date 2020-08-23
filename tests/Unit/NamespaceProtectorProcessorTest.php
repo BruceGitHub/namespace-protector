@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use NamespaceProtector\Config\Config;
+use NamespaceProtector\Config\ConfigMaker;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -13,7 +13,8 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
     /** @test */
     public function it_process_work(): void
     {
-        $config = Config::loadFromFile(new FileSystemPath('tests/Stub/targetProject/json/namespace-protector-config.json'));
+        $configMaker = new ConfigMaker();
+        $config = $configMaker->createFromFile(new FileSystemPath('tests/Stub/targetProject/json/namespace-protector-config.json'));
         $factory = new NamespaceProtectorProcessorFactory();
         $namespaceProtectorProcessor = $factory->create($config);
         $namespaceProtectorProcessor->load();

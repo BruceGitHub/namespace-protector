@@ -21,10 +21,17 @@ else
 use NamespaceProtector\Command\NamespaceProtectorCommand;
 use NamespaceProtector\Command\NamespaceProtectorConfigCreatorCommand;
 use Symfony\Component\Console\Application;
+use NamespaceProtector\Config\ConfigTemplateCreator;
+
+const FILENAME = 'namespace-protector-config.json';
 
 $app = new Application('Namespace Protector','0.1.0 (Alpha)');
 $app->add(new NamespaceProtectorCommand());
-$app->add(new NamespaceProtectorConfigCreatorCommand());
+$app->add(new NamespaceProtectorConfigCreatorCommand(
+            'Namespace-Protector-Config-Create', 
+            new ConfigTemplateCreator(FILENAME)
+        )
+);
 
 try {
     $app->run();

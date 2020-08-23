@@ -3,6 +3,7 @@
 namespace NamespaceProtector\Command;
 
 use NamespaceProtector\Config\Config;
+use NamespaceProtector\Config\ConfigMaker;
 use NamespaceProtector\Common\FileSystemPath;
 use Symfony\Component\Console\Command\Command;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
@@ -36,11 +37,12 @@ abstract class AbstractValidateNamespaceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $configMaker = new ConfigMaker();
         $output->writeln('Boot validate analysis....');
-        $config = Config::loadFromFile(new FileSystemPath(\getcwd() . '/namespace-protector-config.json'));
+        $config = $configMaker->createFromFile(new FileSystemPath(\getcwd() . '/namespace-protector-config.json'));
         $plotter = $input->getArgument(self::PLOTTER_ARGUMENT);
         if ($plotter && \is_string($plotter)) {
-            $config = Config::fromConfigWithOverride($config, ['plotter' => $plotter]);
+            $config = $configMaker->createFromItSelf($config, ['plotter' => $plotter]);
         }
 
         $factory = new NamespaceProtectorProcessorFactory();

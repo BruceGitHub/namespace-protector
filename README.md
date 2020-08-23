@@ -17,16 +17,17 @@ Allow to improve the information hiding at level of namespace Like C#/Java pubbl
 The idea is that namespace in some situations can be private at all except for a specific entry point. 
 For example the namespace of third parts lib. 
 
-# The Design of this project it's based 
+# The Design of this project follows this rules 
 
 - No NULL 
 - No instanceof 
 - No switch
+- No static
 
 # todo
 - [] Adds mode DISCOVER_CONFIG, so for each lib that in the `extra` node of composer.json declares the visibility settings of the namespace lib, it can perform the validity in autonomy
 
-- [] Adds command to build deps graph 
+- [x] Adds command to build conflicts graph 
 
 # Minimal config 
 

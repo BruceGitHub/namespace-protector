@@ -12,7 +12,7 @@ class ResultParser implements ResultParserInterface
     /**
      * @param ResultCollectedReadable<ResultProcessorInterface> $resultCollectorReadableParser
      */
-    public function __construct(ResultCollectedReadable $resultCollectorReadableParser = null)
+    public function __construct(ResultCollectedReadable $resultCollectorReadableParser = null) //todo: remove this
     {
         if (null === $resultCollectorReadableParser) {
             /** @var ResultCollectedReadable<ResultProcessorInterface> $resultCollectorReadableParser */
@@ -38,7 +38,7 @@ class ResultParser implements ResultParserInterface
         $collected = new ResultCollected();
 
         foreach ($this->getResultCollectionReadable() as $item) {
-            $collected->addResult($item);
+            $collected->addResult($item); //todo: inspect
         }
 
         foreach ($toAppendInstance->getResultCollectionReadable() as $item) {

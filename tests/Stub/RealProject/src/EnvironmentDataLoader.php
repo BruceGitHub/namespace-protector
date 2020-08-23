@@ -6,6 +6,7 @@ use Closure;
 use ReflectionClass;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Scanner\ComposerJson;
+use NamespaceProtector\Scanner\ComposerJsonInterface;
 
 final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 {
@@ -26,10 +27,10 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
     /** @var DbKeyValue */
     private $collectComposerNamespace;
 
-    /** @var ComposerJson */
+    /** @var ComposerJsonInterface */
     private $composerJson;
 
-    public function __construct(ComposerJson $composerJson)
+    public function __construct(ComposerJsonInterface $composerJson)
     {
         $this->composerJson = $composerJson;
         $this->initializeVars();

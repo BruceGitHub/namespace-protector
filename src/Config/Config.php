@@ -2,7 +2,6 @@
 
 namespace NamespaceProtector\Config;
 
-use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Common\PathInterface;
 use Webmozart\Assert\Assert;
 
@@ -42,7 +41,7 @@ final class Config
      * @param array<string> $privateEntries
      * @param array<string> $publicEntries
      */
-    private function __construct(
+    public function __construct(
         string $version,
         PathInterface $pathStart,
         PathInterface $pathComposerJson,
@@ -132,29 +131,8 @@ final class Config
         return $prettyPrintNamespaceToValidate;
     }
 
-    public static function loadFromFile(PathInterface $path): self
-    {
-        $content = \safe\file_get_contents($path->get());
-        $arrayConfig = \safe\json_decode($content, true);
-
-        $self = new self(
-            $arrayConfig['version'],
-            new FileSystemPath($arrayConfig['start-path'] ?? '.'),
-            new FileSystemPath($arrayConfig['composer-json-path'] ?? '.'),
-            $arrayConfig['private-entries'] ?? [],
-            $arrayConfig['public-entries'] ?? [],
-            $arrayConfig['mode'] ?? self::MODE_PUBLIC,
-            $arrayConfig['cache'] ?? false,
-            $arrayConfig['plotter'] ?? self::PLOTTER_TERMINAL,
-        );
-
-        $self->validateLoadedConfig();
-
-        return $self;
-    }
-
     /** @param array<string,string> $parameters */
-    public static function fromConfigWithOverride(self $config, array $parameters): self
+    public function cloneWithWithOverride(self $config, array $parameters): self
     {
         $self = new self(
             $config->getVersion(),
@@ -167,12 +145,12 @@ final class Config
             $parameters['plotter'] ?? $config->getPlotter(),
         );
 
-        $self->validateLoadedConfig();
+        $self->validateLoadedConfig(); //todo: validation called multiple times
 
         return $self;
     }
 
-    private function validateLoadedConfig(): void
+    public function validateLoadedConfig(): void
     {
         Assert::inArray($this->getMode(), [self::MODE_PUBLIC, self::MODE_MAKE_VENDOR_PRIVATE], 'Mode not valid');
         Assert::eq('0.1.0', $this->getVersion(), 'Version not valid');
@@ -182,7 +160,7 @@ final class Config
         Assert::inArray($this->getPlotter(), [self::PLOTTER_TERMINAL, self::PLOTTER_PNG], 'Plotter not valid');
     }
 
-    private function getVersion(): string
+    public function getVersion(): string
     {
         //todo: use https://github.com/nikolaposa/version
         return $this->version;

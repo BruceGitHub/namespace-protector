@@ -5,23 +5,22 @@ namespace NamespaceProtector\Config;
 
 use NamespaceProtector\Common\PathInterface;
 
-final class ConfigTemplateCreator
+final class ConfigTemplateCreator implements ConfigTemplateCreatorInterface
 {
-    private const FILENAME = 'namespace-protector-config.json';
-    private const FILENAME_VISIBILITY = 'namespace-protector-visibility.json';
-    private const TEMPLATE_CONFIG_JSON = 'template-config-json';
+    /** @var string */
+    private $templateName;
 
-    public static function createJsonTemplateConfig(PathInterface $baseComposerJsonDirectory): void
+    public function __construct(string $templateName)
     {
-        self::createFileWithBackup($baseComposerJsonDirectory() . self::FILENAME, self::TEMPLATE_CONFIG_JSON);
+        $this->templateName = $templateName;
     }
 
-    public static function createJsonTemplateVisibility(): void
+    public function create(PathInterface $destinationPathFileJson): void
     {
-        self::createFileWithBackup(self::FILENAME_VISIBILITY, 'template-visibility');
+        $this->createFileWithBackup($destinationPathFileJson->get(), $this->templateName);
     }
 
-    private static function createFileWithBackup(string $fileName, string $templateFile): void
+    private function createFileWithBackup(string $fileName, string $templateFile): void
     {
         @\rename($fileName, $fileName . '_backup.json');
 

@@ -7,12 +7,12 @@ namespace Unit\Parser;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use Tests\Unit\AbstractUnitTestCase;
-use NamespaceProtector\Config\Config;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Cache\NullCache;
 use NamespaceProtector\Parser\Node\NamespaceVisitor;
 use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Common\FileSystemPath;
+use NamespaceProtector\Config\ConfigMaker;
 use NamespaceProtector\Event\EventDispatcher;
 use NamespaceProtector\Event\ListenerProvider;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
@@ -353,7 +353,9 @@ class PhpFileParserTest extends AbstractUnitTestCase
     private function createPhpFileParser(string $pathConfig): PhpFileParser
     {
         $metaDataLoader = $this->getEnvironmentMock();
-        $config = Config::loadFromFile(new FileSystemPath($pathConfig));
+
+        $configMaker = new ConfigMaker();
+        $config = $configMaker->createFromFile(new FileSystemPath($pathConfig));
         $listener = new ListenerProvider();
         $callableUseStatement = new ProcessUseStatement($metaDataLoader, $config);
         $listener->addEventListener(FoundUseNamespace::class, $callableUseStatement);
