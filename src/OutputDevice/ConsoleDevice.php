@@ -3,7 +3,6 @@
 namespace NamespaceProtector\OutputDevice;
 
 use NamespaceProtector\Result\ErrorResult;
-use NamespaceProtector\Result\ResultInterface;
 use NamespaceProtector\Result\ResultProcessedFile;
 use Symfony\Component\Console\Output\OutputInterface;
 use NamespaceProtector\Result\ResultProcessorInterface;
@@ -60,12 +59,8 @@ final class ConsoleDevice implements OutputDeviceInterface
         return $resultTitle . $resultbuffer;
     }
 
-    public function plotResult(ResultInterface $result): string
+    public function plotResult(ErrorResult $result): string
     {
-        if ($result instanceof ErrorResult) {
-            return \Safe\sprintf("\t > ERROR Line: %d of use %s ", $result->getLine(), $result->getUse()) . "\n";
-        }
-
-        return 'xxx';
+        return \Safe\sprintf("\t > ERROR Line: %d of use %s ", $result->getLine(), $result->getUse()) . "\n";
     }
 }

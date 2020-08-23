@@ -12,6 +12,11 @@ class MatchedResult implements MatchedResultInterface
         $this->info = $info;
     }
 
+    public function matched(): bool
+    {
+        return true;
+    }
+
     public function getInfo(): string
     {
         return $this->info;

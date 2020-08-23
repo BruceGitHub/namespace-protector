@@ -4,4 +4,5 @@ namespace NamespaceProtector\Parser\Node;
 
 interface MatchedResultInterface
 {
+    public function matched(): bool;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace NamespaceProtector\Db;
 
 use NamespaceProtector\Entry\Entry;
-use NamespaceProtector\Parser\Node\MatchedResult;
+use NamespaceProtector\Parser\Node\MatchedResultInterface;
 
 final class DbKeyValue implements DbKeyValueInterface
 {
@@ -26,11 +26,9 @@ final class DbKeyValue implements DbKeyValueInterface
 
     public function booleanSearch(MatchCollectionInterface $match, Entry $matchMe): bool
     {
-        if ($match->evaluate($this->collections, $matchMe) instanceof MatchedResult) {
-            return true;
-        }
-
-        return false;
+        /** @var MatchedResultInterface */
+        $resul = $match->evaluate($this->collections, $matchMe);
+        return $resul->matched();
     }
 
     public function count(): int

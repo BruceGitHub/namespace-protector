@@ -7,9 +7,9 @@ namespace NamespaceProtector\Parser\Node;
 use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Db\BooleanMatchKey;
-use NamespaceProtector\Db\BooleanMatchNameSpace;
 use NamespaceProtector\Db\BooleanMatchValue;
 use NamespaceProtector\Db\DbKeyValueInterface;
+use NamespaceProtector\Db\BooleanMatchNameSpace;
 use NamespaceProtector\Db\MatchCollectionInterface;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
@@ -44,9 +44,10 @@ final class ProcessUseStatement
             return;
         }
 
+        /** @var MatchedResult */
         $result = $this->isInPrivateConfiguredEntries($val, new BooleanMatchNameSpace());
 
-        if ($result instanceof MatchedResult) {
+        if ($result->matched()) {
             $event->foundError($result->getInfo());
             return;
         }
@@ -54,7 +55,7 @@ final class ProcessUseStatement
 
     private function withModeVendorPrivate(Entry $currentNamespaceAccess, EventProcessNodeInterface $event): void
     {
-        if ($this->isInPublicConfiguredEntries($currentNamespaceAccess, new BooleanMatchNameSpace()) instanceof MatchedResult) {
+        if ($this->isInPublicConfiguredEntries($currentNamespaceAccess, new BooleanMatchNameSpace())->matched()) {
             return;
         }
 

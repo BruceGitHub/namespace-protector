@@ -15,7 +15,6 @@ use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Event\EventDispatcher;
 use NamespaceProtector\Event\ListenerProvider;
-use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
@@ -362,7 +361,6 @@ class PhpFileParserTest extends AbstractUnitTestCase
 
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $traverser = new NodeTraverser();
-        $resultCollector = new ResultCollected();
 
         $namespaceVisitor = new NamespaceVisitor(
             [

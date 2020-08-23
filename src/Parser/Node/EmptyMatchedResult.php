@@ -4,8 +4,8 @@ namespace NamespaceProtector\Parser\Node;
 
 class EmptyMatchedResult implements MatchedResultInterface
 {
-    public function __invoke(): string
+    public function matched(): bool
     {
-        return '';
+        return false;
     }
 }
