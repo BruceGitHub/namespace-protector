@@ -21,7 +21,7 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
     /** @var array<Callable> */
     private $listNodeProcessor;
 
-    /** @var ResultCollected */
+    /** @var ResultCollected<ErrorResult> */
     private $storeProcessNodeResult;
 
     /**
@@ -86,6 +86,9 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
         $this->storeProcessNodeResult->addResult($err);
     }
 
+    /**
+     * @return ResultCollectedReadable<ErrorResult>
+     */
     public function getStoreProcessedResult(): ResultCollectedReadable
     {
         return new ResultCollectedReadable($this->storeProcessNodeResult);

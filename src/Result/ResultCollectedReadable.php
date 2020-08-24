@@ -8,17 +8,18 @@ use Iterator;
 use Countable;
 
 /**
- * @implements ResultCollectorInterface<ResultInterface>
+ * @template T
+ * @implements ResultCollectedInterface<T>
  */
-final class ResultCollectedReadable implements Countable, ResultCollectorInterface
+final class ResultCollectedReadable implements Countable, ResultCollectedInterface
 {
-    /** @var ResultCollectorInterface<ResultInterface> */
+    /** @var ResultCollectedInterface<T> */
     private $resultCollector;
 
     /**
-     * @param ResultCollectorInterface<ResultInterface> $resultCollector
+     * @param ResultCollectedInterface<T> $resultCollector
      */
-    public function __construct(ResultCollectorInterface $resultCollector)
+    public function __construct(ResultCollectedInterface $resultCollector)
     {
         $this->resultCollector = $resultCollector;
     }
@@ -29,7 +30,7 @@ final class ResultCollectedReadable implements Countable, ResultCollectorInterfa
     }
 
     /**
-     * @return Iterator<ResultInterface>
+     * @return Iterator<T>
      */
     public function getIterator(): Iterator
     {

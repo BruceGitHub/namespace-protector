@@ -9,10 +9,10 @@ use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultProcessor;
 use NamespaceProtector\Scanner\FileSystemScanner;
-use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultAnalyserInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
 use NamespaceProtector\Result\ResultProcessorInterface;
+use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 final class NamespaceProtectorProcessor
 {
@@ -65,7 +65,7 @@ final class NamespaceProtectorProcessor
         /** @var ResultAnalyser $result */
         $result = $this->processEntries($this->fileSystemScanner, $this->analyser);
 
-        /** @var ResultCollectedReadable<ResultProcessedFile> $resultCollector */
+        /** @var ResultCollectedReadable<ResultProcessedFileInterface> $resultCollector */
         $resultCollector = $result->getResultCollected();
 
         return new ResultProcessor($resultCollector);
@@ -73,11 +73,11 @@ final class NamespaceProtectorProcessor
 
     private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultAnalyserInterface
     {
-        $totalResult = new ResultAnalyser(new ResultCollectedReadable(new ResultCollected()));
+        $totalResult = new ResultAnalyser((new ResultCollected()));
 
         foreach ($fileSystemScanner->getFileLoaded() as $file) {
             $tmp = $analyser->execute($file);
-            $totalResult = $totalResult->append($tmp);
+            $totalResult->append($tmp);
         }
 
         return $totalResult;

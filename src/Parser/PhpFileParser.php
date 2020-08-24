@@ -10,10 +10,9 @@ use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultCollected;
-use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultParserInterface;
-use NamespaceProtector\Result\ResultCollectedReadable;
-use NamespaceProtector\Result\ResultProcessorInterface;
+use NamespaceProtector\Result\ResultProcessedFileEditable;
+use NamespaceProtector\Result\ResultProcessedFileInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
 
@@ -62,19 +61,20 @@ final class PhpFileParser implements ParserInterface
     private function getListResult(): ResultParserInterface
     {
         if (\count($this->namespaceProtectorVisitor->getStoreProcessedResult()) === 0) {
-            return new ResultParser();
+            return new ResultParser(new ResultCollected());
         }
 
-        $processFileResult = new ResultProcessedFile($this->pathFileToParse->get());
+        $processFileResult = new ResultProcessedFileEditable($this->pathFileToParse->get());
 
         /** @var ErrorResult $singleConflict */
         foreach ($this->namespaceProtectorVisitor->getStoreProcessedResult() as $singleConflict) {
             $processFileResult->addConflic($singleConflict);
         }
 
-        /** @var ResultCollectedReadable<ResultProcessorInterface> */
-        $collected = new ResultCollectedReadable(new ResultCollected([$processFileResult]));
-        return new ResultParser($collected);
+        /** @var ResultCollected<ResultProcessedFileInterface> $result*/
+        $result = new ResultCollected([$processFileResult]);
+
+        return new ResultParser($result);
     }
 
     /**

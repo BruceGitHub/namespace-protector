@@ -6,20 +6,17 @@ namespace NamespaceProtector\Result;
 
 class ResultProcessor implements ResultProcessorInterface
 {
-    /** @var ResultCollectedReadable<ResultProcessedFile> */
+    /** @var ResultCollectedReadable<ResultProcessedFileInterface> */
     private $resultCollectorReadable;
 
     /**
-     * @param ResultCollectedReadable<ResultProcessedFile> $resultCollectorReadable
+     * @param ResultCollectedReadable<ResultProcessedFileInterface> $resultCollectorReadable
      */
     public function __construct(ResultCollectedReadable $resultCollectorReadable)
     {
         $this->resultCollectorReadable = $resultCollectorReadable;
     }
 
-    /**
-     * @return ResultCollectedReadable<ResultProcessedFile>
-     */
     public function getProcessedResult(): ResultCollectedReadable
     {
         return $this->resultCollectorReadable;

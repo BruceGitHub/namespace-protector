@@ -7,7 +7,7 @@ namespace NamespaceProtector\Result;
 interface ResultProcessorInterface
 {
     /**
-     * @return ResultCollectedReadable<ResultProcessedFile>
+     * @return ResultCollectedReadable<ResultProcessedFileInterface>
      */
     public function getProcessedResult(): ResultCollectedReadable;
 }

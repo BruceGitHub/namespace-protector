@@ -6,26 +6,24 @@ namespace NamespaceProtector\Result;
 
 class ResultAnalyser implements ResultAnalyserInterface
 {
-    /** @var ResultCollectedReadable */
-    private $resultCollectorReadable;
+    /**
+     * @var ResultCollected<ResultProcessedFileInterface>
+     */
+    private $resultCollection;
 
-    public function __construct(ResultCollectedReadable $resultCollectorReadable)
+    /**
+     * @param ResultCollected<ResultProcessedFileInterface> $resultCollection
+     */
+    public function __construct(ResultCollected $resultCollection)
     {
-        $this->resultCollectorReadable = $resultCollectorReadable;
+        $this->resultCollection = $resultCollection;
     }
 
-    public function append(ResultAnalyserInterface $toAppendInstance): ResultAnalyserInterface
+    public function append(ResultAnalyserInterface $toAppend): void
     {
-        $collected = new ResultCollected();
-        foreach ($this->getResultCollected() as $item) {
-            $collected->addResult($item);
+        foreach ($toAppend->getResultCollected() as $item) {
+            $this->resultCollection->addResult($item);
         }
-
-        foreach ($toAppendInstance->getResultCollected() as $item) {
-            $collected->addResult($item);
-        }
-
-        return new self(new ResultCollectedReadable($collected));
     }
 
     public function withResults(): bool
@@ -35,11 +33,11 @@ class ResultAnalyser implements ResultAnalyserInterface
 
     public function getResultCollected(): ResultCollectedReadable
     {
-        return $this->resultCollectorReadable;
+        return new ResultCollectedReadable($this->resultCollection);
     }
 
     public function count(): int
     {
-        return \count($this->resultCollectorReadable);
+        return \count($this->resultCollection);
     }
 }

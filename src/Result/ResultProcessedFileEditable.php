@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Result;
 
-final class ResultProcessedFile implements ResultProcessedFileEditableInterface
+final class ResultProcessedFileEditable implements ResultProcessedFileEditableInterface
 {
     /** @var string  */
     private $file;

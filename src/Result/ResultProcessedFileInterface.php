@@ -6,6 +6,6 @@ interface ResultProcessedFileInterface extends ResultInterface
 {
     public function getFileName(): String;
 
-    /** @return array<ResultInterface> */
+    /** @return array<ErrorResult> */
     public function getConflicts(): array;
 }

@@ -3,9 +3,9 @@
 namespace NamespaceProtector\OutputDevice;
 
 use NamespaceProtector\Result\ErrorResult;
-use NamespaceProtector\Result\ResultProcessedFile;
 use Symfony\Component\Console\Output\OutputInterface;
 use NamespaceProtector\Result\ResultProcessorInterface;
+use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 final class ConsoleDevice implements OutputDeviceInterface
 {
@@ -38,7 +38,7 @@ final class ConsoleDevice implements OutputDeviceInterface
         $this->outputInterface->writeln('<fg=red>Total errors: ' . $this->totalErrors . '</>');
     }
 
-    public function plot(ResultProcessedFile $processedFileResult): string
+    public function plot(ResultProcessedFileInterface $processedFileResult): string
     {
         $resultbuffer = '';
         $resultTitle = '';

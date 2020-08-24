@@ -3,6 +3,7 @@
 namespace NamespaceProtector\OutputDevice;
 
 use NamespaceProtector\Result\ResultProcessedFile;
+use NamespaceProtector\Result\ResultProcessedFileInterface;
 use NamespaceProtector\Result\ResultProcessorInterface;
 
 final class GraphicsDevice implements OutputDeviceInterface
@@ -21,7 +22,7 @@ final class GraphicsDevice implements OutputDeviceInterface
         $graphviz->display($graph);
     }
 
-    public function plot(\Fhaculty\Graph\Graph $graph, ResultProcessedFile $processedFileResult): void
+    public function plot(\Fhaculty\Graph\Graph $graph, ResultProcessedFileInterface $processedFileResult): void
     {
         if (\count($processedFileResult->getConflicts()) > 0) {
             $blue = $graph->createVertex($this->getIdFromNamespace($processedFileResult->getFileName()), true);

@@ -8,6 +8,6 @@ interface ResultParserInterface extends ResultInterface
 {
     public function append(ResultParserInterface $toAppendInstance): void;
 
-    /** @return ResultCollectedReadable<ResultParserInterface> */
+    /** @return ResultCollectedReadable<ResultProcessedFileInterface> */
     public function getResultCollectionReadable(): ResultCollectedReadable;
 }

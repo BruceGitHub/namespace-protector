@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
@@ -10,7 +12,7 @@ use IteratorAggregate;
  * @template T
  * @extends IteratorAggregate<T>
  */
-interface ResultCollectorInterface extends Countable, IteratorAggregate
+interface ResultCollectedInterface extends Countable, IteratorAggregate
 {
     public function count(): int;
 

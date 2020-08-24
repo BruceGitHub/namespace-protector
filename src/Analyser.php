@@ -8,8 +8,10 @@ use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Parser\ParserInterface;
+use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultAnalyserInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
+use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 final class Analyser
 {
@@ -23,20 +25,38 @@ final class Analyser
 
     public function execute(PathInterface $filePath): ResultAnalyserInterface
     {
-        $cumulativeResultFromParser = new ResultParser();
+        /** @var ResultCollected<ResultProcessedFileInterface> $collection*/
+        $collection = new ResultCollected();
+        $cumulativeParserResult = new ResultParser($collection);
+
         foreach ($this->parserList as $currentParser) {
             $resultOfcurrentParsedFile = $currentParser->parseFile($filePath);
 
-            $cumulativeResultFromParser->append($resultOfcurrentParsedFile);
+            $cumulativeParserResult->append($resultOfcurrentParsedFile);
         }
 
-        return $this->getResult($cumulativeResultFromParser);
+        return $this->getResult($cumulativeParserResult);
     }
 
     private function getResult(ResultParser $resultParser): ResultAnalyserInterface
     {
-        return new ResultAnalyser(
-            new ResultCollectedReadable($resultParser->getResultCollectionReadable())
-        );
+        return new ResultAnalyser($this->convertReadOnlyCollectionToEditableCollection($resultParser->getResultCollectionReadable()));
+    }
+
+    /**
+     *
+     * @param ResultCollectedReadable<ResultProcessedFileInterface> $resultCollectedReadable
+     * @return ResultCollected<ResultProcessedFileInterface>
+     */
+    private function convertReadOnlyCollectionToEditableCollection(ResultCollectedReadable $resultCollectedReadable): ResultCollected
+    {
+        /** @var ResultCollected<ResultProcessedFileInterface> $collection*/
+        $collection = new ResultCollected();
+
+        foreach ($resultCollectedReadable as $item) {
+            $collection->addResult($item);
+        }
+
+        return $collection;
     }
 }
