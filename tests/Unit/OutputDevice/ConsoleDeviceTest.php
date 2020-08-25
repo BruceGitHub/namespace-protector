@@ -9,7 +9,7 @@ use NamespaceProtector\OutputDevice\ConsoleDevice;
 use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultCollectedReadable;
-use NamespaceProtector\Result\ResultProcessedFile;
+use NamespaceProtector\Result\ResultProcessedFileEditable;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -23,7 +23,7 @@ class ConsoleDeviceTest extends AbstractUnitTestCase
         );
         \ob_start();
 
-        $rpf = new ResultProcessedFile('FileA');
+        $rpf = new ResultProcessedFileEditable('FileA');
         $rpf->addConflic(new ErrorResult(99, 'ConflicA', 1));
 
         $result = $this->prophesize(ResultProcessorInterface::class);

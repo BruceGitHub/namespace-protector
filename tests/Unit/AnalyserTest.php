@@ -11,7 +11,6 @@ use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultAnalyserInterface;
-use NamespaceProtector\Result\ResultCollectedReadable;
 
 class AnalyserTest extends AbstractUnitTestCase
 {
@@ -23,7 +22,7 @@ class AnalyserTest extends AbstractUnitTestCase
 
         $parser->parseFile($file)
             ->shouldBeCalled()
-            ->willReturn(new ResultParser(new ResultCollectedReadable(new ResultCollected())));
+            ->willReturn(new ResultParser(new ResultCollected()));
 
         $parser = $parser->reveal();
 
@@ -50,7 +49,7 @@ class AnalyserTest extends AbstractUnitTestCase
         $parser = $this->prophesize(ParserInterface::class);
         $parser->parseFile($file)
             ->willReturn(
-                new ResultParser(new ResultCollectedReadable(new ResultCollected($result)))
+                new ResultParser(new ResultCollected($result))
             );
 
         $analyser = $this->createAnalyser($parser->reveal(), $file);

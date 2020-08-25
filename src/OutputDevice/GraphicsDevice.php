@@ -2,7 +2,6 @@
 
 namespace NamespaceProtector\OutputDevice;
 
-use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultProcessedFileInterface;
 use NamespaceProtector\Result\ResultProcessorInterface;
 
