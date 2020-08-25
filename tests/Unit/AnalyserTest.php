@@ -11,6 +11,7 @@ use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultAnalyserInterface;
+use NamespaceProtector\Result\Factory\CollectedFactory;
 
 class AnalyserTest extends AbstractUnitTestCase
 {
@@ -34,7 +35,8 @@ class AnalyserTest extends AbstractUnitTestCase
 
     private function createAnalyser($parser): Analyser
     {
-        $analyser = new Analyser($parser);
+        $collectionFactory = new CollectedFactory();
+        $analyser = new Analyser($collectionFactory, $parser);
         return $analyser;
     }
 

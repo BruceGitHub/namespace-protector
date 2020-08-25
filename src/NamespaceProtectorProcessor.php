@@ -6,11 +6,11 @@ namespace NamespaceProtector;
 
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Result\ResultAnalyser;
-use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultProcessor;
 use NamespaceProtector\Scanner\FileSystemScanner;
 use NamespaceProtector\Result\ResultAnalyserInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
+use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\Result\ResultProcessedFileInterface;
 
@@ -28,16 +28,21 @@ final class NamespaceProtectorProcessor
     /** @var EnvironmentDataLoaderInterface */
     private $environmentDataLoader;
 
+    /** @var CollectedFactory */
+    private $collectedFactory;
+
     public function __construct(
         ComposerJson $composerJson,
         FileSystemScanner $fileSystemScanner,
         Analyser $analyser,
-        EnvironmentDataLoader $environmentDataLoader
+        EnvironmentDataLoader $environmentDataLoader,
+        CollectedFactory $collectedFactory
     ) {
         $this->composerJson = $composerJson;
         $this->fileSystemScanner = $fileSystemScanner;
         $this->analyser = $analyser;
         $this->environmentDataLoader = $environmentDataLoader;
+        $this->collectedFactory = $collectedFactory;
     }
 
     public function load(): void
@@ -73,7 +78,9 @@ final class NamespaceProtectorProcessor
 
     private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultAnalyserInterface
     {
-        $totalResult = new ResultAnalyser((new ResultCollected()));
+        $collection = $this->collectedFactory->createForProcessdFile();
+
+        $totalResult = new ResultAnalyser($collection);
 
         foreach ($fileSystemScanner->getFileLoaded() as $file) {
             $tmp = $analyser->execute($file);

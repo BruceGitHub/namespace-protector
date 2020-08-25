@@ -9,7 +9,6 @@ use PhpParser\ParserFactory;
 use Psr\SimpleCache\CacheInterface;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Cache\NullCache;
-use NamespaceProtector\Parser\Node\NamespaceVisitor;
 use NamespaceProtector\Parser\PhpFileParser;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Cache\SimpleFileCache;
@@ -17,7 +16,9 @@ use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Event\EventDispatcher;
 use NamespaceProtector\Event\ListenerProvider;
 use NamespaceProtector\Scanner\FileSystemScanner;
+use NamespaceProtector\Parser\Node\NamespaceVisitor;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
+use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
 
 final class NamespaceProtectorProcessorFactory
@@ -38,21 +39,25 @@ final class NamespaceProtectorProcessorFactory
 
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $traverser = new NodeTraverser();
+        $collectionFactory = new CollectedFactory();
 
         $namespaceVisitor = new NamespaceVisitor(
             [
                 'preserveOriginalNames' => true,
                 'replaceNodes' => false,
             ],
-            $dispatcher
+            $dispatcher,
+            $collectionFactory
         );
 
         $analyser = new Analyser(
+            $collectionFactory,
             new PhpFileParser(
                 $cacheClass,
                 $traverser,
                 $namespaceVisitor,
-                $parser
+                $parser,
+                $collectionFactory
             )
         );
 
@@ -60,7 +65,8 @@ final class NamespaceProtectorProcessorFactory
             $composerJson,
             $fileSystem,
             $analyser,
-            $metaDataLoader
+            $metaDataLoader,
+            $collectionFactory,
         );
 
         return $namespaceProtectorProcessor;

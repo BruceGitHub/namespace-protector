@@ -24,6 +24,9 @@ For example the namespace of third parts lib.
 - No switch
 - No static
 
+## Nice to have 
+- Minimize the @var annotation 
+
 # todo
 - [] Adds mode DISCOVER_CONFIG, so for each lib that in the `extra` node of composer.json declares the visibility settings of the namespace lib, it can perform the validity in autonomy
 

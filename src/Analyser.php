@@ -11,6 +11,7 @@ use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultAnalyserInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
+use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 final class Analyser
@@ -18,15 +19,20 @@ final class Analyser
     /** @var ParserInterface[]  */
     private $parserList;
 
-    public function __construct(ParserInterface ...$parserList)
-    {
+    /** @var CollectedFactory */
+    private $collectedFactory;
+
+    public function __construct(
+        CollectedFactory $collectedFactory,
+        ParserInterface ...$parserList
+    ) {
         $this->parserList = $parserList;
+        $this->collectedFactory = $collectedFactory;
     }
 
     public function execute(PathInterface $filePath): ResultAnalyserInterface
     {
-        /** @var ResultCollected<ResultProcessedFileInterface> $collection*/
-        $collection = new ResultCollected();
+        $collection = $this->collectedFactory->createForProcessdFile();
         $cumulativeParserResult = new ResultParser($collection);
 
         foreach ($this->parserList as $currentParser) {
@@ -50,8 +56,7 @@ final class Analyser
      */
     private function convertReadOnlyCollectionToEditableCollection(ResultCollectedReadable $resultCollectedReadable): ResultCollected
     {
-        /** @var ResultCollected<ResultProcessedFileInterface> $collection*/
-        $collection = new ResultCollected();
+        $collection = $this->collectedFactory->createForProcessdFile();
 
         foreach ($resultCollectedReadable as $item) {
             $collection->addResult($item);

@@ -9,10 +9,9 @@ use PhpParser\NodeTraverserInterface;
 use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
-use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultParserInterface;
+use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Result\ResultProcessedFileEditable;
-use NamespaceProtector\Result\ResultProcessedFileInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
 
@@ -33,17 +32,22 @@ final class PhpFileParser implements ParserInterface
     /** @var PathInterface */
     private $pathFileToParse;
 
+    /** @var CollectedFactory */
+    private $collectedFactory;
+
     public function __construct(
         \Psr\SimpleCache\CacheInterface $cache,
         NodeTraverserInterface $nodeTraverserInterface,
         NamespaceProtectorVisitorInterface $visitor,
-        Parser $parser
+        Parser $parser,
+        CollectedFactory $collectedFactory
     ) {
         $this->cache = $cache;
         $this->traverser = $nodeTraverserInterface;
         $this->parser = $parser;
         $this->namespaceProtectorVisitor = $visitor;
         $nodeTraverserInterface->addVisitor($visitor);
+        $this->collectedFactory = $collectedFactory;
     }
 
     public function parseFile(PathInterface $pathFile): ResultParserInterface
@@ -61,7 +65,8 @@ final class PhpFileParser implements ParserInterface
     private function getListResult(): ResultParserInterface
     {
         if (\count($this->namespaceProtectorVisitor->getStoreProcessedResult()) === 0) {
-            return new ResultParser(new ResultCollected());
+            $collection = $this->collectedFactory->createForProcessdFile();
+            return new ResultParser($collection);
         }
 
         $processFileResult = new ResultProcessedFileEditable($this->pathFileToParse->get());
@@ -70,11 +75,9 @@ final class PhpFileParser implements ParserInterface
         foreach ($this->namespaceProtectorVisitor->getStoreProcessedResult() as $singleConflict) {
             $processFileResult->addConflic($singleConflict);
         }
+        $collection = $this->collectedFactory->createForProcessdFile([$processFileResult]);
 
-        /** @var ResultCollected<ResultProcessedFileInterface> $result*/
-        $result = new ResultCollected([$processFileResult]);
-
-        return new ResultParser($result);
+        return new ResultParser($collection);
     }
 
     /**
