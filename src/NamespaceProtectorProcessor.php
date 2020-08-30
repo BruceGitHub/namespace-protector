@@ -78,7 +78,7 @@ final class NamespaceProtectorProcessor
 
     private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultAnalyserInterface
     {
-        $collection = $this->collectedFactory->createForProcessdFile();
+        $collection = $this->collectedFactory->createEmptyChangeableProcessedFile();
 
         $totalResult = new ResultAnalyser($collection);
 

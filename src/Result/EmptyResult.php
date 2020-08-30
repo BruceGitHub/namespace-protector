@@ -4,7 +4,4 @@ namespace NamespaceProtector\Result;
 
 final class EmptyResult implements ResultInterface
 {
-    public function __construct()
-    {
-    }
 }

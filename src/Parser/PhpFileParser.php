@@ -65,7 +65,7 @@ final class PhpFileParser implements ParserInterface
     private function getListResult(): ResultParserInterface
     {
         if (\count($this->namespaceProtectorVisitor->getStoreProcessedResult()) === 0) {
-            $collection = $this->collectedFactory->createForProcessdFile();
+            $collection = $this->collectedFactory->createEmptyChangeableProcessedFile();
             return new ResultParser($collection);
         }
 
@@ -75,7 +75,7 @@ final class PhpFileParser implements ParserInterface
         foreach ($this->namespaceProtectorVisitor->getStoreProcessedResult() as $singleConflict) {
             $processFileResult->addConflic($singleConflict);
         }
-        $collection = $this->collectedFactory->createForProcessdFile([$processFileResult]);
+        $collection = $this->collectedFactory->createChangeableProcessedFile([$processFileResult]);
 
         return new ResultParser($collection);
     }

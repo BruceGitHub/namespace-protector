@@ -8,7 +8,7 @@ use Countable;
 
 interface ResultAnalyserInterface extends Countable
 {
-    public function append(ResultAnalyserInterface $toAppendInstance): void;
+    public function append(self $toAppendInstance): void;
 
     public function withResults(): bool;
 

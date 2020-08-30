@@ -32,7 +32,7 @@ final class Analyser
 
     public function execute(PathInterface $filePath): ResultAnalyserInterface
     {
-        $collection = $this->collectedFactory->createForProcessdFile();
+        $collection = $this->collectedFactory->createEmptyChangeableProcessedFile();
         $cumulativeParserResult = new ResultParser($collection);
 
         foreach ($this->parserList as $currentParser) {
@@ -56,7 +56,7 @@ final class Analyser
      */
     private function convertReadOnlyCollectionToEditableCollection(ResultCollectedReadable $resultCollectedReadable): ResultCollected
     {
-        $collection = $this->collectedFactory->createForProcessdFile();
+        $collection = $this->collectedFactory->createEmptyChangeableProcessedFile();
 
         foreach ($resultCollectedReadable as $item) {
             $collection->addResult($item);

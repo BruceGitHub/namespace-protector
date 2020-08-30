@@ -4,25 +4,24 @@ namespace NamespaceProtector\Result\Factory;
 
 use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
-use NamespaceProtector\Result\ResultProcessedFileEditable;
-use NamespaceProtector\Result\ResultProcessedFileInterface;
+use NamespaceProtector\Result\ResultCollectedInterface;
 
-final class CollectedFactory
+final class CollectedFactory extends AbstractCollectionFactory
 {
-    /**
-     * @return ResultCollected<ResultProcessedFileInterface>
-     * @param array<ResultProcessedFileEditable> $list
-     */
-    public function createForProcessdFile(array $list = []): ResultCollected
-    {
-        /** @var array<ResultProcessedFileInterface> $list */
-        return  new ResultCollected($list);
-    }
-
     /**
      * @return ResultCollected<ErrorResult>
      */
-    public function createForErrorResult(): ResultCollected
+    public function createForErrorResult(): ResultCollected //todo: move to another factory
+    {
+        return new ResultCollected();
+    }
+
+    public function createChangeableProcessedFile(array $list): ResultCollectedInterface
+    {
+        return new ResultCollected($list);
+    }
+
+    public function createEmptyChangeableProcessedFile(): ResultCollectedInterface
     {
         return  new ResultCollected();
     }
