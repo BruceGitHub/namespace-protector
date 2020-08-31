@@ -20,6 +20,7 @@ use NamespaceProtector\Parser\Node\NamespaceVisitor;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
 use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
+use NamespaceProtector\Result\Factory\ErrorCollectionFactory;
 
 final class NamespaceProtectorProcessorFactory
 {
@@ -40,6 +41,7 @@ final class NamespaceProtectorProcessorFactory
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $traverser = new NodeTraverser();
         $collectionFactory = new CollectedFactory();
+        $errorCollectionFactory = new ErrorCollectionFactory();
 
         $namespaceVisitor = new NamespaceVisitor(
             [
@@ -47,7 +49,7 @@ final class NamespaceProtectorProcessorFactory
                 'replaceNodes' => false,
             ],
             $dispatcher,
-            $collectionFactory
+            $errorCollectionFactory
         );
 
         $analyser = new Analyser(

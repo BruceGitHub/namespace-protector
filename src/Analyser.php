@@ -11,19 +11,19 @@ use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultAnalyserInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
-use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Result\ResultProcessedFileInterface;
+use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
 
 final class Analyser
 {
     /** @var ParserInterface[]  */
     private $parserList;
 
-    /** @var CollectedFactory */
+    /** @var CollectionFactoryInterface */
     private $collectedFactory;
 
     public function __construct(
-        CollectedFactory $collectedFactory,
+        CollectionFactoryInterface $collectedFactory,
         ParserInterface ...$parserList
     ) {
         $this->parserList = $parserList;

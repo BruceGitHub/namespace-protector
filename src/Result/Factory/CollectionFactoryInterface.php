@@ -6,16 +6,16 @@ use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultCollectedInterface;
 use NamespaceProtector\Result\ResultProcessedFileInterface;
 
-abstract class AbstractCollectionFactory
+interface CollectionFactoryInterface
 {
     /**
      * @return ResultCollected<ResultProcessedFileInterface>
      * @param array<ResultProcessedFileInterface> $list
      */
-    abstract public function createChangeableProcessedFile(array $list): ResultCollectedInterface;
+    public function createChangeableProcessedFile(array $list): ResultCollectedInterface;
 
     /**
      * @return ResultCollected<ResultProcessedFileInterface>
      */
-    abstract public function createEmptyChangeableProcessedFile(): ResultCollectedInterface;
+    public function createEmptyChangeableProcessedFile(): ResultCollectedInterface;
 }

@@ -10,9 +10,9 @@ use NamespaceProtector\Result\ResultProcessor;
 use NamespaceProtector\Scanner\FileSystemScanner;
 use NamespaceProtector\Result\ResultAnalyserInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
-use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\Result\ResultProcessedFileInterface;
+use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
 
 final class NamespaceProtectorProcessor
 {
@@ -28,7 +28,7 @@ final class NamespaceProtectorProcessor
     /** @var EnvironmentDataLoaderInterface */
     private $environmentDataLoader;
 
-    /** @var CollectedFactory */
+    /** @var CollectionFactoryInterface */
     private $collectedFactory;
 
     public function __construct(
@@ -36,7 +36,7 @@ final class NamespaceProtectorProcessor
         FileSystemScanner $fileSystemScanner,
         Analyser $analyser,
         EnvironmentDataLoader $environmentDataLoader,
-        CollectedFactory $collectedFactory
+        CollectionFactoryInterface $collectedFactory
     ) {
         $this->composerJson = $composerJson;
         $this->fileSystemScanner = $fileSystemScanner;

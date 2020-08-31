@@ -19,6 +19,7 @@ use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\ProcessUseStatement;
 use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
+use NamespaceProtector\Result\Factory\ErrorCollectionFactory;
 
 class PhpFileParserTest extends AbstractUnitTestCase
 {
@@ -365,6 +366,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $traverser = new NodeTraverser();
         $collectionFactory = new CollectedFactory();
+        $errorCollectionFactory = new ErrorCollectionFactory();
 
         $namespaceVisitor = new NamespaceVisitor(
             [
@@ -372,7 +374,7 @@ class PhpFileParserTest extends AbstractUnitTestCase
                 'replaceNodes' => false,
             ],
             $dispatcher,
-            $collectionFactory
+            $errorCollectionFactory
         );
 
         return new PhpFileParser(new NullCache(), $traverser, $namespaceVisitor, $parser, $collectionFactory);

@@ -6,7 +6,7 @@ use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultCollectedInterface;
 
-final class CollectedFactory extends AbstractCollectionFactory
+final class CollectedFactory implements CollectionFactoryInterface
 {
     /**
      * @return ResultCollected<ErrorResult>

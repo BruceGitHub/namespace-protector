@@ -12,8 +12,8 @@ use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
-use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Parser\Node\Event\FoundUseNamespace;
+use NamespaceProtector\Result\Factory\ErrorCollectionFactoryInterface;
 
 final class NamespaceVisitor extends NameResolver implements NamespaceProtectorVisitorInterface
 {
@@ -25,8 +25,8 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
     /** @var ResultCollected<ErrorResult> */
     private $storeProcessNodeResult;
 
-    /** @var CollectedFactory */
-    private $collectedFactory;
+    /** @var ErrorCollectionFactoryInterface */
+    private $errorCollectionFactory;
 
     /**
      * @param array<string,mixed> $configParser
@@ -34,10 +34,10 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
     public function __construct(
         array $configParser,
         EventDispatcherInterface $eventDispatcher,
-        CollectedFactory $collectedFactory
+        ErrorCollectionFactoryInterface $errorCollectionFactory
     ) {
         parent::__construct(null, $configParser);
-        $this->collectedFactory = $collectedFactory;
+        $this->errorCollectionFactory = $errorCollectionFactory;
         $this->configure($eventDispatcher);
     }
 
@@ -53,7 +53,7 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
             return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->toCodeString()));
         };
 
-        $collection = $this->collectedFactory->createForErrorResult();
+        $collection = $this->errorCollectionFactory->createForErrorResult();
 
         $this->storeProcessNodeResult = $collection;
     }

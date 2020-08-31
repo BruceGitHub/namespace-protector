@@ -10,8 +10,8 @@ use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultParserInterface;
-use NamespaceProtector\Result\Factory\CollectedFactory;
 use NamespaceProtector\Result\ResultProcessedFileEditable;
+use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
 
@@ -32,7 +32,7 @@ final class PhpFileParser implements ParserInterface
     /** @var PathInterface */
     private $pathFileToParse;
 
-    /** @var CollectedFactory */
+    /** @var CollectionFactoryInterface */
     private $collectedFactory;
 
     public function __construct(
@@ -40,7 +40,7 @@ final class PhpFileParser implements ParserInterface
         NodeTraverserInterface $nodeTraverserInterface,
         NamespaceProtectorVisitorInterface $visitor,
         Parser $parser,
-        CollectedFactory $collectedFactory
+        CollectionFactoryInterface $collectedFactory
     ) {
         $this->cache = $cache;
         $this->traverser = $nodeTraverserInterface;
