@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use NamespaceProtector\OutputDevice\GraphicsDevice;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use NamespaceProtector\Showable\ConfigConsoleShowable;
 use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\NamespaceProtectorProcessorFactory;
 use NamespaceProtector\OutputDevice\OutputDeviceInterface;
@@ -37,8 +38,9 @@ abstract class AbstractValidateNamespaceCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $configMaker = new ConfigMaker();
         $output->writeln('Boot validate analysis....');
+
+        $configMaker = new ConfigMaker();
         $config = $configMaker->createFromFile(new FileSystemPath(\getcwd() . '/namespace-protector-config.json'));
         $plotter = $input->getArgument(self::PLOTTER_ARGUMENT);
         if ($plotter && \is_string($plotter)) {
@@ -47,10 +49,11 @@ abstract class AbstractValidateNamespaceCommand extends Command
 
         $factory = new NamespaceProtectorProcessorFactory();
         $namespaceProtectorProcessor = $factory->create($config);
-
         $namespaceProtectorProcessor->load();
 
-        $output->writeln($config->print());
+        $configConsole = new ConfigConsoleShowable($output);
+        $configConsole->show($config);
+
         $output->writeln('Load data...');
         $output->writeln('Loaded ' . $namespaceProtectorProcessor->getFilesLoaded() . ' files to validate');
         $output->writeln('Loaded ' . $namespaceProtectorProcessor->totalSymbolsLoaded() . ' built in symbols');

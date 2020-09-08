@@ -24,12 +24,12 @@ final class GraphicsDevice implements OutputDeviceInterface
     public function plot(\Fhaculty\Graph\Graph $graph, ResultProcessedFileInterface $processedFileResult): void
     {
         if (\count($processedFileResult->getConflicts()) > 0) {
-            $blue = $graph->createVertex($this->getIdFromNamespace($processedFileResult->getFileName()), true);
+            $blue = $graph->createVertex($processedFileResult->getFileName(), true);
             $blue->setAttribute('graphviz.color', 'blue');
         }
 
         foreach ($processedFileResult->getConflicts() as $conflict) {
-            $red = $graph->createVertex($this->getIdFromNamespace($conflict->get()), true);
+            $red = $graph->createVertex($conflict->get(), true);
             $red->setAttribute('graphviz.color', 'red');
 
             $edge = $blue->createEdgeTo($red);
@@ -37,8 +37,4 @@ final class GraphicsDevice implements OutputDeviceInterface
         }
     }
 
-    public function getIdFromNamespace(string $nameSpace): string
-    {
-        return $nameSpace;
-    }
 }

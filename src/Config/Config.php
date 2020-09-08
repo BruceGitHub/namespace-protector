@@ -97,40 +97,6 @@ final class Config
         return $this->pathComposerJson;
     }
 
-    public function print(): string
-    {
-        //todo: automatic dump config
-
-        $prettyPrintPrivateEntries = $this->populateOutputVarFromArray($this->getPrivateEntries());
-        $prettyPrintPublicEntries = $this->populateOutputVarFromArray($this->getPublicEntries());
-
-        return
-            '' . PHP_EOL .
-            '|Dump config:' . PHP_EOL .
-            '|> Version: ' . $this->getVersion() . PHP_EOL .
-            '|> Cache: ' . ($this->enabledCache() === true ? 'TRUE' : 'FALSE') . PHP_EOL .
-            '|> Plotter: ' . $this->getPlotter() . PHP_EOL .
-            '|> Path start: ' . $this->pathStart->get() . PHP_EOL .
-            '|> Composer Json path: ' . $this->pathComposerJson->get() . PHP_EOL .
-            '|> Mode: ' . $this->getMode() . PHP_EOL .
-            '|> Private entries: ' . $prettyPrintPrivateEntries . PHP_EOL .
-            '|' . PHP_EOL .
-            '|> Public entries: ' . $prettyPrintPublicEntries . PHP_EOL .
-            '';
-    }
-
-    /**
-     * @param array<string> $entries
-     */
-    private function populateOutputVarFromArray(array $entries): string
-    {
-        $prettyPrintNamespaceToValidate = "\n";
-        foreach ($entries as $namespace) {
-            $prettyPrintNamespaceToValidate .= '|       >' . $namespace . \PHP_EOL;
-        }
-        return $prettyPrintNamespaceToValidate;
-    }
-
     /** @param array<string,string> $parameters */
     public function cloneWithWithOverride(self $config, array $parameters): self
     {

@@ -38,7 +38,7 @@ final class ConsoleDevice implements OutputDeviceInterface
         $this->outputInterface->writeln('<fg=red>Total errors: ' . $this->totalErrors . '</>');
     }
 
-    public function plot(ResultProcessedFileInterface $processedFileResult): string
+    private function plot(ResultProcessedFileInterface $processedFileResult): string
     {
         $resultbuffer = '';
         $resultTitle = '';
@@ -59,7 +59,7 @@ final class ConsoleDevice implements OutputDeviceInterface
         return $resultTitle . $resultbuffer;
     }
 
-    public function plotResult(ErrorResult $result): string
+    private function plotResult(ErrorResult $result): string
     {
         return \Safe\sprintf("\t > ERROR Line: %d of use %s ", $result->getLine(), $result->getUse()) . "\n";
     }
