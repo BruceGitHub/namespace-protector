@@ -36,5 +36,4 @@ final class GraphicsDevice implements OutputDeviceInterface
             $edge->setAttribute('graphviz.color', 'grey');
         }
     }
-
 }

@@ -1,13 +1,14 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace NamespaceProtector\Showable;
 
 use NamespaceProtector\Config as RootConfig;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConfigConsoleShowable implements ConfigShowableInterface {
-
+class ConfigConsoleShowable implements ConfigShowableInterface
+{
     /** @var OutputInterface */
-    private $console; 
+    private $console;
 
     public function __construct(OutputInterface $outputInterface)
     {
@@ -19,7 +20,7 @@ class ConfigConsoleShowable implements ConfigShowableInterface {
         $prettyPrintPrivateEntries = $this->populateOutputVarFromArray($config->getPrivateEntries());
         $prettyPrintPublicEntries = $this->populateOutputVarFromArray($config->getPublicEntries());
 
-        $output = 
+        $output =
             '' . PHP_EOL .
             '|Dump config:' . PHP_EOL .
             '|> Version: ' . $config->getVersion() . PHP_EOL .
@@ -31,9 +32,9 @@ class ConfigConsoleShowable implements ConfigShowableInterface {
             '|> Private entries: ' . $prettyPrintPrivateEntries . PHP_EOL .
             '|' . PHP_EOL .
             '|> Public entries: ' . $prettyPrintPublicEntries . PHP_EOL .
-            '';    
-            
-            echo $this->console->write($output);
+            '';
+
+        echo $this->console->write($output);
     }
 
     /**
@@ -47,5 +48,4 @@ class ConfigConsoleShowable implements ConfigShowableInterface {
         }
         return $prettyPrintNamespaceToValidate;
     }
-
 }
