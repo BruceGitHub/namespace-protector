@@ -6,6 +6,7 @@ use Closure;
 use ReflectionClass;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Scanner\ComposerJsonInterface;
+use NamespaceProtector\Metadata\VendorNamespaceInterface;
 
 final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 {
@@ -25,6 +26,8 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 
     /** @var DbKeyValue */
     private $collectComposerNamespace;
+
+    //private VendorNamespaceInterface $vendorNamespaces;
 
     /** @var ComposerJsonInterface */
     private $composerJson;
@@ -59,9 +62,12 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
                 $internalClass[$class] = $aClass->getName();
             }
         }
+
         $this->collectBaseClasses = $this->fillFromArray($internalClass, $fetchKey);
         $this->collectBaseConstants = $this->fillFromArray(\get_defined_constants(), $fetchKey);
         $this->collectComposerNamespace = $this->fillFromArray($this->composerJson->getPsr4Ns(), $fetchKey);
+
+        // $this->vendorNamespaces->load();
     }
 
     /**
@@ -121,4 +127,9 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 
         return $db;
     }
+
+    // public function vendorNamespaces(): VendorNamespaceInterface
+    // {
+    //     return $this->vendorNamespaces;
+    // }
 }

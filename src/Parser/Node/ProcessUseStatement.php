@@ -6,12 +6,11 @@ namespace NamespaceProtector\Parser\Node;
 
 use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\Config\Config;
-use NamespaceProtector\Db\BooleanMatchKey;
-use NamespaceProtector\Db\BooleanMatchValue;
-use NamespaceProtector\Db\DbKeyValueInterface;
-use NamespaceProtector\Db\BooleanMatchNameSpace;
-use NamespaceProtector\Db\MatchCollectionInterface;
+use NamespaceProtector\Rule\FalsePositive;
+use NamespaceProtector\Rule\IsWithPrivateNamespace;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
+use NamespaceProtector\Rule\IsInConfigureComposerPsr4;
+use NamespaceProtector\Rule\isInPrivateConfiguredEntries;
 use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
 final class ProcessUseStatement
@@ -31,97 +30,19 @@ final class ProcessUseStatement
     public function __invoke(EventProcessNodeInterface $event): void
     {
         $val = new Entry($event->getNodeName());
-        if ($this->isFalsePositives($val)) {
-            return;
+
+        $isConfiguredComposerPsr4 = new IsInConfigureComposerPsr4($this->metadataLoader);
+        $rules = [
+            new FalsePositive($this->metadataLoader),
+            new IsWithPrivateNamespace($this->globalConfig, $this->metadataLoader, $isConfiguredComposerPsr4),
+            $isConfiguredComposerPsr4,
+            new isInPrivateConfiguredEntries($this->globalConfig),
+        ];
+
+        foreach ($rules as $rule) {
+            if ($rule->apply($val, $event)) {
+                return;
+            }
         }
-
-        if ($this->globalConfig->getMode() === Config::MODE_MAKE_VENDOR_PRIVATE) {
-            $this->withModeVendorPrivate($val, $event);
-            return;
-        }
-
-        if ($this->isInConfiguredComposerPsr4Namespaces($val, new BooleanMatchNameSpace())) {
-            return;
-        }
-
-        /** @var MatchedResult */
-        $result = $this->isInPrivateConfiguredEntries($val, new BooleanMatchNameSpace());
-
-        if ($result->matched()) {
-            $event->foundError($result->getInfo());
-            return;
-        }
-    }
-
-    private function withModeVendorPrivate(Entry $currentNamespaceAccess, EventProcessNodeInterface $event): void
-    {
-        if ($this->isInPublicConfiguredEntries($currentNamespaceAccess, new BooleanMatchNameSpace())->matched()) {
-            return;
-        }
-
-        if ($this->isInConfiguredComposerPsr4Namespaces($currentNamespaceAccess, new BooleanMatchNameSpace())) {
-            return;
-        }
-
-        $event->foundError();
-        return;
-    }
-
-    private function isFalsePositives(Entry $resultTocheck): bool
-    {
-        $result = $this->stripFirstSlash($resultTocheck);
-
-        if ($this->valueExist($this->metadataLoader->getCollectBaseConstants(), new BooleanMatchKey(), $result)) {
-            return true;
-        }
-
-        if ($this->valueExist($this->metadataLoader->getCollectBaseFunctions(), new  BooleanMatchValue(), $result)) {
-            return true;
-        }
-
-        if ($this->valueExist($this->metadataLoader->getCollectBaseInterfaces(), new  BooleanMatchValue(), $result)) {
-            return true;
-        }
-
-        if ($this->valueExist($this->metadataLoader->getCollectBaseClasses(), new  BooleanMatchValue(), $result)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function valueExist(DbKeyValueInterface $collections, MatchCollectionInterface $matchCriteria, Entry $matchMe): bool
-    {
-        if ($collections->booleanSearch($matchCriteria, $matchMe)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function stripFirstSlash(Entry $token): Entry
-    {
-        if ($token->get()[0] === '\\') {
-            return new Entry(substr($token->get(), 1, strlen($token->get())));
-        }
-
-        return $token;
-    }
-
-    private function isInPublicConfiguredEntries(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): MatchedResultInterface
-    {
-        return $macher->evaluate($this->globalConfig->getPublicEntries(), $currentNamespaceAccess);
-    }
-
-    private function isInPrivateConfiguredEntries(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): MatchedResultInterface
-    {
-        return $macher->evaluate($this->globalConfig->getPrivateEntries(), $currentNamespaceAccess);
-    }
-
-    private function isInConfiguredComposerPsr4Namespaces(Entry $val, MatchCollectionInterface $macher): bool
-    {
-        $val = $this->stripFirstSlash($val);
-
-        return $this->metadataLoader->getCollectComposerNamespace()->booleanSearch($macher, $val);
     }
 }

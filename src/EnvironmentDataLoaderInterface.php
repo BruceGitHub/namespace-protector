@@ -3,9 +3,11 @@
 namespace NamespaceProtector;
 
 use NamespaceProtector\Db\DbKeyValue;
+use NamespaceProtector\Metadata\VendorNamespaceInterface;
 
 interface EnvironmentDataLoaderInterface
 {
+    //todo: remove get become i.e constants, interfaces, classes, etc.
     public function getCollectBaseConstants(): DbKeyValue;
 
     public function getCollectBaseInterfaces(): DbKeyValue;
@@ -15,6 +17,8 @@ interface EnvironmentDataLoaderInterface
     public function getCollectBaseFunctions(): DbKeyValue;
 
     public function getCollectComposerNamespace(): DbKeyValue;
+
+    // public function vendorNamespaces(): VendorNamespaceInterface;
 
     public function load(): void;
 }

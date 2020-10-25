@@ -53,6 +53,7 @@ final class Analyser
      *
      * @param ResultCollectedReadable<ResultProcessedFileInterface> $resultCollectedReadable
      * @return ResultCollected<ResultProcessedFileInterface>
+     *
      */
     private function convertReadOnlyCollectionToEditableCollection(ResultCollectedReadable $resultCollectedReadable): ResultCollected
     {
