@@ -3,7 +3,6 @@
 namespace NamespaceProtector;
 
 use NamespaceProtector\Db\DbKeyValue;
-use NamespaceProtector\Metadata\VendorNamespaceInterface;
 
 interface EnvironmentDataLoaderInterface
 {
@@ -17,8 +16,6 @@ interface EnvironmentDataLoaderInterface
     public function getCollectBaseFunctions(): DbKeyValue;
 
     public function getCollectComposerNamespace(): DbKeyValue;
-
-    // public function vendorNamespaces(): VendorNamespaceInterface;
 
     public function load(): void;
 }
