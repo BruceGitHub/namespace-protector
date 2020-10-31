@@ -23,7 +23,7 @@ services:
       PHP_IDE_CONFIG: "serverName=namespace-protector"
 
   composer:
-    image: composer:1.9
+    image: composer:2.0.3
     command: ["composer", "install"]
     user: '1000'
     volumes:

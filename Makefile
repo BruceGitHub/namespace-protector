@@ -39,7 +39,7 @@ stop:
 restart: stop start
 
 composer_shell:
-	docker-compose run composer sh
+	docker-compose -f ./.container/docker-compose.yml run --rm composer sh
 
 test:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
