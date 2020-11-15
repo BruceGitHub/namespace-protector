@@ -2,7 +2,12 @@
 
 namespace NamespaceProtector\Metadata;
 
-interface VendorNamespaceInterface extends MetadataInterface
+use NamespaceProtector\Entry\Entry;
+use NamespaceProtector\Parser\Node\MatchedResultInterface;
+
+interface VendorNamespaceInterface
 {
-    public function load();
+    public function load(): void;
+
+    public function hasNamespace(Entry $entry): MatchedResultInterface;
 }

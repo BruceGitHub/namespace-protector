@@ -9,6 +9,7 @@ final class Config
 {
     public const MODE_MAKE_VENDOR_PRIVATE = 'MODE_MAKE_VENDOR_PRIVATE';
     public const MODE_PUBLIC = 'PUBLIC';
+    public const MODE_AUTODISCOVER = 'MODE_AUTODISCOVER';
 
     public const PLOTTER_TERMINAL = 'plotter-terminal';
     public const PLOTTER_PNG = 'plotter-png';

@@ -10,7 +10,7 @@ use NamespaceProtector\Db\MatchCollectionInterface;
 use NamespaceProtector\Parser\Node\MatchedResultInterface;
 use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
-class isInPrivateConfiguredEntries implements RuleInterface
+class IsInPrivateConfiguredEntries implements RuleInterface
 {
     private Config $config;
 

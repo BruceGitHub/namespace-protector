@@ -359,7 +359,8 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $configMaker = new ConfigMaker();
         $config = $configMaker->createFromFile(new FileSystemPath($pathConfig));
         $listener = new ListenerProvider();
-        $callableUseStatement = new ProcessUseStatement($metaDataLoader, $config);
+        $cache = new NullCache();
+        $callableUseStatement = new ProcessUseStatement($metaDataLoader, $config, $cache);
         $listener->addEventListener(FoundUseNamespace::class, $callableUseStatement);
         $dispatcher = new EventDispatcher($listener);
 

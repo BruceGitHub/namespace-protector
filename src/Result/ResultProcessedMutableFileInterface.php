@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
-interface ResultProcessedFileEditableInterface extends ResultProcessedFileInterface
+interface ResultProcessedMutableFileInterface extends ResultProcessedFileInterface
 {
     public function getFileName(): String;
 

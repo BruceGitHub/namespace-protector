@@ -10,7 +10,7 @@ use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultParserInterface;
-use NamespaceProtector\Result\ResultProcessedFileEditable;
+use NamespaceProtector\Result\ResultProcessedMutableFile;
 use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
 use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
@@ -55,8 +55,6 @@ final class PhpFileParser implements ParserInterface
         $this->pathFileToParse = $pathFile;
 
         $ast = $this->fetchAstAfterParse($pathFile);
-        $this->namespaceProtectorVisitor->clearStoredProcessedResult();
-
         $this->traverser->traverse($ast);
 
         return $this->getListResult();
@@ -65,19 +63,19 @@ final class PhpFileParser implements ParserInterface
     private function getListResult(): ResultParserInterface
     {
         if (\count($this->namespaceProtectorVisitor->getStoreProcessedResult()) === 0) {
-            $collection = $this->collectedFactory->createEmptyChangeableProcessedFile();
+            $collection = $this->collectedFactory->createEmptyMutableCollection();
             return new ResultParser($collection);
         }
 
-        $processFileResult = new ResultProcessedFileEditable($this->pathFileToParse->get());
+        $processFileResult = new ResultProcessedMutableFile($this->pathFileToParse->get());
 
         /** @var ErrorResult $singleConflict */
         foreach ($this->namespaceProtectorVisitor->getStoreProcessedResult() as $singleConflict) {
             $processFileResult->addConflic($singleConflict);
         }
-        $collection = $this->collectedFactory->createChangeableProcessedFile([$processFileResult]);
+        $collection = $this->collectedFactory->createMutableCollection([$processFileResult]);
 
-        return new ResultParser($collection);
+        return new ResultParser($collection); //todo: readonly ?
     }
 
     /**

@@ -4,8 +4,6 @@ namespace NamespaceProtector\Rule;
 
 use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\Config\Config;
-use NamespaceProtector\Db\BooleanMatchNameSpace;
-use NamespaceProtector\Db\MatchCollectionInterface;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\MatchedResultInterface;
 use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
@@ -17,7 +15,8 @@ class IsConfiguredInThirdPartyApp implements RuleInterface
 
     public function __construct(
         EnvironmentDataLoaderInterface $environmentDataLoader,
-        Config $config    ) {
+        Config $config
+    ) {
         $this->environmentDataLoader = $environmentDataLoader;
         $this->config = $config;
     }
@@ -28,7 +27,7 @@ class IsConfiguredInThirdPartyApp implements RuleInterface
             return false;
         }
 
-        if (!$this->check($entry, new BooleanMatchNameSpace())->matched()) {
+        if (!$this->check($entry)->matched()) {
             return true;
         }
 
@@ -36,8 +35,8 @@ class IsConfiguredInThirdPartyApp implements RuleInterface
         return true;
     }
 
-    private function check(Entry $currentNamespaceAccess, MatchCollectionInterface $macher): MatchedResultInterface
+    private function check(Entry $currentNamespaceAccess): MatchedResultInterface
     {
-        return $macher->evaluate($this->environmentDataLoader->vendorNamespaces()->metadataIterator(), $currentNamespaceAccess);
+        return $this->environmentDataLoader->vendorNamespaces()->hasNamespace($currentNamespaceAccess);
     }
 }

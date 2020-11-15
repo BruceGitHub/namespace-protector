@@ -58,10 +58,17 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
         $this->storeProcessNodeResult = $collection;
     }
 
-    public function enterNode(Node $node)
+    public function enterNode(Node $node) //todo miss type hint (override fro lib)
     {
         $this->processNode($node);
         return $node;
+    }
+
+    public function beforeTraverse(array $nodes)
+    { //todo miss type hint (override from lib)
+        $this->storeProcessNodeResult->emptyResult();
+        parent::beforeTraverse($nodes);
+        return null;
     }
 
     private function processNode(Node $node): void
@@ -100,10 +107,5 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
     public function getStoreProcessedResult(): ResultCollectedReadable
     {
         return new ResultCollectedReadable($this->storeProcessNodeResult);
-    }
-
-    public function clearStoredProcessedResult(): void
-    {
-        $this->storeProcessNodeResult->emptyResult();
     }
 }

@@ -34,7 +34,7 @@ final class NamespaceProtectorProcessorFactory
         $cacheClass = $this->createCacheObject($config);
 
         $listener = new ListenerProvider();
-        $callableUseStatement = new ProcessUseStatement($metaDataLoader, $config);
+        $callableUseStatement = new ProcessUseStatement($metaDataLoader, $config, $cacheClass);
         $listener->addEventListener(FoundUseNamespace::class, $callableUseStatement);
         $dispatcher = new EventDispatcher($listener);
 

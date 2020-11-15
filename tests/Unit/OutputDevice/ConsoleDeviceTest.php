@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Tests\Unit\OutputDevice;
 
 use Tests\Unit\AbstractUnitTestCase;
-use NamespaceProtector\OutputDevice\ConsoleDevice;
 use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
-use NamespaceProtector\Result\ResultCollectedReadable;
-use NamespaceProtector\Result\ResultProcessedFileEditable;
-use NamespaceProtector\Result\ResultProcessorInterface;
+use NamespaceProtector\OutputDevice\ConsoleDevice;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use NamespaceProtector\Result\ResultCollectedReadable;
+use NamespaceProtector\Result\ResultProcessorInterface;
+use NamespaceProtector\Result\ResultProcessedMutableFile;
 
 class ConsoleDeviceTest extends AbstractUnitTestCase
 {
@@ -23,7 +23,7 @@ class ConsoleDeviceTest extends AbstractUnitTestCase
         );
         \ob_start();
 
-        $rpf = new ResultProcessedFileEditable('FileA');
+        $rpf = new ResultProcessedMutableFile('FileA');
         $rpf->addConflic(new ErrorResult(99, 'ConflicA', 1));
 
         $result = $this->prophesize(ResultProcessorInterface::class);

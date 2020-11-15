@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
-final class ResultProcessedFileEditable implements ResultProcessedFileEditableInterface
+final class ResultProcessedMutableFile implements ResultProcessedMutableFileInterface
 {
     /** @var string  */
     private $file;

@@ -14,6 +14,4 @@ interface NamespaceProtectorVisitorInterface extends NodeVisitor
     * @return ResultCollectedReadable<ErrorResult>
     */
     public function getStoreProcessedResult(): ResultCollectedReadable;
-
-    public function clearStoredProcessedResult(): void;
 }

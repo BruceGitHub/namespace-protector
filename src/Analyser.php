@@ -32,7 +32,7 @@ final class Analyser
 
     public function execute(PathInterface $filePath): ResultAnalyserInterface
     {
-        $collection = $this->collectedFactory->createEmptyChangeableProcessedFile();
+        $collection = $this->collectedFactory->createEmptyMutableCollection();
         $cumulativeParserResult = new ResultParser($collection);
 
         foreach ($this->parserList as $currentParser) {
@@ -46,7 +46,7 @@ final class Analyser
 
     private function getResult(ResultParser $resultParser): ResultAnalyserInterface
     {
-        return new ResultAnalyser($this->convertReadOnlyCollectionToEditableCollection($resultParser->getResultCollectionReadable()));
+        return new ResultAnalyser($this->convertReadOnlyCollectionToMutableCollection($resultParser->getResultCollectionReadable()));
     }
 
     /**
@@ -55,9 +55,9 @@ final class Analyser
      * @return ResultCollected<ResultProcessedFileInterface>
      *
      */
-    private function convertReadOnlyCollectionToEditableCollection(ResultCollectedReadable $resultCollectedReadable): ResultCollected
+    private function convertReadOnlyCollectionToMutableCollection(ResultCollectedReadable $resultCollectedReadable): ResultCollected
     {
-        $collection = $this->collectedFactory->createEmptyChangeableProcessedFile();
+        $collection = $this->collectedFactory->createEmptyMutableCollection();
 
         foreach ($resultCollectedReadable as $item) {
             $collection->addResult($item);

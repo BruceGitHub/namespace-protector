@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Result;
 
-final class ResultProcessedFileReadOnly implements ResultProcessedFileInterface
+final class ResultProcessedFileReadOnly implements ResultProcessedFileInterface //todo: isn't used
 {
     /** @var string  */
     private $file;

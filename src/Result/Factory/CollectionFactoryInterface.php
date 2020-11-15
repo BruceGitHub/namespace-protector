@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result\Factory;
 
@@ -12,10 +14,10 @@ interface CollectionFactoryInterface
      * @return ResultCollected<ResultProcessedFileInterface>
      * @param array<ResultProcessedFileInterface> $list
      */
-    public function createChangeableProcessedFile(array $list): ResultCollectedInterface;
+    public function createMutableCollection(array $list): ResultCollectedInterface;
 
     /**
      * @return ResultCollected<ResultProcessedFileInterface>
      */
-    public function createEmptyChangeableProcessedFile(): ResultCollectedInterface;
+    public function createEmptyMutableCollection(): ResultCollectedInterface;
 }
