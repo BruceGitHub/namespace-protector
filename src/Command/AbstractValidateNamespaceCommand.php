@@ -59,7 +59,6 @@ abstract class AbstractValidateNamespaceCommand extends Command
         $output->writeln('Loaded ' . $namespaceProtectorProcessor->totalSymbolsLoaded() . ' built in symbols');
         $output->writeln('Start analysis...');
 
-        /** @var ResultProcessorInterface $result */
         $result = $namespaceProtectorProcessor->process();
 
         $plotter = $this->createOutputObject($config, $output);

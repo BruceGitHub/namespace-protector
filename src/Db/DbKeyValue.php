@@ -26,7 +26,6 @@ final class DbKeyValue implements DbKeyValueInterface
 
     public function booleanSearch(MatchCollectionInterface $match, Entry $matchMe): bool
     {
-        /** @var MatchedResultInterface */
         $resul = $match->evaluate($this->collections, $matchMe);
         return $resul->matched();
     }

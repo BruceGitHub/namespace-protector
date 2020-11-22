@@ -65,7 +65,6 @@ final class PhpFileParser implements ParserInterface
 
         $processFileResult = new ResultProcessedMutableFile($pathFile->get());
 
-        /** @var ErrorResult $singleConflict */
         foreach ($this->namespaceProtectorVisitor->getStoreProcessedResult() as $singleConflict) {
             $processFileResult->addConflic($singleConflict);
         }

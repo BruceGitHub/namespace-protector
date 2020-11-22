@@ -55,7 +55,6 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
         /** @var string|int $value */
         $fetchValue = function ($key, $value): string {return (string)$value; };
 
-        /** @var string|int $value */
         $fetchKey = function ($key, $value): string {return (string)$key; };
 
         $this->collectBaseFunctions = $this->fillFromArray(\get_defined_functions()['internal'], $fetchValue);
@@ -76,49 +75,31 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
         $this->vendorNamespaces->load();
     }
 
-    /**
-     * @return DbKeyValue
-     */
     public function getCollectBaseClasses(): DbKeyValue
     {
         return $this->collectBaseClasses;
     }
 
-    /**
-     * @return DbKeyValue
-     */
     public function getCollectBaseInterfaces(): DbKeyValue
     {
         return $this->collectBaseInterfaces;
     }
 
-    /**
-     * @return DbKeyValue
-     */
     public function getCollectBaseFunctions(): DbKeyValue
     {
         return $this->collectBaseFunctions;
     }
 
-    /**
-     * @return DbKeyValue
-     */
     public function getCollectBaseConstants(): DbKeyValue
     {
         return $this->collectBaseConstants;
     }
 
-    /**
-     * @return DbKeyValue
-     */
     public function getCollectComposerNamespace(): DbKeyValue
     {
         return $this->collectComposerNamespace;
     }
 
-    /**
-     * @param array<mixed> $collections
-     */
     private function fillFromArray(array $collections, Closure $fetchValue): DbKeyValue
     {
         $db = new DbKeyValue();

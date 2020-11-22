@@ -36,10 +36,6 @@ final class Config
     /** @var string */
     private $plotter;
 
-    /**
-     *
-     * @param array $privateEntries
-     */
     public function __construct(
         string $version,
         PathInterface $pathStart,
@@ -88,29 +84,6 @@ final class Config
     public function getPathComposerJson(): PathInterface
     {
         return $this->pathComposerJson;
-    }
-
-    /**
-     * @param array<string> $parameters
-     */
-    public function cloneWithWithOverride(self $config, array $parameters): self
-    {
-        $parameters['plotter'] ?? $config->getPlotter();
-        $plotter = $parameters['plotter'];
-        $self = new self(
-            $config->getVersion(),
-            $config->getStartPath(),
-            $config->getPathComposerJson(),
-            $config->getPrivateEntries(),
-            $config->getPublicEntries(),
-            $config->getMode(),
-            $config->enabledCache(),
-            $plotter
-        );
-
-        $self->validateLoadedConfig(); //todo: validation called multiple times
-
-        return $self;
     }
 
     public function validateLoadedConfig(): void
