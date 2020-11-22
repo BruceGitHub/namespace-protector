@@ -8,7 +8,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 final class EventDispatcher implements EventDispatcherInterface
 {
-    /** @var ListenerProviderInterface*/
+    /** @var ListenerProviderInterface */
     private $listenerProvider;
 
     public function __construct(ListenerProviderInterface $listenerProvider)
@@ -18,6 +18,10 @@ final class EventDispatcher implements EventDispatcherInterface
 
     public function dispatch(object $event)
     {
+
+        /** 
+         * @var callable listener
+        */
         foreach ($this->listenerProvider->getListenersForEvent($event) as $listener) {
             // if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
             //     break;

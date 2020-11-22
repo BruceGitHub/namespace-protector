@@ -15,7 +15,11 @@ final class BooleanMatchPos implements MatchCollectionInterface
      */
     public function evaluate(Iterable $data, Entry $matchMe): MatchedResultInterface
     {
-        foreach ($data as $entry => $value) {
+        /**
+         * @var string $entry
+         * @var string $value
+         */
+        foreach ($data as $entry => $value) { //todo: remove 
             if (strpos($matchMe->get(), $entry) !== false) {
                 return new MatchedResult($matchMe());
             }

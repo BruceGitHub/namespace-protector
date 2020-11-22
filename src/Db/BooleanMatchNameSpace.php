@@ -16,6 +16,7 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
      */
     public function evaluate(iterable $data, Entry $matchMe): MatchedResultInterface
     {
+        /** @var string $item */
         foreach ($data as $item) {
             $currentEntry = \strtolower($this->stripQueueSlash($item));
             $matchMeLiteral = \strtolower($this->stripQueueSlash($matchMe->get()));

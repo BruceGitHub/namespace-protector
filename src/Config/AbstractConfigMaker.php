@@ -8,6 +8,8 @@ abstract class AbstractConfigMaker
 {
     abstract public function createFromFile(PathInterface $path): Config;
 
-    /** @param array<string,string> $parameters */
+    /**
+     * @param array<string> $parameters
+     */
     abstract public function createFromItSelf(Config $config, array $parameters): Config;
 }

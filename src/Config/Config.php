@@ -20,11 +20,9 @@ final class Config
     /** @var PathInterface  */
     private $pathComposerJson;
 
-    /** @var array<string> */
-    private $privateEntries;
+    private array $privateEntries;
 
-    /** @var array<string> */
-    private $publicEntries;
+    private array $publicEntries;
 
     /** @var string */
     private $mode;
@@ -39,8 +37,8 @@ final class Config
     private $plotter;
 
     /**
-     * @param array<string> $privateEntries
-     * @param array<string> $publicEntries
+     *
+     * @param array $privateEntries
      */
     public function __construct(
         string $version,
@@ -67,17 +65,11 @@ final class Config
         return $this->pathStart;
     }
 
-    /**
-     * @return array<string>
-     */
     public function getPrivateEntries(): array
     {
         return $this->privateEntries;
     }
 
-    /**
-     * @return array<string>
-     */
     public function getPublicEntries(): array
     {
         return $this->publicEntries;
@@ -98,9 +90,13 @@ final class Config
         return $this->pathComposerJson;
     }
 
-    /** @param array<string,string> $parameters */
+    /**
+     * @param array<string> $parameters
+     */
     public function cloneWithWithOverride(self $config, array $parameters): self
     {
+        $parameters['plotter'] ?? $config->getPlotter();
+        $plotter = $parameters['plotter'] ; 
         $self = new self(
             $config->getVersion(),
             $config->getStartPath(),
@@ -109,7 +105,7 @@ final class Config
             $config->getPublicEntries(),
             $config->getMode(),
             $config->enabledCache(),
-            $parameters['plotter'] ?? $config->getPlotter(),
+            $plotter
         );
 
         $self->validateLoadedConfig(); //todo: validation called multiple times

@@ -56,6 +56,7 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
                 continue;
             }
 
+            /** @var array<string> $jsonArray*/
             $jsonArray = \safe\json_decode(
                 \safe\file_get_contents($pathComposer . DIRECTORY_SEPARATOR . ComposerJson::FILE_NAME),
                 true
