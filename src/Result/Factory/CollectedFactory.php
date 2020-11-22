@@ -11,9 +11,6 @@ use NamespaceProtector\Result\ResultCollectedReadable;
 
 final class CollectedFactory implements CollectionFactoryInterface
 {
-    /**
-     * @return ResultCollected<ErrorResult>
-     */
     public function createForErrorResult(): ResultCollected //todo: move to another factory
     {
         return new ResultCollected();
@@ -24,16 +21,14 @@ final class CollectedFactory implements CollectionFactoryInterface
         return new ResultCollected($list);
     }
 
-    public function createEmptyMutableCollection(): ResultCollectedInterface
+    /**
+     * @return \NamespaceProtector\Result\ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface>
+     */
+    public function createEmptyMutableCollection(): ResultCollected
     {
         return new ResultCollected();
     }
 
-    /**
-     * @return ResultCollectedReadable
-     *
-     * @psalm-return ResultCollectedReadable<\NamespaceProtector\Result\ResultProcessedFileInterface>
-     */
     public function createEmptyReadOnlyCollection(): ResultCollectedReadable
     {
         return new ResultCollectedReadable($this->createEmptyMutableCollection());

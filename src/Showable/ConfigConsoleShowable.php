@@ -34,15 +34,20 @@ class ConfigConsoleShowable implements ConfigShowableInterface
             '|> Public entries: ' . $prettyPrintPublicEntries . PHP_EOL .
             '';
 
-        echo $this->console->write($output);
+        /** @var string $writeOutput */
+        $writeOutput =  $this->console->write($output);
+
+        echo $writeOutput;
     }
 
     /**
-     * @param array<string> $entries
+     * @param array<mixed> $entries
      */
     private function populateOutputVarFromArray(array $entries): string
     {
         $prettyPrintNamespaceToValidate = "\n";
+
+        /** @var string $namespace */
         foreach ($entries as $namespace) {
             $prettyPrintNamespaceToValidate .= '|       >' . $namespace . \PHP_EOL;
         }

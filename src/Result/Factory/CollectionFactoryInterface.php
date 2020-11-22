@@ -11,15 +11,9 @@ use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 interface CollectionFactoryInterface
 {
-    /**
-     * @return ResultCollected<ResultProcessedFileInterface>
-     */
     public function createMutableCollection(array $list): ResultCollected;
 
-    /**
-     * @return ResultCollected<ResultProcessedFileInterface>
-     */
-    public function createEmptyMutableCollection(): ResultCollectedInterface;
+    public function createEmptyMutableCollection(): ResultCollected;
 
     public function createEmptyReadOnlyCollection(): ResultCollectedReadable;
 }
