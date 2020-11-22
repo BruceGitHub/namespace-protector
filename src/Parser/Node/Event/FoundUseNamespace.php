@@ -20,6 +20,7 @@ final class FoundUseNamespace implements EventProcessNodeInterface
     {
         $this->line = $line;
         $this->nodeName = $nodeName;
+        $this->additionalInformation = '';
     }
 
     public function getLine(): int

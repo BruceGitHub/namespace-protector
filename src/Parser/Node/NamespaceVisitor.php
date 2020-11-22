@@ -37,6 +37,7 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
         ErrorCollectionFactoryInterface $errorCollectionFactory
     ) {
         parent::__construct(null, $configParser);
+        $this->listNodeProcessor = [];
         $this->errorCollectionFactory = $errorCollectionFactory;
         $this->configure($eventDispatcher);
     }
