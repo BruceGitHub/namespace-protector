@@ -33,6 +33,9 @@ final class ComposerJson implements ComposerJsonInterface
     {
         $content = \safe\file_get_contents($this->fileSystemPathComposerJson);
 
+        /**
+         * @var array{autoload: array{psr-4:array{string}} } $data
+         */
         $data = \safe\json_decode($content, true);
 
         $this->psr4Ns = $data['autoload']['psr-4'];

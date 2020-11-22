@@ -21,9 +21,6 @@ final class CollectedFactory implements CollectionFactoryInterface
         return new ResultCollected($list);
     }
 
-    /**
-     * @return \NamespaceProtector\Result\ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface>
-     */
     public function createEmptyMutableCollection(): ResultCollected
     {
         return new ResultCollected();

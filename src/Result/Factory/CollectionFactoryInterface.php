@@ -11,9 +11,19 @@ use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 interface CollectionFactoryInterface
 {
+    /**
+     * @param array<int,\NamespaceProtector\Result\ResultProcessedFileInterface> $list
+     * @return \NamespaceProtector\Result\ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface>
+     */
     public function createMutableCollection(array $list): ResultCollected;
 
+    /**
+     * @return \NamespaceProtector\Result\ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface>
+     */            
     public function createEmptyMutableCollection(): ResultCollected;
 
+    /**
+     * @return \NamespaceProtector\Result\ResultCollectedReadable<\NamespaceProtector\Result\ResultProcessedFileInterface>
+     */            
     public function createEmptyReadOnlyCollection(): ResultCollectedReadable;
 }

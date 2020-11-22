@@ -58,9 +58,10 @@ final class PhpFileParser implements ParserInterface
     private function getListResult(PathInterface $pathFile): ResultParserInterface
     {
         if (\count($this->namespaceProtectorVisitor->getStoreProcessedResult()) === 0) {
-            return new ResultParser(
-                $this->collectedFactory->createEmptyMutableCollection()
-            );
+            
+            $emptyCollection = $this->collectedFactory->createEmptyMutableCollection(); 
+            
+            return new ResultParser($emptyCollection);
         }
 
         $processFileResult = new ResultProcessedMutableFile($pathFile->get());

@@ -52,8 +52,11 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 
     public function load(): void
     {   
-        $fetchValue = function ($key, $value):string {return $value; };
-        $fetchKey = function ($key, $value):string {return $key; };
+        /** @var string|int $value */
+        $fetchValue = function ($key, $value):string {return (string)$value; };
+
+        /** @var string|int $value */
+        $fetchKey = function ($key, $value):string {return (string)$key; };
 
         $this->collectBaseFunctions = $this->fillFromArray(\get_defined_functions()['internal'], $fetchValue);
         $this->collectBaseInterfaces = $this->fillFromArray(\get_declared_interfaces(), $fetchValue);
@@ -119,7 +122,11 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
     private function fillFromArray(array $collections, Closure $fetchValue): DbKeyValue
     {
         $db = new DbKeyValue();
+
+        /** @var string $value */
         foreach ($collections as $key => $value) {
+
+            /** @var string $checkValue */
             $checkValue = $fetchValue($key, $value);
             $pos = \strpos($checkValue, self::NAMESPACE_PROJECT);
 

@@ -2,8 +2,9 @@
 
 namespace NamespaceProtector\Scanner;
 
-use NamespaceProtector\Common\FileSystemPath;
+use DirectoryIterator;
 use NamespaceProtector\Common\PathInterface;
+use NamespaceProtector\Common\FileSystemPath;
 
 final class FileSystemScanner implements ScannerInterface
 {
@@ -36,7 +37,8 @@ final class FileSystemScanner implements ScannerInterface
                     $pathDescriptor->get()
                 )
             );
-
+            
+            /** @var DirectoryIterator $file */
             foreach ($iterator as $file) {
                 if ($file->isDir()) {
                     continue;

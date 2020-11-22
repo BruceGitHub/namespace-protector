@@ -13,34 +13,34 @@ use ArrayIterator;
  */
 final class ResultCollected implements ResultCollectedInterface
 {
-    /** @var array<T>  */
-    private $listResult;
+    /** @var  array<int, T> */
+    private $list;
 
     /**
-     * @param array<T> $result
+     * @param  array<int, T> $list
      */
-    public function __construct(array $result = [])
+    public function __construct(array $list = [])
     {
-        $this->listResult = $result;
+        $this->list = $list;
     }
 
     /**
-     * @param T $result
+     * @param T $list
      * @return void
      */
-    public function addResult($result): void
+    public function addResult($list): void
     {
-        $this->listResult[] = $result;
+        $this->list[] = $list;
     }
 
     public function count(): int
     {
-        return \count($this->listResult);
+        return \count($this->list);
     }
 
     public function emptyResult(): void
     {
-        $this->listResult = [];
+        $this->list = [];
     }
 
     /**
@@ -48,6 +48,6 @@ final class ResultCollected implements ResultCollectedInterface
      */
     public function getIterator(): Iterator
     {
-        return new ArrayIterator($this->listResult);
+        return new ArrayIterator($this->list);
     }
 }

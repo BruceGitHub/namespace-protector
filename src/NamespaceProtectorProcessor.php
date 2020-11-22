@@ -83,6 +83,9 @@ final class NamespaceProtectorProcessor
         foreach ($filesToAnalyser->getFileLoaded() as $file) {
             $tmp = $analyser->execute($file);
 
+            /**
+             * @var \NamespaceProtector\Result\ResultProcessedFileInterface $processedFile
+             */
             foreach ($tmp->getResultCollected() as $processedFile) {
                 $totalResult->append($processedFile);
             }

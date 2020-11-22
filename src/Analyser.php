@@ -40,7 +40,7 @@ final class Analyser
         $resultsParser = new ResultAnalyser($this->collectedFactory);
 
         /**
-         * @var ResultProcessedFileInterface $currentParserResult
+         * @var \NamespaceProtector\Result\ResultProcessedFileInterface $currentParserResult
          */
         foreach ($cumulativeParserResult->getResultCollectionReadable() as $currentParserResult) {
             $resultsParser->append($currentParserResult);

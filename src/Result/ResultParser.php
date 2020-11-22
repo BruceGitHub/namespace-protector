@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
+use NamespaceProtector\Result\ResultCollected;
+use NamespaceProtector\Result\ResultProcessedFileInterface;
+
 class ResultParser implements ResultParserInterface
 {
-    /** @var ResultCollected<ResultProcessedFileInterface> */
+    /** @var ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface> */
     private $collectedResultParser;
 
     /**
-     * @param ResultCollected<ResultProcessedFileInterface> $collectedResultParser
+     * @param \NamespaceProtector\Result\ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface> $collectedResultParser
      */
     public function __construct(ResultCollected $collectedResultParser)
     {
