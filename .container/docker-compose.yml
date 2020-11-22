@@ -21,6 +21,7 @@ services:
         xdebug.remote_log=/tmp/xdebug_remote.log
 
       PHP_IDE_CONFIG: "serverName=namespace-protector"
+      XDG_CACHE_HOME: "./.cache/"
 
   composer:
     image: composer:2.0.3

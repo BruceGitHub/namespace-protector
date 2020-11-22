@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Cache;
 
-use Webmozart\Assert\Assert;
 use NamespaceProtector\Common\PathInterface;
 
 final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
@@ -56,28 +55,16 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
         return true;
     }
 
-    /**
-     * @param array<string> $keys
-     * @return array<mixed>
-     */
     public function getMultiple($keys, $default = null)
     {
         throw new \RuntimeException('Non implemented yet');
     }
 
-    /**
-     * @param array<mixed> $values
-     * @return bool
-     */
     public function setMultiple($values, $ttl = null)
     {
         throw new \RuntimeException('Non implemented yet');
     }
 
-    /**
-     * @param array<string> $keys
-     * @return bool
-     */
     public function deleteMultiple($keys)
     {
         throw new \RuntimeException('Non implemented yet');
@@ -101,7 +88,6 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
     private function delete_directory(string $dirname): bool
     {
         $dir_handle = \Safe\opendir($dirname);
-        Assert::notNull($dir_handle);
 
         while ($file = readdir($dir_handle)) {
             if ($file != '.' && $file != '..') {

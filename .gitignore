@@ -7,3 +7,4 @@
 /.coverage
 ./namespace-protector-config.json
 .phpunit.result.cache
+.cache

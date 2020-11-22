@@ -20,7 +20,7 @@ final class PhpFileParser implements ParserInterface
     /** @var \PhpParser\Parser  */
     private $parser;
 
-    /** @var \PhpParser\NodeTraverserInterface.  */
+    /** @var \PhpParser\NodeTraverserInterface  */
     private $traverser;
 
     /** @var \Psr\SimpleCache\CacheInterface  */
@@ -28,9 +28,6 @@ final class PhpFileParser implements ParserInterface
 
     /** @var NamespaceProtectorVisitorInterface */
     private $namespaceProtectorVisitor;
-
-    /** @var PathInterface */
-    private $pathFileToParse;
 
     /** @var CollectionFactoryInterface */
     private $collectedFactory;
@@ -52,30 +49,34 @@ final class PhpFileParser implements ParserInterface
 
     public function parseFile(PathInterface $pathFile): ResultParserInterface
     {
-        $this->pathFileToParse = $pathFile;
-
         $ast = $this->fetchAstAfterParse($pathFile);
         $this->traverser->traverse($ast);
 
-        return $this->getListResult();
+        return $this->getListResult($pathFile);
     }
 
-    private function getListResult(): ResultParserInterface
+    private function getListResult(PathInterface $pathFile): ResultParserInterface
     {
         if (\count($this->namespaceProtectorVisitor->getStoreProcessedResult()) === 0) {
-            $collection = $this->collectedFactory->createEmptyMutableCollection();
-            return new ResultParser($collection);
+            return new ResultParser(
+                $this->collectedFactory->createEmptyMutableCollection()
+            );
         }
 
-        $processFileResult = new ResultProcessedMutableFile($this->pathFileToParse->get());
+        $processFileResult = new ResultProcessedMutableFile($pathFile->get());
 
         /** @var ErrorResult $singleConflict */
         foreach ($this->namespaceProtectorVisitor->getStoreProcessedResult() as $singleConflict) {
             $processFileResult->addConflic($singleConflict);
         }
-        $collection = $this->collectedFactory->createMutableCollection([$processFileResult]);
 
-        return new ResultParser($collection); //todo: readonly ?
+        $collection = $this->collectedFactory->createMutableCollection(
+            [
+                $processFileResult->getReadOnlyProcessedFile(),
+            ]
+        );
+
+        return new ResultParser($collection);
     }
 
     /**

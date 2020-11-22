@@ -20,6 +20,8 @@ install:
 phpstan:
 	docker run --rm -v $(CURDIR):/app phpstan/phpstan analyse /app/src
 
+psalm:
+	docker run --rm -v $(CURDIR):/app ./vendor/bin/psalm
 
 csf:
 	./bin/php-cs-fixer fix --verbose

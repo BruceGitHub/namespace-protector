@@ -2,7 +2,7 @@
 
 namespace NamespaceProtector\Result;
 
-final class ResultProcessedFileReadOnly implements ResultProcessedFileInterface //todo: isn't used
+final class ResultProcessedFileReadOnly implements ResultProcessedFileInterface
 {
     /** @var string  */
     private $file;
@@ -10,9 +10,11 @@ final class ResultProcessedFileReadOnly implements ResultProcessedFileInterface 
     /** @var array<ErrorResult> */
     private $conflicts = [];
 
-    public function __construct(string $file)
+    /** @param array<ErrorResult> $conflicts*/
+    public function __construct(string $file, array $conflicts)
     {
         $this->file = $file;
+        $this->conflicts = $conflicts;
     }
 
     public function getFileName(): String

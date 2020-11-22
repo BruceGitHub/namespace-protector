@@ -23,6 +23,7 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
+        $listeners = [];
         $eventClass = \get_class($event);
         foreach ($this->map[$eventClass] as  $listenerInstanceEvent) {
             \get_class($listenerInstanceEvent);
@@ -30,6 +31,6 @@ final class ListenerProvider implements ListenerProviderInterface
             $listeners[] = $listenerInstanceEvent;
         }
 
-        return $listeners ?? [];
+        return $listeners;
     }
 }

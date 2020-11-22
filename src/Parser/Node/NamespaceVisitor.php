@@ -43,12 +43,12 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
 
     private function configure(EventDispatcherInterface $eventDispatcher): void
     {
-        $this->listNodeProcessor[UseUse::class] = function (Node $node) use ($eventDispatcher) {
+        $this->listNodeProcessor[UseUse::class] = function (Node $node) use ($eventDispatcher): object {
             /** @var UseUse $node */
             return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->name->toCodeString()));
         };
 
-        $this->listNodeProcessor[FullyQualified::class] = function (Node $node) use ($eventDispatcher) {
+        $this->listNodeProcessor[FullyQualified::class] = function (Node $node) use ($eventDispatcher): object {
             /** @var FullyQualified $node */
             return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->toCodeString()));
         };

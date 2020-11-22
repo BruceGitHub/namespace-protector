@@ -4,26 +4,32 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
+use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
+
 class ResultAnalyser implements ResultAnalyserInterface
 {
-    /**
-     * @var ResultCollected<ResultProcessedFileInterface>
-     */
-    private $resultCollection;
+    private ResultCollectedReadable $resultCollection;
 
-    /**
-     * @param ResultCollected<ResultProcessedFileInterface> $resultCollection
-     */
-    public function __construct(ResultCollected $resultCollection)
+    private CollectionFactoryInterface $collectedFactory;
+
+    public function __construct(CollectionFactoryInterface $collectedFactory)
     {
-        $this->resultCollection = $resultCollection;
+        $this->resultCollection = $collectedFactory->createEmptyReadOnlyCollection();
+
+        $this->collectedFactory = $collectedFactory;
     }
 
-    public function append(ResultAnalyserInterface $toAppend): void
+    public function append(ResultProcessedFileInterface $toAppend): void
     {
-        foreach ($toAppend->getResultCollected() as $item) {
-            $this->resultCollection->addResult($item);
+        $collection = $this->collectedFactory->createEmptyMutableCollection();
+
+        foreach ($this->resultCollection as $item) {
+            $collection->addResult($item);
         }
+
+        $collection->addResult($toAppend);
+
+        $this->resultCollection = new ResultCollectedReadable($collection);
     }
 
     public function withResults(): bool
@@ -33,7 +39,7 @@ class ResultAnalyser implements ResultAnalyserInterface
 
     public function getResultCollected(): ResultCollectedReadable
     {
-        return new ResultCollectedReadable($this->resultCollection);
+        return $this->resultCollection;
     }
 
     public function count(): int

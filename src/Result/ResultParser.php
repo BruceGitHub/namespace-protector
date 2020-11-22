@@ -7,25 +7,25 @@ namespace NamespaceProtector\Result;
 class ResultParser implements ResultParserInterface
 {
     /** @var ResultCollected<ResultProcessedFileInterface> */
-    private $collectionResultProcessor;
+    private $collectedResultParser;
 
     /**
-     * @param ResultCollected<ResultProcessedFileInterface> $collectionResultProcessor
+     * @param ResultCollected<ResultProcessedFileInterface> $collectedResultParser
      */
-    public function __construct(ResultCollected $collectionResultProcessor)
+    public function __construct(ResultCollected $collectedResultParser)
     {
-        $this->collectionResultProcessor = $collectionResultProcessor;
+        $this->collectedResultParser = $collectedResultParser;
     }
 
     public function getResultCollectionReadable(): ResultCollectedReadable
     {
-        return new ResultCollectedReadable($this->collectionResultProcessor);
+        return new ResultCollectedReadable($this->collectedResultParser);
     }
 
-    public function append(ResultParserInterface $toAppendInstance): void
+    public function append(ResultParserInterface $toAppend): void
     {
-        foreach ($toAppendInstance->getResultCollectionReadable() as $item) {
-            $this->collectionResultProcessor->addResult($item);
+        foreach ($toAppend->getResultCollectionReadable() as $item) {
+            $this->collectedResultParser->addResult($item);
         }
     }
 }

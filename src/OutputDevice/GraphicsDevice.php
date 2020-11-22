@@ -24,16 +24,23 @@ final class GraphicsDevice implements OutputDeviceInterface
     public function plot(\Fhaculty\Graph\Graph $graph, ResultProcessedFileInterface $processedFileResult): void
     {
         if (\count($processedFileResult->getConflicts()) > 0) {
-            $blue = $graph->createVertex($processedFileResult->getFileName(), true);
+            /** @var int $fileName */
+            $fileName = $processedFileResult->getFileName(); 
+
+            $blue = $graph->createVertex($fileName, true);
             $blue->setAttribute('graphviz.color', 'blue');
-        }
+        
+            foreach ($processedFileResult->getConflicts() as $conflict) {
+        
+                /** @var int $fileName */
+                $fileName = $conflict->get(); 
 
-        foreach ($processedFileResult->getConflicts() as $conflict) {
-            $red = $graph->createVertex($conflict->get(), true);
-            $red->setAttribute('graphviz.color', 'red');
+                $red = $graph->createVertex($fileName, true);
+                $red->setAttribute('graphviz.color', 'red');
 
-            $edge = $blue->createEdgeTo($red);
-            $edge->setAttribute('graphviz.color', 'grey');
+                $edge = $blue->createEdgeTo($red);
+                $edge->setAttribute('graphviz.color', 'grey');
+            }
         }
     }
 }

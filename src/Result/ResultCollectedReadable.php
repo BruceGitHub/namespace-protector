@@ -14,19 +14,19 @@ use Countable;
 final class ResultCollectedReadable implements Countable, ResultCollectedInterface
 {
     /** @var ResultCollectedInterface<T> */
-    private $resultCollector;
+    private $resultCollectedImmutable;
 
     /**
-     * @param ResultCollectedInterface<T> $resultCollector
+     * @param ResultCollectedInterface<T> $resultCollectedImmutable
      */
-    public function __construct(ResultCollectedInterface $resultCollector)
+    public function __construct(ResultCollectedInterface $resultCollectedImmutable)
     {
-        $this->resultCollector = $resultCollector;
+        $this->resultCollectedImmutable = $resultCollectedImmutable;
     }
 
     public function count(): int
     {
-        return \count($this->resultCollector);
+        return \count($this->resultCollectedImmutable);
     }
 
     /**
@@ -34,6 +34,6 @@ final class ResultCollectedReadable implements Countable, ResultCollectedInterfa
      */
     public function getIterator(): Iterator
     {
-        return $this->resultCollector->getIterator();
+        return $this->resultCollectedImmutable->getIterator();
     }
 }

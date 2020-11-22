@@ -7,6 +7,7 @@ namespace NamespaceProtector\Result\Factory;
 use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultCollectedInterface;
+use NamespaceProtector\Result\ResultCollectedReadable;
 
 final class CollectedFactory implements CollectionFactoryInterface
 {
@@ -18,13 +19,23 @@ final class CollectedFactory implements CollectionFactoryInterface
         return new ResultCollected();
     }
 
-    public function createMutableCollection(array $list): ResultCollectedInterface
+    public function createMutableCollection(array $list): ResultCollected
     {
         return new ResultCollected($list);
     }
 
     public function createEmptyMutableCollection(): ResultCollectedInterface
     {
-        return  new ResultCollected();
+        return new ResultCollected();
+    }
+
+    /**
+     * @return ResultCollectedReadable
+     *
+     * @psalm-return ResultCollectedReadable<\NamespaceProtector\Result\ResultProcessedFileInterface>
+     */
+    public function createEmptyReadOnlyCollection(): ResultCollectedReadable
+    {
+        return new ResultCollectedReadable($this->createEmptyMutableCollection());
     }
 }

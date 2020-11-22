@@ -8,14 +8,11 @@ use Countable;
 
 interface ResultAnalyserInterface extends Countable
 {
-    public function append(self $toAppendInstance): void;
+    public function append(ResultProcessedFileInterface $toAppend): void;
 
     public function withResults(): bool;
 
     public function count(): int;
 
-    /**
-     * @return ResultCollectedReadable<ResultProcessedFileInterface>
-     */
     public function getResultCollected(): ResultCollectedReadable;
 }

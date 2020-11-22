@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use NamespaceProtector\Analyser;
-use NamespaceProtector\Result\Result;
+use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultAnalyserInterface;
 use NamespaceProtector\Result\Factory\CollectedFactory;
+use NamespaceProtector\Result\ResultProcessedFileReadOnly;
 
 class AnalyserTest extends AbstractUnitTestCase
 {
@@ -46,7 +47,12 @@ class AnalyserTest extends AbstractUnitTestCase
         $file = $this->getFileToParse();
 
         $result = [];
-        $result[] = new Result('Message', 1);
+        $result[] = new ResultProcessedFileReadOnly(
+            $file->get(),
+            [
+                new ErrorResult(1, 'use', 1),
+            ]
+        );
 
         $parser = $this->prophesize(ParserInterface::class);
         $parser->parseFile($file)

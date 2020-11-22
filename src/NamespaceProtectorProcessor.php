@@ -20,7 +20,7 @@ final class NamespaceProtectorProcessor
     private $composerJson;
 
     /** @var FileSystemScanner */
-    private $fileSystemScanner;
+    private $filesToAnalyser;
 
     /** @var Analyser */
     private $analyser;
@@ -33,13 +33,13 @@ final class NamespaceProtectorProcessor
 
     public function __construct(
         ComposerJson $composerJson,
-        FileSystemScanner $fileSystemScanner,
+        FileSystemScanner $filesToAnalyser,
         Analyser $analyser,
         EnvironmentDataLoader $environmentDataLoader,
         CollectionFactoryInterface $collectedFactory
     ) {
         $this->composerJson = $composerJson;
-        $this->fileSystemScanner = $fileSystemScanner;
+        $this->filesToAnalyser = $filesToAnalyser;
         $this->analyser = $analyser;
         $this->environmentDataLoader = $environmentDataLoader;
         $this->collectedFactory = $collectedFactory;
@@ -48,13 +48,13 @@ final class NamespaceProtectorProcessor
     public function load(): void
     {
         $this->composerJson->load();
-        $this->fileSystemScanner->load();
+        $this->filesToAnalyser->load();
         $this->environmentDataLoader->load();
     }
 
     public function getFilesLoaded(): int
     {
-        return \count($this->fileSystemScanner->getFileLoaded());
+        return \count($this->filesToAnalyser->getFileLoaded());
     }
 
     public function totalSymbolsLoaded(): int
@@ -67,24 +67,25 @@ final class NamespaceProtectorProcessor
 
     public function process(): ResultProcessorInterface
     {
-        /** @var ResultAnalyser $result */
-        $result = $this->processEntries($this->fileSystemScanner, $this->analyser);
+        /** @var ResultAnalyser $rAnalyser */
+        $rAnalyser = $this->processEntries($this->filesToAnalyser, $this->analyser);
 
         /** @var ResultCollectedReadable<ResultProcessedFileInterface> $resultCollector */
-        $resultCollector = $result->getResultCollected();
+        $resultCollector = $rAnalyser->getResultCollected();
 
         return new ResultProcessor($resultCollector);
     }
 
-    private function processEntries(FileSystemScanner $fileSystemScanner, Analyser $analyser): ResultAnalyserInterface
+    private function processEntries(FileSystemScanner $filesToAnalyser, Analyser $analyser): ResultAnalyserInterface
     {
-        $collection = $this->collectedFactory->createEmptyMutableCollection();
+        $totalResult = new ResultAnalyser($this->collectedFactory);
 
-        $totalResult = new ResultAnalyser($collection);
-
-        foreach ($fileSystemScanner->getFileLoaded() as $file) {
+        foreach ($filesToAnalyser->getFileLoaded() as $file) {
             $tmp = $analyser->execute($file);
-            $totalResult->append($tmp);
+
+            foreach ($tmp->getResultCollected() as $processedFile) {
+                $totalResult->append($processedFile);
+            }
         }
 
         return $totalResult;

@@ -25,6 +25,8 @@ final class ComposerJson implements ComposerJsonInterface
             . self::FILE_NAME;
 
         Assert::readable($this->fileSystemPathComposerJson, NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSER_JSON_NOT_READABLE);
+
+        $this->psr4Ns = [];
     }
 
     public function load(): void

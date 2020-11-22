@@ -31,33 +31,25 @@ final class NullCache implements CacheInterface
         return false;
     }
 
-    /**
-     * @param array<string> $keys
-     * @return array<mixed>
-     */
+    /*** @inheritDoc */
     public function getMultiple($keys, $default = null)
     {
         return [];
     }
 
-    /**
-     * @param array<mixed> $values
-     * @return bool
-     */
+    /*** @inheritDoc */
     public function setMultiple($values, $ttl = null)
     {
         return false;
     }
 
-    /**
-     * @param array<mixed> $keys
-     * @return bool
-     */
+    /*** @inheritDoc */
     public function deleteMultiple($keys)
     {
         return false;
     }
 
+    /*** @inheritDoc */
     public function has($key)
     {
         return false;

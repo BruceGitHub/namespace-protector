@@ -11,5 +11,7 @@ interface ResultProcessedMutableFileInterface extends ResultProcessedFileInterfa
     /** @return array<ErrorResult> */
     public function getConflicts(): array;
 
+    public function getReadOnlyProcessedFile(): ResultProcessedFileReadOnly;
+
     public function addConflic(ErrorResult $conflic): void;
 }

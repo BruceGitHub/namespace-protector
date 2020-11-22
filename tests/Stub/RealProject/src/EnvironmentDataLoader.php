@@ -47,8 +47,13 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 
     public function load(): void
     {
-        $fetchValue = function ($key, $value) {return $value; };
-        $fetchKey = function ($key, $value) {return $key; };
+        $fetchValue = function (string $key,string $value): string {
+            return $value; 
+        };
+
+        $fetchKey = function (string $key, string $value): string {
+            return $key; 
+        };
 
         $this->collectBaseFunctions = $this->fillFromArray(\get_defined_functions()['internal'], $fetchValue);
         $this->collectBaseInterfaces = $this->fillFromArray(\get_declared_interfaces(), $fetchValue);

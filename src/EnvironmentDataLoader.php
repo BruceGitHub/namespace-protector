@@ -114,7 +114,7 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
     }
 
     /**
-     * @param array<string> $collections
+     * @param array<mixed> $collections
      */
     private function fillFromArray(array $collections, Closure $fetchValue): DbKeyValue
     {

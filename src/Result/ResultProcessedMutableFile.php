@@ -32,4 +32,10 @@ final class ResultProcessedMutableFile implements ResultProcessedMutableFileInte
     {
         return $this->conflicts;
     }
+
+    public function getReadOnlyProcessedFile(): ResultProcessedFileReadOnly
+    {
+        $processedFile = new ResultProcessedFileReadOnly($this->file, $this->getConflicts());
+        return $processedFile;
+    }
 }

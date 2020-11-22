@@ -14,11 +14,11 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
     /**
      * @param Iterable<mixed> $data
      */
-    public function evaluate(iterable $data, Entry $matchMeInData): MatchedResultInterface
+    public function evaluate(iterable $data, Entry $matchMe): MatchedResultInterface
     {
         foreach ($data as $item) {
             $currentEntry = \strtolower($this->stripQueueSlash($item));
-            $matchMeLiteral = \strtolower($this->stripQueueSlash($matchMeInData->get()));
+            $matchMeLiteral = \strtolower($this->stripQueueSlash($matchMe->get()));
 
             if ($this->isMatchMeNameSpaceInCheckEntry($matchMeLiteral, $currentEntry)) {
                 return new MatchedResult($item);
@@ -28,18 +28,18 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
         return new EmptyMatchedResult();
     }
 
-    private function isMatchMeNameSpaceInCheckEntry(string $matchMeInData, string $checkEntry): bool
+    private function isMatchMeNameSpaceInCheckEntry(string $matchMe, string $checkEntry): bool
     {
-        if ($matchMeInData === $checkEntry) {
+        if ($matchMe === $checkEntry) {
             return true;
         }
 
-        $pos = \strpos($matchMeInData, $checkEntry);
+        $pos = \strpos($matchMe, $checkEntry);
         if ($pos === false) {
             return false;
         }
 
-        if (\strlen($checkEntry) > \strlen($matchMeInData)) {
+        if (\strlen($checkEntry) > \strlen($matchMe)) {
             return false;
         }
 
