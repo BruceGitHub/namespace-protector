@@ -18,6 +18,7 @@ class VendorNamespace implements VendorNamespaceInterface
     public function __construct(MatchCollectionInterface $macher)
     {
         $this->macher = $macher;
+        $this->collection = new DbKeyValue();
     }
 
     public function load(): void

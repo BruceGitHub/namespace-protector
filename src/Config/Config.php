@@ -96,7 +96,7 @@ final class Config
     public function cloneWithWithOverride(self $config, array $parameters): self
     {
         $parameters['plotter'] ?? $config->getPlotter();
-        $plotter = $parameters['plotter'] ; 
+        $plotter = $parameters['plotter'];
         $self = new self(
             $config->getVersion(),
             $config->getStartPath(),

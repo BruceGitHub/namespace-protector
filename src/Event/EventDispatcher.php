@@ -18,8 +18,7 @@ final class EventDispatcher implements EventDispatcherInterface
 
     public function dispatch(object $event)
     {
-
-        /** 
+        /**
          * @var callable listener
         */
         foreach ($this->listenerProvider->getListenersForEvent($event) as $listener) {

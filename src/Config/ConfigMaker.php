@@ -2,7 +2,6 @@
 
 namespace NamespaceProtector\Config;
 
-use Webmozart\Assert\Assert;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Common\FileSystemPath;
 
@@ -12,23 +11,23 @@ final class ConfigMaker extends AbstractConfigMaker
     {
         $content = \safe\file_get_contents($path->get());
 
-        /** 
-         * @var array 
+        /**
+         * @var array
          * {
-         *  version: string, 
+         *  version: string,
          *  start-path?: string,
          *  private-entries?: [],
          *  public-entries?: [],
          *  mode?: string,
          *  cache?: bool,
          *  plotter?: string,
-         * } $parameters 
+         * } $parameters
          * */
         $parameters = \safe\json_decode($content, true);
 
         /** @var string $version */
         $version = $parameters['version'];
-            
+
         /** @var string $startPath */
         $startPath = $parameters['start-path'] ?? '.';
 

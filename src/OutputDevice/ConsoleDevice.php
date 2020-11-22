@@ -17,7 +17,7 @@ final class ConsoleDevice implements OutputDeviceInterface
 
     public function __construct(OutputInterface $outputInterface)
     {
-        $this->totalErrors = 0; 
+        $this->totalErrors = 0;
         $this->outputInterface = $outputInterface;
     }
 

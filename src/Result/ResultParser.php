@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
-use NamespaceProtector\Result\ResultCollected;
-use NamespaceProtector\Result\ResultProcessedFileInterface;
-
 class ResultParser implements ResultParserInterface
 {
     /** @var ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface> */

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Result\Factory;
 
-use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
-use NamespaceProtector\Result\ResultCollectedInterface;
 use NamespaceProtector\Result\ResultCollectedReadable;
 
 final class CollectedFactory implements CollectionFactoryInterface

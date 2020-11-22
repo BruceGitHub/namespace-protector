@@ -22,8 +22,7 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
     public function __construct(
         string $name,
         ConfigTemplateCreatorInterface $configTemplateCreator
-    )
-    {
+    ) {
         parent::__construct($name);
         $this->configTemplateCreator = $configTemplateCreator;
     }

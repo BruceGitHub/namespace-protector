@@ -35,7 +35,7 @@ class ConfigConsoleShowable implements ConfigShowableInterface
             '';
 
         /** @var string $writeOutput */
-        $writeOutput =  $this->console->write($output);
+        $writeOutput = $this->console->write($output);
 
         echo $writeOutput;
     }

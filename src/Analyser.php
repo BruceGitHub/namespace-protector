@@ -9,7 +9,6 @@ use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Parser\ParserInterface;
 use NamespaceProtector\Result\ResultAnalyserInterface;
-use NamespaceProtector\Result\ResultProcessedFileInterface;
 use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
 
 final class Analyser

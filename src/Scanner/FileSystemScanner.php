@@ -37,7 +37,7 @@ final class FileSystemScanner implements ScannerInterface
                     $pathDescriptor->get()
                 )
             );
-            
+
             /** @var DirectoryIterator $file */
             foreach ($iterator as $file) {
                 if ($file->isDir()) {

@@ -6,8 +6,6 @@ namespace NamespaceProtector\Result\Factory;
 
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\Result\ResultCollectedReadable;
-use NamespaceProtector\Result\ResultCollectedInterface;
-use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 interface CollectionFactoryInterface
 {
@@ -19,11 +17,11 @@ interface CollectionFactoryInterface
 
     /**
      * @return \NamespaceProtector\Result\ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface>
-     */            
+     */
     public function createEmptyMutableCollection(): ResultCollected;
 
     /**
      * @return \NamespaceProtector\Result\ResultCollectedReadable<\NamespaceProtector\Result\ResultProcessedFileInterface>
-     */            
+     */
     public function createEmptyReadOnlyCollection(): ResultCollectedReadable;
 }

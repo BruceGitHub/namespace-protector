@@ -58,9 +58,8 @@ final class PhpFileParser implements ParserInterface
     private function getListResult(PathInterface $pathFile): ResultParserInterface
     {
         if (\count($this->namespaceProtectorVisitor->getStoreProcessedResult()) === 0) {
-            
-            $emptyCollection = $this->collectedFactory->createEmptyMutableCollection(); 
-            
+            $emptyCollection = $this->collectedFactory->createEmptyMutableCollection();
+
             return new ResultParser($emptyCollection);
         }
 
@@ -99,13 +98,13 @@ final class PhpFileParser implements ParserInterface
 
             /**
              * @var \PhpParser\Node[]
-             */        
+             */
             return $ast ?? [];
         }
 
         /**
          * @var \PhpParser\Node[]
-         */        
+         */
         return $this->cache->get($keyEntryForCache, []);
     }
 }
