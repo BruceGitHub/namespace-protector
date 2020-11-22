@@ -80,7 +80,7 @@ final class PhpFileParser implements ParserInterface
     }
 
     /**
-     * @return array<mixed>
+     * @return \PhpParser\Node[]
      */
     private function fetchAstAfterParse(PathInterface $pathFile): array
     {
@@ -96,9 +96,15 @@ final class PhpFileParser implements ParserInterface
             $ast = $this->parser->parse($code);
             $this->cache->set($keyEntryForCache, $ast);
 
+            /**
+             * @var \PhpParser\Node[]
+             */        
             return $ast ?? [];
         }
 
+        /**
+         * @var \PhpParser\Node[]
+         */        
         return $this->cache->get($keyEntryForCache, []);
     }
 }

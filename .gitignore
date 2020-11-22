@@ -8,3 +8,4 @@
 ./namespace-protector-config.json
 .phpunit.result.cache
 .cache
+.php_cs.cache
