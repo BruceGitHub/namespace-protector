@@ -88,10 +88,11 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
             return;
         }
 
-        $additionalInformation = '';
-        if ($resultProcessNode->getAdditionalInformation() !== '') {
-            $additionalInformation = '( ' . $resultProcessNode->getAdditionalInformation() . ' )';
-        }
+        //todo: not now 
+        // $additionalInformation = '';
+        // if ($resultProcessNode->getAdditionalInformation() !== '') {
+        //     $additionalInformation = '( ' . $resultProcessNode->getAdditionalInformation() . ' )';
+        // }
 
         $err = new ErrorResult(
             $node->getLine(),

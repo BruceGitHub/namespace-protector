@@ -17,11 +17,8 @@ install:
 	install_phpunit &&
 	install_csfixer
 
-phpstan:
-	docker run --rm -v $(CURDIR):/app phpstan/phpstan analyse /app/src
-
 psalm:
-	docker run --rm -v $(CURDIR):/app ./vendor/bin/psalm
+	docker-compose -f .container/docker-compose.yml run --rm php ./vendor/bin/psalm
 
 csf:
 	./bin/php-cs-fixer fix --verbose

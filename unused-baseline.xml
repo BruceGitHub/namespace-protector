@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.2.1@ea9cb72143b77e7520c52fa37290bd8d8bc88fd9">
+  <file src="src/Command/AbstractValidateNamespaceCommand.php">
+    <PossiblyUnusedMethod occurrences="1">
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Command/NamespaceProtectorCommand.php">
+    <UnusedClass occurrences="1">
+      <code>NamespaceProtectorCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/NamespaceProtectorConfigCreatorCommand.php">
+    <UnusedClass occurrences="1">
+      <code>NamespaceProtectorConfigCreatorCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Config/Config.php">
+    <RedundantCondition occurrences="1">
+      <code>boolean</code>
+    </RedundantCondition>
+  </file>
+  <file src="src/Config/ConfigTemplateCreator.php">
+    <UnusedClass occurrences="1">
+      <code>ConfigTemplateCreator</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Db/BooleanMatchPos.php">
+    <UnusedClass occurrences="1">
+      <code>BooleanMatchPos</code>
+    </UnusedClass>
+    <UnusedVariable occurrences="1">
+      <code>$value</code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Entry/Entry.php">
+    <PossiblyUnusedMethod occurrences="1">
+      <code>equalTo</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/EnvironmentDataLoader.php">
+    <UnusedClosureParam occurrences="2">
+      <code>$key</code>
+      <code>$value</code>
+    </UnusedClosureParam>
+  </file>
+  <file src="src/Parser/Node/Event/FoundUseNamespace.php">
+    <PossiblyUnusedMethod occurrences="1">
+      <code>getLine</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Parser/Node/ProcessUseStatement.php">
+    <UnusedProperty occurrences="1">
+      <code>$cache</code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Result/EmptyResult.php">
+    <UnusedClass occurrences="1">
+      <code>EmptyResult</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Result/ErrorResult.php">
+    <PossiblyUnusedMethod occurrences="1">
+      <code>getType</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Result/Factory/CollectedFactory.php">
+    <PossiblyUnusedMethod occurrences="1">
+      <code>createForErrorResult</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Result/Result.php">
+    <UnusedClass occurrences="1">
+      <code>Result</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Rule/IsWithPrivateNamespace.php">
+    <UnusedProperty occurrences="1">
+      <code>$metadataLoader</code>
+    </UnusedProperty>
+  </file>
+</files>
