@@ -7,8 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigConsoleShowable implements ConfigShowableInterface
 {
-    /** @var OutputInterface */
-    private $console;
+    private OutputInterface $console;
 
     public function __construct(OutputInterface $outputInterface)
     {
