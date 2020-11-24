@@ -14,25 +14,19 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 {
     public const NAMESPACE_PROJECT = 'NamespaceProtector';
 
-    /** @var DbKeyValue */
-    private $collectBaseClasses;
+    private DbKeyValue $collectBaseClasses;
 
-    /** @var DbKeyValue */
-    private $collectBaseInterfaces;
+    private DbKeyValue $collectBaseInterfaces;
 
-    /** @var DbKeyValue */
-    private $collectBaseFunctions;
+    private DbKeyValue $collectBaseFunctions;
 
-    /** @var DbKeyValue */
-    private $collectBaseConstants;
+    private DbKeyValue $collectBaseConstants;
 
-    /** @var DbKeyValue */
-    private $collectComposerNamespace;
+    private DbKeyValue $collectComposerNamespace;
 
     private VendorNamespaceInterface $vendorNamespaces;
 
-    /** @var ComposerJsonInterface */
-    private $composerJson;
+    private ComposerJsonInterface $composerJson;
 
     public function __construct(ComposerJsonInterface $composerJson)
     {
