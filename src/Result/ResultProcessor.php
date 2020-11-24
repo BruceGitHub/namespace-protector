@@ -7,7 +7,7 @@ namespace NamespaceProtector\Result;
 class ResultProcessor implements ResultProcessorInterface
 {
     /** @var ResultCollectedReadable<ResultProcessedFileInterface> */
-    private $resultCollectorReadable;
+    private ResultCollectedReadable $resultCollectorReadable;
 
     /**
      * @param ResultCollectedReadable<ResultProcessedFileInterface> $resultCollectorReadable

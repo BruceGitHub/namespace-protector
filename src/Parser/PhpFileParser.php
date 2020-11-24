@@ -17,20 +17,15 @@ use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
 
 final class PhpFileParser implements ParserInterface
 {
-    /** @var \PhpParser\Parser  */
-    private $parser;
+    private \PhpParser\Parser $parser;
 
-    /** @var \PhpParser\NodeTraverserInterface  */
-    private $traverser;
+    private \PhpParser\NodeTraverserInterface $traverser;
 
-    /** @var \Psr\SimpleCache\CacheInterface  */
-    private $cache;
+    private \Psr\SimpleCache\CacheInterface $cache;
 
-    /** @var NamespaceProtectorVisitorInterface */
-    private $namespaceProtectorVisitor;
+    private NamespaceProtectorVisitorInterface $namespaceProtectorVisitor;
 
-    /** @var CollectionFactoryInterface */
-    private $collectedFactory;
+    private CollectionFactoryInterface $collectedFactory;
 
     public function __construct(
         \Psr\SimpleCache\CacheInterface $cache,

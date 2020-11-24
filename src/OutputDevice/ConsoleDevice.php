@@ -9,11 +9,9 @@ use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 final class ConsoleDevice implements OutputDeviceInterface
 {
-    /** @var OutputInterface */
-    private $outputInterface;
+    private OutputInterface $outputInterface;
 
-    /** @var int */
-    private $totalErrors;
+    private int $totalErrors;
 
     public function __construct(OutputInterface $outputInterface)
     {

@@ -7,7 +7,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 final class ListenerProvider implements ListenerProviderInterface
 {
     /** @var array<array<object>> */
-    private $map = [];
+    private array $map = [];
 
     public function addEventListener(string $eventClassName, object $listenerInstanceEvent): void
     {

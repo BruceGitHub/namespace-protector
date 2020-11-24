@@ -14,10 +14,9 @@ use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
 final class Analyser
 {
     /** @var ParserInterface[]  */
-    private $parserList;
+    private array $parserList;
 
-    /** @var CollectionFactoryInterface */
-    private $collectedFactory;
+    private CollectionFactoryInterface $collectedFactory;
 
     public function __construct(
         CollectionFactoryInterface $collectedFactory,

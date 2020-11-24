@@ -16,20 +16,15 @@ use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
 
 final class NamespaceProtectorProcessor
 {
-    /** @var ComposerJson */
-    private $composerJson;
+    private ComposerJson $composerJson;
 
-    /** @var FileSystemScanner */
-    private $filesToAnalyser;
+    private FileSystemScanner $filesToAnalyser;
 
-    /** @var Analyser */
-    private $analyser;
+    private Analyser $analyser;
 
-    /** @var EnvironmentDataLoaderInterface */
-    private $environmentDataLoader;
+    private EnvironmentDataLoaderInterface $environmentDataLoader;
 
-    /** @var CollectionFactoryInterface */
-    private $collectedFactory;
+    private CollectionFactoryInterface $collectedFactory;
 
     public function __construct(
         ComposerJson $composerJson,

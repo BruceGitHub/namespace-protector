@@ -17,11 +17,9 @@ use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
 final class ProcessUseStatement
 {
-    /** @var EnvironmentDataLoaderInterface  */
-    private $metadataLoader;
+    private EnvironmentDataLoaderInterface $metadataLoader;
 
-    /** @var Config  */
-    private $appConfig;
+    private Config $appConfig;
 
     private CacheInterface $cache;
 

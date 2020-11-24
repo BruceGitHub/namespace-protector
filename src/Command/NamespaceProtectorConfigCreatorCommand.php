@@ -16,8 +16,7 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
     const CREATE_DEFAULT_CONFIG = 'create-default-config';
     const NAMESPACE_PROTECTOR_JSON = 'namespace-protector.json';
 
-    /** @var ConfigTemplateCreatorInterface */
-    private $configTemplateCreator;
+    private ConfigTemplateCreatorInterface $configTemplateCreator;
 
     public function __construct(
         string $name,

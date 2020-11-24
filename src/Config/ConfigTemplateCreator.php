@@ -7,8 +7,7 @@ use NamespaceProtector\Common\PathInterface;
 
 final class ConfigTemplateCreator implements ConfigTemplateCreatorInterface
 {
-    /** @var string */
-    private $templateName;
+    private string $templateName;
 
     public function __construct(string $templateName)
     {

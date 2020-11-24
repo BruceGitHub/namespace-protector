@@ -7,7 +7,7 @@ namespace NamespaceProtector\Result;
 class ResultParser implements ResultParserInterface
 {
     /** @var ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface> */
-    private $collectedResultParser;
+    private ResultCollected $collectedResultParser;
 
     /**
      * @param \NamespaceProtector\Result\ResultCollected<\NamespaceProtector\Result\ResultProcessedFileInterface> $collectedResultParser

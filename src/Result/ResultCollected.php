@@ -14,7 +14,7 @@ use ArrayIterator;
 final class ResultCollected implements ResultCollectedInterface
 {
     /** @var  array<int, T> */
-    private $list;
+    private array $list;
 
     /**
      * @param  array<int, T> $list

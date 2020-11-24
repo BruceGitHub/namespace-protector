@@ -4,14 +4,11 @@ namespace NamespaceProtector\Result;
 
 final class ErrorResult implements ResultInterface
 {
-    /** @var int  */
-    private $type;
+    private int $type;
 
-    /** @var int */
-    private $line;
+    private int $line;
 
-    /** @var string */
-    private $use;
+    private string $use;
 
     public function __construct(int $line, string $use, int $type)
     {

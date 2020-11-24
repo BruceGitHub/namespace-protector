@@ -8,8 +8,7 @@ use NamespaceProtector\Common\PathInterface;
 
 final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
 {
-    /** @var PathInterface */
-    private $path;
+    private PathInterface $path;
 
     public function __construct(PathInterface $cachePath)
     {

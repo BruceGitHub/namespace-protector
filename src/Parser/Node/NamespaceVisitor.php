@@ -20,13 +20,12 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
     public const ERR = 1;
 
     /** @var array<Callable> */
-    private $listNodeProcessor;
+    private array $listNodeProcessor;
 
     /** @var ResultCollected<ErrorResult> */
-    private $storeProcessNodeResult;
+    private ResultCollected $storeProcessNodeResult;
 
-    /** @var ErrorCollectionFactoryInterface */
-    private $errorCollectionFactory;
+    private ErrorCollectionFactoryInterface $errorCollectionFactory;
 
     /**
      * @param array<string,mixed> $configParser

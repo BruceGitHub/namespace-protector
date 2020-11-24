@@ -4,11 +4,9 @@ namespace NamespaceProtector\Result;
 
 final class Result implements ResultInterface
 {
-    /** @var string  */
-    private $value;
+    private string $value;
 
-    /** @var int  */
-    private $type;
+    private int $type;
 
     public function __construct(string $value, int $type = 0)
     {

@@ -6,8 +6,7 @@ use Webmozart\Assert\Assert;
 
 final class FileSystemPath implements PathInterface
 {
-    /** @var string  */
-    private $path;
+    private string $path;
 
     public function __construct(string $path, bool $noCheck = false)
     {

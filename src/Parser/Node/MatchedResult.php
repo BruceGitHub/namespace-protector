@@ -4,8 +4,7 @@ namespace NamespaceProtector\Parser\Node;
 
 class MatchedResult implements MatchedResultInterface
 {
-    /** @var string */
-    private $info;
+    private string $info;
 
     public function __construct(string $info)
     {

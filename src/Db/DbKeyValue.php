@@ -9,7 +9,7 @@ use NamespaceProtector\Parser\Node\MatchedResultInterface;
 final class DbKeyValue implements DbKeyValueInterface
 {
     /** @var array<mixed> */
-    private $collections;
+    private array $collections;
 
     /**
      * @param array<string> $initValue

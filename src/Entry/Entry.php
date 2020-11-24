@@ -6,8 +6,7 @@ use Webmozart\Assert\Assert;
 
 final class Entry
 {
-    /** @var string */
-    private $entry;
+    private string $entry;
 
     public function __construct(string $entry)
     {

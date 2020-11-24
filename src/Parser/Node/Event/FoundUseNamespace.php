@@ -4,17 +4,13 @@ namespace NamespaceProtector\Parser\Node\Event;
 
 final class FoundUseNamespace implements EventProcessNodeInterface
 {
-    /** @var int */
-    private $line;
+    private int $line;
 
-    /** @var string */
-    private $nodeName;
+    private string $nodeName;
 
-    /** @var string */
-    private $additionalInformation;
+    private string $additionalInformation;
 
-    /** @var bool */
-    private $erroDetect = false;
+    private bool $erroDetect = false;
 
     public function __construct(int $line, string $nodeName)
     {

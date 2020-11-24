@@ -14,7 +14,7 @@ use Countable;
 final class ResultCollectedReadable implements Countable, ResultCollectedInterface
 {
     /** @var ResultCollectedInterface<T> */
-    private $resultCollectedImmutable;
+    private ResultCollectedInterface $resultCollectedImmutable;
 
     /**
      * @param ResultCollectedInterface<T> $resultCollectedImmutable

@@ -14,27 +14,21 @@ final class Config
     public const PLOTTER_TERMINAL = 'plotter-terminal';
     public const PLOTTER_PNG = 'plotter-png';
 
-    /** @var PathInterface */
-    private $pathStart;
+    private PathInterface $pathStart;
 
-    /** @var PathInterface  */
-    private $pathComposerJson;
+    private PathInterface $pathComposerJson;
 
     private array $privateEntries;
 
     private array $publicEntries;
 
-    /** @var string */
-    private $mode;
+    private string $mode;
 
-    /** @var string */
-    private $version;
+    private string $version;
 
-    /** @var bool */
-    private $enabledCache;
+    private bool $enabledCache;
 
-    /** @var string */
-    private $plotter;
+    private string $plotter;
 
     public function __construct(
         string $version,
