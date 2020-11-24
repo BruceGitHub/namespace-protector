@@ -12,11 +12,10 @@ final class ComposerJson implements ComposerJsonInterface
     public const FILE_NAME = 'composer.json';
     public const NAME_PROJECT_IN_COMPOSER = 'brucegithub/namespace-protector';
 
-    /** @var string */
-    private $fileSystemPathComposerJson;
+    private string $fileSystemPathComposerJson;
 
     /** @var array<string> */
-    private $psr4Ns;
+    private array $psr4Ns;
 
     public function __construct(PathInterface $fileSystemPathComposerJson)
     {
