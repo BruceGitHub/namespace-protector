@@ -9,13 +9,12 @@ use NamespaceProtector\Common\FileSystemPath;
 final class FileSystemScanner implements ScannerInterface
 {
     /** @var array<PathInterface>  */
-    private $startPaths;
+    private array $startPaths;
 
     /** @var array<PathInterface>  */
-    private $fileLoaded = [];
+    private array $fileLoaded = [];
 
-    /** @var string  */
-    private $extensions;
+    private string $extensions;
 
     /**
      * @param array<PathInterface> $startPaths
