@@ -26,7 +26,6 @@ final class ListenerProvider implements ListenerProviderInterface
         $listeners = [];
         $eventClass = \get_class($event);
         foreach ($this->map[$eventClass] as  $listenerInstanceEvent) {
-
             $listeners[] = $listenerInstanceEvent;
         }
 

@@ -6,7 +6,6 @@ namespace NamespaceProtector\Parser;
 
 use PhpParser\Parser;
 use PhpParser\NodeTraverserInterface;
-use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultParser;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Result\ResultParserInterface;

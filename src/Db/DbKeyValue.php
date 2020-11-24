@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace NamespaceProtector\Db;
 
 use NamespaceProtector\Entry\Entry;
-use NamespaceProtector\Parser\Node\MatchedResultInterface;
 
 final class DbKeyValue implements DbKeyValueInterface
 {

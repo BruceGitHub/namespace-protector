@@ -6,7 +6,6 @@ use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Db\BooleanMatchNameSpace;
 use NamespaceProtector\Db\MatchCollectionInterface;
-use NamespaceProtector\EnvironmentDataLoaderInterface;
 use NamespaceProtector\Parser\Node\MatchedResultInterface;
 use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 

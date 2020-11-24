@@ -12,7 +12,6 @@ use NamespaceProtector\OutputDevice\GraphicsDevice;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use NamespaceProtector\Showable\ConfigConsoleShowable;
-use NamespaceProtector\Result\ResultProcessorInterface;
 use NamespaceProtector\NamespaceProtectorProcessorFactory;
 use NamespaceProtector\OutputDevice\OutputDeviceInterface;
 

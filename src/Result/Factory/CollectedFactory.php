@@ -9,7 +9,6 @@ use NamespaceProtector\Result\ResultCollectedReadable;
 
 final class CollectedFactory implements CollectionFactoryInterface
 {
-
     public function createMutableCollection(array $list): ResultCollected
     {
         return new ResultCollected($list);
