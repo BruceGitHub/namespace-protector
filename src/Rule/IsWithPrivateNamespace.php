@@ -12,17 +12,14 @@ use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
 class IsWithPrivateNamespace implements RuleInterface
 {
-    private EnvironmentDataLoaderInterface  $metadataLoader;
     private Config $config;
     private IsInConfigureComposerPsr4 $isInConfigureComposerPsr4;
 
     public function __construct(
         Config $config,
-        EnvironmentDataLoaderInterface $metadataLoader,
         IsInConfigureComposerPsr4 $isInConfigureComposerPsr4
     ) {
         $this->config = $config;
-        $this->metadataLoader = $metadataLoader;
         $this->isInConfigureComposerPsr4 = $isInConfigureComposerPsr4;
     }
 

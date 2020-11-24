@@ -42,7 +42,7 @@ final class ProcessUseStatement
         $isConfiguredComposerPsr4 = new IsInConfigureComposerPsr4($this->metadataLoader);
         $rules = [
             new FalsePositive($this->metadataLoader),
-            new IsWithPrivateNamespace($this->appConfig, $this->metadataLoader, $isConfiguredComposerPsr4),
+            new IsWithPrivateNamespace($this->appConfig, $isConfiguredComposerPsr4),
             $isConfiguredComposerPsr4,
             new IsInPrivateConfiguredEntries($this->appConfig),
             new IsConfiguredInThirdPartyApp($this->metadataLoader, $this->appConfig),
