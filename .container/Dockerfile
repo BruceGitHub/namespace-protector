@@ -1,4 +1,4 @@
-FROM clearlinux/php-fpm:7.3.12
+FROM clearlinux/php-fpm:7.4
 
 LABEL maintainer="roberto.diana@gmail.com"
 RUN swupd bundle-add php-extras make wget

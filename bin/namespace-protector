@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-if (version_compare(PHP_VERSION, '7.1.0') < 0) {
-    fwrite(STDERR, "PHP 7.1 is required\n");
+if (version_compare(PHP_VERSION, '7.4.0') < 0) {
+    fwrite(STDERR, "PHP 7.4 is required\n");
     exit(1);
 }
 
@@ -23,13 +23,16 @@ use NamespaceProtector\Command\NamespaceProtectorConfigCreatorCommand;
 use Symfony\Component\Console\Application;
 use NamespaceProtector\Config\ConfigTemplateCreator;
 
-const FILENAME = 'namespace-protector-config.json';
+const FILENAME_TEMPLATE = 'template-config-json';
 
 $app = new Application('Namespace Protector','0.1.0 (Alpha)');
 $app->add(new NamespaceProtectorCommand());
 $app->add(new NamespaceProtectorConfigCreatorCommand(
             'Namespace-Protector-Config-Create', 
-            new ConfigTemplateCreator(FILENAME)
+            new ConfigTemplateCreator(
+                    NamespaceProtectorConfigCreatorCommand::NAMESPACE_PROTECTOR_JSON,
+                    FILENAME_TEMPLATE
+                )
         )
 );
 

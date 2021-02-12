@@ -14,7 +14,8 @@ use NamespaceProtector\Exception\NamespaceProtectorExceptionInterface;
 final class NamespaceProtectorConfigCreatorCommand extends Command
 {
     const CREATE_DEFAULT_CONFIG = 'create-default-config';
-    const NAMESPACE_PROTECTOR_JSON = 'namespace-protector.json';
+    const NAMESPACE_PROTECTOR_JSON = 'namespace-protector-config.json';
+    const KEY_COMPOSER = 'brucegithub/namespace-protector';
 
     private ConfigTemplateCreatorInterface $configTemplateCreator;
 
@@ -60,7 +61,7 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
                 true
             );
 
-            if ($jsonArray['name'] !== ComposerJson::NAME_PROJECT_IN_COMPOSER) {
+            if ($jsonArray['require-dev'][self::KEY_COMPOSER] !== ComposerJson::NAME_PROJECT_IN_COMPOSER) {
                 return new FileSystemPath($pathComposer);
             }
         }
