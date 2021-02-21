@@ -1,6 +1,0 @@
-parameters:
-    level: 8
-    paths:
-        - src
-    excludes_analyse:
-        - src/OutputDevice/GraphicsDevice

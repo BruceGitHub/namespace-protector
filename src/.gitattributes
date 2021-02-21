@@ -1,0 +1,15 @@
+/tests       export-ignore
+/.container       export-ignore
+/img                export-ignore
+/.travis.yml       export-ignore
+/.travis.yml       export-ignore
+/.gitignore       export-ignore
+/.php_cs          export-ignore
+/.php_cs.dist     export-ignore
+/phpunit.xml      export-ignore
+/phpunit.xml.dist export-ignore
+/.psalm           export-ignore
+/namespace-protector-config.json           export-ignore
+/unused-baseline.xml           export-ignore
+/Makefile           export-ignore
+/composer.lock           export-ignore
