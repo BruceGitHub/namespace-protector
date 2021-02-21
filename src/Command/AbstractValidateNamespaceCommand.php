@@ -19,11 +19,6 @@ abstract class AbstractValidateNamespaceCommand extends Command
 {
     private const PLOTTER_ARGUMENT = 'plotter';
 
-    public function __construct(string $name = null)
-    {
-        parent::__construct($name);
-    }
-
     protected function configure(): void
     {
         parent::configure();

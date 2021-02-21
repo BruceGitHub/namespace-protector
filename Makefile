@@ -20,6 +20,10 @@ install:
 psalm:
 	docker-compose -f .container/docker-compose.yml run --rm php ./vendor/bin/psalm
 
+psalm-with-issue:
+	docker-compose -f .container/docker-compose.yml run --rm php ./vendor/bin/psalm --show-info=true
+
+
 csf:
 	./bin/php-cs-fixer fix --verbose
 
