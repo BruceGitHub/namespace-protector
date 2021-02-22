@@ -52,9 +52,7 @@ Trought the json configuration it's possible define
 - mode `public` default mode, in this setup only a private namespace it's validated
 - mode `private vendor` in which each access of vendor namespace trigger a violation if was not added public namespace.
 
-<a href="https://asciinema.org/a/xp9xgpZ212dTW2LH4IDniicG2?autoplay=1">
-<img src="https://asciinema.org/a/xp9xgpZ212dTW2LH4IDniicG2?autoplay=1" width="836"/>
-</a>
+[![asciicast](https://asciinema.org/a/xp9xgpZ212dTW2LH4IDniicG2.svg)](https://asciinema.org/a/xp9xgpZ212dTW2LH4IDniicG2)
 
 # Install and Run 
 
