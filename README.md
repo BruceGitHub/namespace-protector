@@ -53,11 +53,8 @@ Trought the json configuration it's possible define
 - mode `private vendor` in which each access of vendor namespace trigger a violation if was not added public namespace.
 
 <a href="https://asciinema.org/a/xp9xgpZ212dTW2LH4IDniicG2?autoplay=1">
-<img src="https://asciinema.org/a/14.png" width="836"/>
+<img src="https://asciinema.org/a/xp9xgpZ212dTW2LH4IDniicG2?autoplay=1" width="836"/>
 </a>
-
-
-<script id="asciicast-393366" src="https://asciinema.org/a/393366.js" async></script>
 
 # Install and Run 
 
