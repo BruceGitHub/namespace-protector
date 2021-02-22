@@ -51,7 +51,8 @@ Trought the json configuration it's possible define
 
 - mode `public` default mode, in this setup only a private namespace it's validated
 - mode `private vendor` in which each access of vendor namespace trigger a violation if was not added public namespace.
-I think thta the in future the modes can be increase
+
+[![asciicast](https://asciinema.org/a/xp9xgpZ212dTW2LH4IDniicG2.svg)](https://asciinema.org/a/xp9xgpZ212dTW2LH4IDniicG2)
 
 # Install and Run 
 
@@ -63,7 +64,7 @@ I think thta the in future the modes can be increase
 
 ## run 
 ```bash
-➜  namespace-protector git:(master) ✗ bin/namespace-protector validate-namespace
+➜  namespace-protector git:(master) ✗ vendor/bin/namespace-protector validate-namespace
 |Dump config:
 |> Version: 0.1.0
 |> Cache: FALSE
@@ -104,7 +105,7 @@ Elapsed time: 0.68148
 
 ```bash 
 Example of output in png format.
-➜  bin/namespace-protector validate-namespace plotter-png
+➜  vendord/bin/namespace-protector validate-namespace plotter-png
 ```
 ![example output](https://github.com/BruceGitHub/namespace-protector/blob/master/img/example_output.png)
 
