@@ -61,7 +61,7 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
                 true
             );
 
-            if (isset($jsonArray['require-dev'][self::KEY_COMPOSER]) 
+            if (isset($jsonArray['require-dev'][self::KEY_COMPOSER])
                 && $jsonArray['require-dev'][self::KEY_COMPOSER] !== ComposerJson::NAME_PROJECT_IN_COMPOSER) {
                 return new FileSystemPath($pathComposer);
             }

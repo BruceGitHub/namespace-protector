@@ -8,18 +8,18 @@ use NamespaceProtector\Common\PathInterface;
 final class ConfigTemplateCreator implements ConfigTemplateCreatorInterface
 {
     private string $templateName;
-    private string $configName; 
+    private string $configName;
 
-    public function __construct(string $configName,string $templateName)
+    public function __construct(string $configName, string $templateName)
     {
         $this->templateName = $templateName;
-        $this->configName = $configName; 
+        $this->configName = $configName;
     }
 
     public function create(PathInterface $destinationPathFileJson): void
     {
         $this->createFileWithBackup(
-            $destinationPathFileJson->get().$this->configName, 
+            $destinationPathFileJson->get() . $this->configName,
             $this->templateName
         );
     }
