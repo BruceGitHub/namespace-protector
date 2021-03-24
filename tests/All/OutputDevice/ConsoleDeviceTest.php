@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\OutputDevice;
+namespace Tests\All\OutputDevice;
 
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;;
 use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
 use NamespaceProtector\OutputDevice\ConsoleDevice;

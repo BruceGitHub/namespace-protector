@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\All;
 
 use NamespaceProtector\Config\ConfigMaker;
 use NamespaceProtector\Common\FileSystemPath;

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Cache;
+namespace Tests\All\Cache;
 
 use Psr\SimpleCache\CacheInterface;
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Cache\SimpleFileCache;
 use NamespaceProtector\Common\FileSystemPath;
 

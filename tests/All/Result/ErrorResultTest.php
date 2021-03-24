@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Result;
+namespace Tests\All\Result;
 
 use NamespaceProtector\Result\ErrorResult;
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 
 class ErrorResultTest extends AbstractUnitTestCase
 {

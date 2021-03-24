@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Scanner;
+namespace Tests\All\Scanner;
 
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Common\FileSystemPath;
 

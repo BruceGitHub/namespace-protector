@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Db;
+namespace Tests\All\Db;
 
 use NamespaceProtector\Entry\Entry;
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Db\MatchCollectionInterface;
 use NamespaceProtector\Parser\Node\MatchedResult;

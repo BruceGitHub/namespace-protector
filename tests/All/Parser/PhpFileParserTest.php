@@ -6,7 +6,7 @@ namespace Unit\Parser;
 
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Db\DbKeyValue;
 use NamespaceProtector\Cache\NullCache;
 use NamespaceProtector\Config\ConfigMaker;

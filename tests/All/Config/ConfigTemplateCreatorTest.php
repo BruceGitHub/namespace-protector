@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Config\ConfigTemplateCreator;
@@ -10,6 +10,7 @@ class ConfigTemplateCreatorTest extends AbstractUnitTestCase
     /** @test */
     public function it_create_json_template_work(): void
     {
+        $this->markTestSkipped();
         // $path = $this->getDirectory();
         // $configTemplateCreator = new ConfigTemplateCreator('namespace-protector-config');
         // $configTemplateCreator->create($path);
@@ -21,6 +22,7 @@ class ConfigTemplateCreatorTest extends AbstractUnitTestCase
     /** @test */
     public function it_create_json_template_if_exist_create_backup(): void
     {
+        $this->markTestSkipped();
         // $path = $this->getDirectory();
         // ConfigTemplateCreator::createJsonTemplateConfig($path);
 

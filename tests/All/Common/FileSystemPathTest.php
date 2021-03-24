@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Unit\Common;
 
 use NamespaceProtector\Common\FileSystemPath;
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 
 class FileSystemPathTest extends AbstractUnitTestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\All;
 
 use NamespaceProtector\Analyser;
 use NamespaceProtector\Result\ErrorResult;

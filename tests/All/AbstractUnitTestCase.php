@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\All;
 
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -49,7 +49,7 @@ abstract class AbstractUnitTestCase extends TestCase
         return $this;
     }
 
-    protected function addFile(string $pathFile, string $directoryReal = '', string $directoryVirtual): self
+    protected function addFile(string $pathFile, string $directoryReal, string $directoryVirtual): self
     {
         $this->fileSystemtoBuild[$directoryVirtual][$pathFile] = \file_get_contents(__DIR__ . '/../Stub/' . $directoryReal . '/' . $pathFile);
 

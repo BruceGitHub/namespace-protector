@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Entry;
+namespace Tests\All\Entry;
 
 use NamespaceProtector\Entry\Entry;
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 
 class EntryTest extends AbstractUnitTestCase
 {

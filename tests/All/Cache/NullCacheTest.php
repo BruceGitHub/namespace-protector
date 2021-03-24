@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Tests\Unit\Cache;
+namespace Tests\All\Cache;
 
-use Tests\Unit\AbstractUnitTestCase;
+use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Cache\NullCache;
 
 class NullCacheTest extends AbstractUnitTestCase
