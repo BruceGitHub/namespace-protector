@@ -48,8 +48,7 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 
     public function load(): void
     {
-        /** @var string|int $value */
-        $fetchValue = function ($key, $value): string {
+        $fetchValue = function ($key, string|int $value): string {
             return (string)$value;
         };
 
