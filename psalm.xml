@@ -19,11 +19,6 @@
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <MissingClosureParamType>
-            <errorLevel type="suppress">
-                <file name="src/EnvironmentDataLoader.php" />  <!-- all InvalidReturnType issues in this file are suppressed -->
-            </errorLevel>
-        </MissingClosureParamType>
     </issueHandlers>
 
 </psalm>

@@ -3,14 +3,14 @@ dist: trusty
 os: linux
 
 php:
-  - 7.4
+  - 8.0.3
 
-before_install: 
+before_install:
 install: composer install --no-interaction
 
-script: 
+script:
   - vendor/bin/phpunit tests
   - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
-    - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)

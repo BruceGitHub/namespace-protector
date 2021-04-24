@@ -48,11 +48,12 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 
     public function load(): void
     {
-        $fetchValue = function ($key, string|int $value): string {
+        $fetchValue = function (string|int $key, string|int $value): string {
             return (string)$value;
         };
 
-        $fetchKey = function ($key, $value): string {
+        /** @psalm-suppress MissingClosureParamType */
+        $fetchKey = function (string|int $key, $value): string {
             return (string)$key;
         };
 
