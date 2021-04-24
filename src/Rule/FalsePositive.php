@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Rule;
 
@@ -12,11 +14,8 @@ use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
 class FalsePositive implements RuleInterface
 {
-    private EnvironmentDataLoaderInterface  $metadataLoader;
-
-    public function __construct(EnvironmentDataLoaderInterface $metadataLoader)
+    public function __construct(private EnvironmentDataLoaderInterface $metadataLoader)
     {
-        $this->metadataLoader = $metadataLoader;
     }
 
     public function apply(Entry $entry, EventProcessNodeInterface $event): bool

@@ -7,14 +7,7 @@ use NamespaceProtector\Common\PathInterface;
 
 final class ConfigTemplateCreator implements ConfigTemplateCreatorInterface
 {
-    private string $templateName;
-    private string $configName;
-
-    public function __construct(string $configName, string $templateName)
-    {
-        $this->templateName = $templateName;
-        $this->configName = $configName;
-    }
+    public function __construct(private string $configName,private string $templateName) {}
 
     public function create(PathInterface $destinationPathFileJson): void
     {

@@ -6,15 +6,12 @@ use Webmozart\Assert\Assert;
 
 final class FileSystemPath implements PathInterface
 {
-    private string $path;
 
-    public function __construct(string $path, bool $noCheck = false)
+    public function __construct(private string $path, bool $noCheck = false)
     {
         if ($noCheck === false) {
             Assert::readable($path);
         }
-
-        $this->path = $path;
     }
 
     public function __invoke(): string

@@ -8,12 +8,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 final class EventDispatcher implements EventDispatcherInterface
 {
-    private ListenerProviderInterface $listenerProvider;
-
-    public function __construct(ListenerProviderInterface $listenerProvider)
-    {
-        $this->listenerProvider = $listenerProvider;
-    }
+    public function __construct(private ListenerProviderInterface $listenerProvider) {}
 
     public function dispatch(object $event)
     {

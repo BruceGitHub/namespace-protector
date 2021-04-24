@@ -8,13 +8,10 @@ use NamespaceProtector\Common\PathInterface;
 
 final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
 {
-    private PathInterface $path;
-
-    public function __construct(PathInterface $cachePath)
+    public function __construct(private PathInterface $path)
     {
-        $this->path = $cachePath;
-        if (!\is_dir($this->path->get())) {
-            \safe\mkdir($this->path->get());
+        if (!\is_dir($path->get())) {
+            \safe\mkdir($path->get());
         }
     }
 

@@ -16,29 +16,13 @@ use NamespaceProtector\Result\Factory\CollectionFactoryInterface;
 
 final class NamespaceProtectorProcessor
 {
-    private ComposerJson $composerJson;
-
-    private FileSystemScanner $filesToAnalyser;
-
-    private Analyser $analyser;
-
-    private EnvironmentDataLoaderInterface $environmentDataLoader;
-
-    private CollectionFactoryInterface $collectedFactory;
-
     public function __construct(
-        ComposerJson $composerJson,
-        FileSystemScanner $filesToAnalyser,
-        Analyser $analyser,
-        EnvironmentDataLoader $environmentDataLoader,
-        CollectionFactoryInterface $collectedFactory
-    ) {
-        $this->composerJson = $composerJson;
-        $this->filesToAnalyser = $filesToAnalyser;
-        $this->analyser = $analyser;
-        $this->environmentDataLoader = $environmentDataLoader;
-        $this->collectedFactory = $collectedFactory;
-    }
+        private ComposerJson $composerJson,
+        private FileSystemScanner $filesToAnalyser,
+        private Analyser $analyser,
+        private EnvironmentDataLoader $environmentDataLoader,
+        private CollectionFactoryInterface $collectedFactory
+    ) {}
 
     public function load(): void
     {

@@ -13,15 +13,11 @@ use Countable;
  */
 final class ResultCollectedReadable implements Countable, ResultCollectedInterface
 {
-    /** @var ResultCollectedInterface<T> */
-    private ResultCollectedInterface $resultCollectedImmutable;
-
     /**
      * @param ResultCollectedInterface<T> $resultCollectedImmutable
      */
-    public function __construct(ResultCollectedInterface $resultCollectedImmutable)
+    public function __construct(private ResultCollectedInterface $resultCollectedImmutable)
     {
-        $this->resultCollectedImmutable = $resultCollectedImmutable;
     }
 
     public function count(): int

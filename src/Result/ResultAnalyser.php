@@ -10,13 +10,9 @@ class ResultAnalyser implements ResultAnalyserInterface
 {
     private ResultCollectedReadable $resultCollection;
 
-    private CollectionFactoryInterface $collectedFactory;
-
-    public function __construct(CollectionFactoryInterface $collectedFactory)
+    public function __construct(private CollectionFactoryInterface $collectedFactory)
     {
         $this->resultCollection = $collectedFactory->createEmptyReadOnlyCollection();
-
-        $this->collectedFactory = $collectedFactory;
     }
 
     public function append(ResultProcessedFileInterface $toAppend): void

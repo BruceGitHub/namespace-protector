@@ -14,40 +14,16 @@ final class Config
     public const PLOTTER_TERMINAL = 'plotter-terminal';
     public const PLOTTER_PNG = 'plotter-png';
 
-    private PathInterface $pathStart;
-
-    private PathInterface $pathComposerJson;
-
-    private array $privateEntries;
-
-    private array $publicEntries;
-
-    private string $mode;
-
-    private string $version;
-
-    private bool $enabledCache;
-
-    private string $plotter;
-
     public function __construct(
-        string $version,
-        PathInterface $pathStart,
-        PathInterface $pathComposerJson,
-        array $privateEntries,
-        array $publicEntries,
-        string $mode = self::MODE_PUBLIC,
-        bool $enabledCache = false,
-        string $plotter = self::PLOTTER_TERMINAL
+        private string $version,
+        private PathInterface $pathStart,
+        private PathInterface $pathComposerJson,
+        private array $privateEntries,
+        private array $publicEntries,
+        private string $mode = self::MODE_PUBLIC,
+        private bool $enabledCache = false,
+        private string $plotter = self::PLOTTER_TERMINAL
     ) {
-        $this->version = $version;
-        $this->pathStart = $pathStart;
-        $this->pathComposerJson = $pathComposerJson;
-        $this->privateEntries = $privateEntries;
-        $this->publicEntries = $publicEntries;
-        $this->mode = $mode;
-        $this->enabledCache = $enabledCache;
-        $this->plotter = $plotter;
     }
 
     public function getStartPath(): PathInterface

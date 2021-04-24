@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector;
 
@@ -47,9 +49,13 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
     public function load(): void
     {
         /** @var string|int $value */
-        $fetchValue = function ($key, $value): string {return (string)$value; };
+        $fetchValue = function ($key, $value): string {
+            return (string)$value;
+        };
 
-        $fetchKey = function ($key, $value): string {return (string)$key; };
+        $fetchKey = function ($key, $value): string {
+            return (string)$key;
+        };
 
         $this->collectBaseFunctions = $this->fillFromArray(\get_defined_functions()['internal'], $fetchValue);
         $this->collectBaseInterfaces = $this->fillFromArray(\get_declared_interfaces(), $fetchValue);
@@ -105,6 +111,7 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
             $pos = \strpos($checkValue, self::NAMESPACE_PROJECT);
 
             if ($pos === false) {
+                /** @psalm-suppress RedundantCastGivenDocblockType */
                 $db->add((string)$key, (string)$value);
             }
         }

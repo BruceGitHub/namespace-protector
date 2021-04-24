@@ -29,10 +29,3 @@ services:
     user: '1000'
     volumes:
       - ./../:/app
-
-networks:
-  main-network:
-    ipam:
-      config:
-        - subnet: "192.168.0.0/24"
-          gateway: "192.168.0.1"

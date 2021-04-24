@@ -1,20 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
 final class ErrorResult implements ResultInterface
 {
-    private int $type;
-
-    private int $line;
-
-    private string $use;
-
-    public function __construct(int $line, string $use, int $type)
+    public function __construct(private int $line, private string $use, private int $type)
     {
-        $this->line = $line;
-        $this->use = $use;
-        $this->type = $type;
     }
 
     public function get(): String

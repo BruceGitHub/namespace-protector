@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Rule;
 
@@ -11,15 +13,10 @@ use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
 class IsWithPrivateNamespace implements RuleInterface
 {
-    private Config $config;
-    private IsInConfigureComposerPsr4 $isInConfigureComposerPsr4;
-
     public function __construct(
-        Config $config,
-        IsInConfigureComposerPsr4 $isInConfigureComposerPsr4
+        private Config $config,
+        private IsInConfigureComposerPsr4 $isInConfigureComposerPsr4
     ) {
-        $this->config = $config;
-        $this->isInConfigureComposerPsr4 = $isInConfigureComposerPsr4;
     }
 
     public function apply(Entry $entry, EventProcessNodeInterface $event): bool

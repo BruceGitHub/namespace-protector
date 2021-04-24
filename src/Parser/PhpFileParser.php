@@ -16,29 +16,14 @@ use NamespaceProtector\Parser\Node\NamespaceProtectorVisitorInterface;
 
 final class PhpFileParser implements ParserInterface
 {
-    private \PhpParser\Parser $parser;
-
-    private \PhpParser\NodeTraverserInterface $traverser;
-
-    private \Psr\SimpleCache\CacheInterface $cache;
-
-    private NamespaceProtectorVisitorInterface $namespaceProtectorVisitor;
-
-    private CollectionFactoryInterface $collectedFactory;
-
     public function __construct(
-        \Psr\SimpleCache\CacheInterface $cache,
-        NodeTraverserInterface $nodeTraverserInterface,
-        NamespaceProtectorVisitorInterface $visitor,
-        Parser $parser,
-        CollectionFactoryInterface $collectedFactory
+        private \Psr\SimpleCache\CacheInterface $cache,
+        private NodeTraverserInterface $traverser,
+        private NamespaceProtectorVisitorInterface $namespaceProtectorVisitor,
+        private Parser $parser,
+        private CollectionFactoryInterface $collectedFactory
     ) {
-        $this->cache = $cache;
-        $this->traverser = $nodeTraverserInterface;
-        $this->parser = $parser;
-        $this->namespaceProtectorVisitor = $visitor;
-        $nodeTraverserInterface->addVisitor($visitor);
-        $this->collectedFactory = $collectedFactory;
+        $traverser->addVisitor($namespaceProtectorVisitor);
     }
 
     public function parseFile(PathInterface $pathFile): ResultParserInterface

@@ -1,14 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Parser\Node;
 
 class MatchedResult implements MatchedResultInterface
 {
-    private string $info;
-
-    public function __construct(string $info)
+    public function __construct(private string $info)
     {
-        $this->info = $info;
     }
 
     public function matched(): bool

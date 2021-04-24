@@ -7,16 +7,10 @@ use NamespaceProtector\Entry\Entry;
 
 final class DbKeyValue implements DbKeyValueInterface
 {
-    /** @var array<mixed> */
-    private array $collections;
-
     /**
-     * @param array<string> $initValue
+     * @param array<string> $collections
      */
-    public function __construct(array $initValue = [])
-    {
-        $this->collections = $initValue;
-    }
+    public function __construct(private array $collections = []) {}
 
     public function add(string $key, string $value): void
     {

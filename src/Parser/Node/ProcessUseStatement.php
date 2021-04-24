@@ -17,20 +17,11 @@ use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
 final class ProcessUseStatement
 {
-    private EnvironmentDataLoaderInterface $metadataLoader;
-
-    private Config $appConfig;
-
-    private CacheInterface $cache;
-
     public function __construct(
-        EnvironmentDataLoaderInterface $metadataLoader,
-        Config $appConfig,
-        CacheInterface $cache
+        private EnvironmentDataLoaderInterface $metadataLoader,
+        private Config $appConfig,
+        private CacheInterface $cache
     ) {
-        $this->appConfig = $appConfig;
-        $this->metadataLoader = $metadataLoader;
-        $this->cache = $cache;
     }
 
     public function __invoke(EventProcessNodeInterface $event): void

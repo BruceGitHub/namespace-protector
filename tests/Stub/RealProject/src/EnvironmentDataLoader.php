@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector;
 
@@ -27,12 +29,8 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
     /** @var DbKeyValue */
     private $collectComposerNamespace;
 
-    /** @var ComposerJsonInterface */
-    private $composerJson;
-
-    public function __construct(ComposerJsonInterface $composerJson)
+    public function __construct(private ComposerJsonInterface $composerJson)
     {
-        $this->composerJson = $composerJson;
         $this->initializeVars();
     }
 
@@ -47,12 +45,12 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 
     public function load(): void
     {
-        $fetchValue = function (string $key,string $value): string {
-            return $value; 
+        $fetchValue = function (string $key, string $value): string {
+            return $value;
         };
 
         $fetchKey = function (string $key, string $value): string {
-            return $key; 
+            return $key;
         };
 
         $this->collectBaseFunctions = $this->fillFromArray(\get_defined_functions()['internal'], $fetchValue);

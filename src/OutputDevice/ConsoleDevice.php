@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\OutputDevice;
 
@@ -9,14 +11,11 @@ use NamespaceProtector\Result\ResultProcessedFileInterface;
 
 final class ConsoleDevice implements OutputDeviceInterface
 {
-    private OutputInterface $outputInterface;
-
     private int $totalErrors;
 
-    public function __construct(OutputInterface $outputInterface)
+    public function __construct(private OutputInterface $outputInterface)
     {
         $this->totalErrors = 0;
-        $this->outputInterface = $outputInterface;
     }
 
     public function output(ResultProcessorInterface $value): void

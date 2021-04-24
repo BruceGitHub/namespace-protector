@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Metadata;
 
@@ -11,13 +13,10 @@ use NamespaceProtector\Parser\Node\MatchedResultInterface;
 
 class VendorNamespace implements VendorNamespaceInterface
 {
-    private MatchCollectionInterface $macher;
-
     private DbKeyValue $collection;
 
-    public function __construct(MatchCollectionInterface $macher)
+    public function __construct(private MatchCollectionInterface $macher)
     {
-        $this->macher = $macher;
         $this->collection = new DbKeyValue();
     }
 

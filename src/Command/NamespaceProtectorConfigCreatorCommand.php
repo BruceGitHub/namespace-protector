@@ -17,14 +17,12 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
     const NAMESPACE_PROTECTOR_JSON = 'namespace-protector-config.json';
     const KEY_COMPOSER = 'brucegithub/namespace-protector';
 
-    private ConfigTemplateCreatorInterface $configTemplateCreator;
 
     public function __construct(
         string $name,
-        ConfigTemplateCreatorInterface $configTemplateCreator
+        private ConfigTemplateCreatorInterface $configTemplateCreator
     ) {
         parent::__construct($name);
-        $this->configTemplateCreator = $configTemplateCreator;
     }
 
     protected function configure(): void

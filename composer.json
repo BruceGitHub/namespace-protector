@@ -24,7 +24,7 @@
     "phpspec/prophecy-phpunit": "^2.0",
     "phpunit/phpunit": "^9",
     "roave/security-advisories": "dev-master",
-    "vimeo/psalm": "^4.2"
+    "vimeo/psalm": "^4.4"
   },
   "autoload": {
     "psr-4": {

@@ -1,21 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Parser\Node\Event;
 
 final class FoundUseNamespace implements EventProcessNodeInterface
 {
-    private int $line;
-
-    private string $nodeName;
-
     private string $additionalInformation;
 
     private bool $erroDetect = false;
 
-    public function __construct(int $line, string $nodeName)
+    public function __construct(private int $line, private string $nodeName)
     {
-        $this->line = $line;
-        $this->nodeName = $nodeName;
         $this->additionalInformation = '';
     }
 

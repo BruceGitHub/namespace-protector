@@ -1,19 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
 final class ResultProcessedFileReadOnly implements ResultProcessedFileInterface
 {
-    private string $file;
-
-    /** @var array<ErrorResult> */
-    private array $conflicts = [];
-
     /** @param array<ErrorResult> $conflicts*/
-    public function __construct(string $file, array $conflicts)
+    public function __construct(private string $file, private array $conflicts)
     {
-        $this->file = $file;
-        $this->conflicts = $conflicts;
     }
 
     public function getFileName(): String

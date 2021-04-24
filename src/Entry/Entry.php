@@ -6,13 +6,9 @@ use Webmozart\Assert\Assert;
 
 final class Entry
 {
-    private string $entry;
-
-    public function __construct(string $entry)
+    public function __construct(private string $entry)
     {
         Assert::notEmpty($entry);
-
-        $this->entry = $entry;
     }
 
     public function equalTo(self $other): bool

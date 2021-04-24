@@ -6,14 +6,11 @@ namespace NamespaceProtector\Result;
 
 final class ResultProcessedMutableFile implements ResultProcessedMutableFileInterface
 {
-    private string $file;
-
     /** @var array<ErrorResult> */
-    private array$conflicts = [];
+    private array $conflicts = [];
 
-    public function __construct(string $file)
+    public function __construct(private string $file)
     {
-        $this->file = $file;
     }
 
     public function getFileName(): String

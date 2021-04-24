@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Scanner;
 
@@ -8,21 +10,15 @@ use NamespaceProtector\Common\FileSystemPath;
 
 final class FileSystemScanner implements ScannerInterface
 {
-    /** @var array<PathInterface>  */
-    private array $startPaths;
 
     /** @var array<PathInterface>  */
     private array $fileLoaded = [];
 
-    private string $extensions;
-
     /**
      * @param array<PathInterface> $startPaths
      */
-    public function __construct(array $startPaths, string $extensions = 'php')
+    public function __construct(private array $startPaths, private  string $extensions = 'php')
     {
-        $this->startPaths = $startPaths;
-        $this->extensions = $extensions;
     }
 
     public function load(): void

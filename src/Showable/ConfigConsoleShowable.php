@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Showable;
 
@@ -7,11 +9,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigConsoleShowable implements ConfigShowableInterface
 {
-    private OutputInterface $console;
-
-    public function __construct(OutputInterface $outputInterface)
+    public function __construct(private OutputInterface $console)
     {
-        $this->console = $outputInterface;
     }
 
     public function show(RootConfig\Config $config): void

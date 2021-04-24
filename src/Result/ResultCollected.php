@@ -13,15 +13,11 @@ use ArrayIterator;
  */
 final class ResultCollected implements ResultCollectedInterface
 {
-    /** @var  array<int, T> */
-    private array $list;
-
     /**
      * @param  array<int, T> $list
      */
-    public function __construct(array $list = [])
+    public function __construct(private array $list = [])
     {
-        $this->list = $list;
     }
 
     /**

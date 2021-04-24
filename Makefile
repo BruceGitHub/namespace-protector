@@ -18,7 +18,7 @@ install:
 	install_csfixer
 
 psalm:
-	docker-compose -f .container/docker-compose.yml run --rm php ./vendor/bin/psalm
+	docker-compose -f .container/docker-compose.yml run --rm php php ./vendor/bin/psalm
 
 psalm-with-issue:
 	docker-compose -f .container/docker-compose.yml run --rm php ./vendor/bin/psalm --show-info=true
@@ -34,7 +34,7 @@ start:
 	docker-compose -f ./.container/docker-compose.yml up -d php
 
 shell: start
-	docker-compose -f ./.container/docker-compose.yml exec php sh
+	docker-compose -f ./.container/docker-compose.yml run php sh
 
 stop:
 	docker-compose -f ./.container/docker-compose.yml down
@@ -45,7 +45,7 @@ composer_shell:
 	docker-compose -f ./.container/docker-compose.yml run --rm composer sh
 
 test:
-	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
+	docker-compose -f ./.container/docker-compose.yml run php php ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
 
 test-filter:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --filter=$(filter)

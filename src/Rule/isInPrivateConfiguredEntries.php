@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Rule;
 
@@ -12,11 +14,8 @@ use NamespaceProtector\Parser\Node\Event\EventProcessNodeInterface;
 
 class IsInPrivateConfiguredEntries implements RuleInterface
 {
-    private Config $config;
-
-    public function __construct(Config $config)
+    public function __construct(private Config $config)
     {
-        $this->config = $config;
     }
 
     public function apply(Entry $entry, EventProcessNodeInterface $event): bool
