@@ -59,6 +59,22 @@ Trought the json configuration it's possible define
 ## with composer 
 `composer require --dev brucegithub/namespace-protector`
 
+## with phar 
+Adds this to composer.json
+```json
+"repositories": [{
+  "type": "vcs",
+  "url": "https://github.com/brucegithub/namespace-protector-phar.git"
+}],
+"require-dev": {
+     "brucegithub/namespace-protector-phar": "dev-main"
+},
+```
+Then
+```sh
+composer update
+```
+
 ## setup 
 `bin/namespace-protector create-config`
 
