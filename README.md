@@ -52,12 +52,13 @@ Trought the json configuration it's possible define
 - mode `public` default mode, in this setup only a private namespace it's validated
 - mode `private vendor` in which each access of vendor namespace trigger a violation if was not added public namespace.
 
-[![asciicast](https://asciinema.org/a/411325.svg)](https://asciinema.org/a/411325)
 
 # Install and Run 
 
 ## with composer 
 `composer require --dev brucegithub/namespace-protector`
+[![asciicast](https://asciinema.org/a/411325.svg)](https://asciinema.org/a/411325)
+
 
 ## with phar 
 Adds this to composer.json
@@ -66,19 +67,16 @@ Adds this to composer.json
   "type": "vcs",
   "url": "https://github.com/brucegithub/namespace-protector-phar.git"
 }],
-"require-dev": {
-     "brucegithub/namespace-protector-phar": "dev-main"
-},
 ```
-Then
-```sh
-composer update
-```
+composer require --dev brucegithub/namespace-protector-phar --no-cache "dev-main"
+[![asciicast](https://asciinema.org/a/411326.svg)](https://asciinema.org/a/411326)
 
 ## setup 
-`bin/namespace-protector create-config`
+`vendor/bin/namespace-protector create-config`
 
 ## run 
+`vendor/bin/namespace-protector validate-namespace`
+
 ```bash
 ➜  namespace-protector git:(master) ✗ vendor/bin/namespace-protector validate-namespace
 |Dump config:
