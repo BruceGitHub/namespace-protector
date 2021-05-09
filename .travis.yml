@@ -3,7 +3,7 @@ dist: trusty
 os: linux
 
 php:
-  - 8.0.3
+  - 8.0
 
 before_install:
 install: composer install --no-interaction
