@@ -10,7 +10,7 @@ use Webmozart\Assert\Assert;
 final class ComposerJson implements ComposerJsonInterface
 {
     public const FILE_NAME = 'composer.json';
-    public const NAME_PROJECT_IN_COMPOSER = 'brucegithub/namespace-protector';
+    public const PROJECT_NAME_IN_COMPOSER = 'brucegithub/namespace-protector';
 
     private string $fileSystemPathComposerJson;
 

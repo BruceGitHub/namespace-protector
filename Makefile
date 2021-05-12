@@ -17,6 +17,20 @@ install:
 	install_phpunit &&
 	install_csfixer
 
+phar_build:
+	box build -vvv
+	mv ./output/namespace-protector.phar ./output/namespace-protector
+	mv ./output/namespace-protector ./../namespace-protector-phar/
+
+docker_build:
+	docker build . -t brucegithub/namespace-protector:0.1.0 -f .container/Dockerfile
+
+docker_run:
+	docker run --rm brucegithub/namespace-protector:0.1.0 list
+
+docker_shell:
+	docker run --rm -ti brucegithub/namespace-protector:0.1.0 sh
+
 psalm:
 	docker-compose -f .container/docker-compose.yml run --rm php php ./vendor/bin/psalm
 

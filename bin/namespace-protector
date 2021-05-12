@@ -2,7 +2,7 @@
 <?php
 
 if (version_compare(PHP_VERSION, '7.4.0') < 0) {
-    fwrite(STDERR, "PHP 7.4 is required\n");
+    fwrite(STDERR, "PHP 7.4 or major is required\n");
     exit(1);
 }
 
@@ -25,7 +25,8 @@ use NamespaceProtector\Config\ConfigTemplateCreator;
 
 const FILENAME_TEMPLATE = 'template-config-json';
 
-$app = new Application('Namespace Protector','0.1.0 (Alpha)');
+//todo: use @package_version@ 
+$app = new Application('Namespace Protector','0.1.0 à(Alpha)');
 $app->add(new NamespaceProtectorCommand());
 $app->add(new NamespaceProtectorConfigCreatorCommand(
             'Namespace-Protector-Config-Create', 
@@ -38,7 +39,7 @@ $app->add(new NamespaceProtectorConfigCreatorCommand(
 
 try {
     $app->run();
-} catch (Exception $e) {
-    echo "Unexpected error...";
+} catch (Throwable $e) {
+    echo "Unexpected error: ". $e->getMessage();
     return 1;
 }

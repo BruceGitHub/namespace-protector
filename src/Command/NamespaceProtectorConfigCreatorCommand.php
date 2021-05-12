@@ -59,10 +59,7 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
                 true
             );
 
-            if (isset($jsonArray['require-dev'][self::KEY_COMPOSER])
-                && $jsonArray['require-dev'][self::KEY_COMPOSER] !== ComposerJson::NAME_PROJECT_IN_COMPOSER) {
-                return new FileSystemPath($pathComposer);
-            }
+            return new FileSystemPath($pathComposer);
         }
 
         throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSER_JSON_NOT_READABLE);
