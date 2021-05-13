@@ -23,12 +23,9 @@ final class ListenerProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
-        $listeners = [];
         $eventClass = \get_class($event);
-        foreach ($this->map[$eventClass] as  $listenerInstanceEvent) {
-            $listeners[] = $listenerInstanceEvent;
-        }
 
-        return $listeners;
+        /** @psalm-suppress UnusedClosureParam */
+        return array_filter($this->map[$eventClass], fn ($item) => true  );
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\Event;
 
@@ -8,7 +10,9 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 final class EventDispatcher implements EventDispatcherInterface
 {
-    public function __construct(private ListenerProviderInterface $listenerProvider) {}
+    public function __construct(private ListenerProviderInterface $listenerProvider)
+    {
+    }
 
     public function dispatch(object $event)
     {

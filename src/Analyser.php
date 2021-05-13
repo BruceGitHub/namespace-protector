@@ -29,17 +29,17 @@ final class Analyser
     public function execute(PathInterface $filePath): ResultAnalyserInterface
     {
         $cumulativeParserResult = new ResultParser($this->collectedFactory->createEmptyMutableCollection());
-
-        foreach ($this->parserList as $currentParser) {
-            $resultOfcurrentParsedFile = $currentParser->parseFile($filePath);
-            $cumulativeParserResult->append($resultOfcurrentParsedFile);
-        }
-
         $resultsParser = new ResultAnalyser($this->collectedFactory);
 
-        foreach ($cumulativeParserResult->getResultCollectionReadable() as $currentParserResult) {
-            $resultsParser->append($currentParserResult);
-        }
+        array_map(
+            fn ($currentParser) => $cumulativeParserResult->append($currentParser->parseFile($filePath)),
+            $this->parserList
+        );
+
+        array_map(
+            fn ($currentParser) => $resultsParser->append($currentParser),
+            iterator_to_array($cumulativeParserResult->getResultCollectionReadable(), true)
+        );
 
         return $resultsParser;
     }

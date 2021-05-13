@@ -45,10 +45,12 @@ class ConfigConsoleShowable implements ConfigShowableInterface
     {
         $prettyPrintNamespaceToValidate = "\n";
 
-        /** @var string $namespace */
-        foreach ($entries as $namespace) {
-            $prettyPrintNamespaceToValidate .= '|       >' . $namespace . \PHP_EOL;
-        }
+        /** @psalm-suppress UnusedVariable */
+        array_walk(
+            $entries,
+            fn (string $namespace): string => $prettyPrintNamespaceToValidate .= '|       >' . $namespace . \PHP_EOL,
+        );
+
         return $prettyPrintNamespaceToValidate;
     }
 }
