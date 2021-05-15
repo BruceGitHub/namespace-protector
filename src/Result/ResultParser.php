@@ -20,8 +20,9 @@ class ResultParser implements ResultParserInterface
 
     public function append(ResultParserInterface $toAppend): void
     {
-        foreach ($toAppend->getResultCollectionReadable() as $item) {
-            $this->collectedResultParser->addResult($item);
-        }
+        array_map(
+            fn ($item) => $this->collectedResultParser->addResult($item),
+            iterator_to_array($toAppend->getResultCollectionReadable()->getIterator())
+        );
     }
 }

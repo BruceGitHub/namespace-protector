@@ -39,22 +39,22 @@ final class ConsoleDevice implements OutputDeviceInterface
     private function plot(ResultProcessedFileInterface $processedFileResult): string
     {
         $resultbuffer = '';
-        $resultTitle = '';
+        $result = '';
 
         if (\count($processedFileResult->getConflicts()) > 0) {
-            $resultTitle = "\nProcessed file: " . $processedFileResult->getFileName() . "\n";
+            $result = "\nProcessed file: " . $processedFileResult->getFileName() . "\n";
         }
 
         foreach ($processedFileResult->getConflicts() as $conflict) {
             $resultbuffer .= $this->plotResult($conflict);
             $this->totalErrors++;
         }
-
+        
         if ($resultbuffer === '') {
             return $resultbuffer;
         }
 
-        return $resultTitle . $resultbuffer;
+        return $result . $resultbuffer;
     }
 
     private function plotResult(ErrorResult $result): string

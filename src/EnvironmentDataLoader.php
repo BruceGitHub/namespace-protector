@@ -61,12 +61,17 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
         $this->collectBaseInterfaces = $this->fillFromArray(\get_declared_interfaces(), $fetchValue);
 
         $internalClass = [];
-        foreach (get_declared_classes() as $class) {
-            $aClass = new ReflectionClass($class);
-            if ($aClass->isInternal()) {
-                $internalClass[$class] = $aClass->getName();
-            }
-        }
+
+        /** @psalm-suppress UnusedVariable */
+        array_map(
+            function (string $class) use ($internalClass): void {
+                $aClass = new ReflectionClass($class);
+                if ($aClass->isInternal()) {
+                    $internalClass[$class] = $aClass->getName();
+                }
+            },
+            get_declared_classes()
+        );
 
         $this->collectBaseClasses = $this->fillFromArray($internalClass, $fetchKey);
         $this->collectBaseConstants = $this->fillFromArray(\get_defined_constants(), $fetchKey);

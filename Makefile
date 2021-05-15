@@ -34,6 +34,9 @@ docker_shell:
 psalm:
 	docker-compose -f .container/docker-compose.yml run --rm php php ./vendor/bin/psalm
 
+psalm-clearcache:
+	docker-compose -f .container/docker-compose.yml run --rm php php ./vendor/bin/psalm --clear-cache
+
 psalm-with-issue:
 	docker-compose -f .container/docker-compose.yml run --rm php ./vendor/bin/psalm --show-info=true
 
@@ -59,7 +62,7 @@ composer_shell:
 	docker-compose -f ./.container/docker-compose.yml run --rm composer sh
 
 test:
-	docker-compose -f ./.container/docker-compose.yml run php php ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
+	docker-compose -f ./.container/docker-compose.yml run php php ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --debug
 
 test-filter:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --filter=$(filter)

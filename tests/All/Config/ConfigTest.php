@@ -87,19 +87,4 @@ class ConfigTest extends AbstractUnitTestCase
         return \json_encode($data);
         return $data;
     }
-
-    /** @test */
-    public function it_load_default_config(): void
-    {
-        $this->markTestSkipped();
-        $configMaker = new ConfigMaker();
-        $configLoaded = $configMaker->createFromFile(
-            new FileSystemPath(
-                __DIR__
-                                . '/..'
-                                . '/..'
-                                . '/../src/Config/template-config-json'
-            )
-        );
-    }
 }

@@ -44,15 +44,12 @@ final class PhpFileParser implements ParserInterface
 
         $processFileResult = new ResultProcessedMutableFile($pathFile->get());
 
-        foreach ($this->namespaceProtectorVisitor->getStoreProcessedResult() as $singleConflict) {
-            $processFileResult->addConflic($singleConflict);
-        }
-
-        $collection = $this->collectedFactory->createMutableCollection(
-            [
-                $processFileResult->getReadOnlyProcessedFile(),
-            ]
+        array_map(
+            fn ($item) => $processFileResult->addConflic($item),
+            iterator_to_array($this->namespaceProtectorVisitor->getStoreProcessedResult()->getIterator())
         );
+
+        $collection = $this->collectedFactory->createMutableCollection([$processFileResult->getReadOnlyProcessedFile()]);
 
         return new ResultParser($collection);
     }

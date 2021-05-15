@@ -18,9 +18,7 @@ class ConsoleDeviceTest extends AbstractUnitTestCase
     /** @test */
     public function it_output_work(): void
     {
-        $consoleDevice = new ConsoleDevice(
-            new ConsoleOutput()
-        );
+        $consoleDevice = new ConsoleDevice(new ConsoleOutput());
         \ob_start();
 
         $rpf = new ResultProcessedMutableFile('FileA');

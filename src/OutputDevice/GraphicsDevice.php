@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace NamespaceProtector\OutputDevice;
 
@@ -13,9 +15,10 @@ final class GraphicsDevice implements OutputDeviceInterface
         $graph->setAttribute('graphviz.name', 'G');
         $graph->setAttribute('graphviz.graph.rankdir', 'LR');
 
-        foreach ($value->getProcessedResult() as $processedFileResult) {
-            $this->plot($graph, $processedFileResult);
-        }
+        array_map(
+            fn ($processedFileResult) => $this->plot($graph, $processedFileResult),
+            iterator_to_array($value->getProcessedResult()->getIterator())
+        );
 
         $graphviz = new \Graphp\GraphViz\GraphViz();
         $graphviz->display($graph);
@@ -30,16 +33,19 @@ final class GraphicsDevice implements OutputDeviceInterface
             $blue = $graph->createVertex($fileName, true);
             $blue->setAttribute('graphviz.color', 'blue');
 
-            foreach ($processedFileResult->getConflicts() as $conflict) {
-                /** @var int $fileName */
-                $fileName = $conflict->get();
+            array_map(
+                function ($conflict) use ($graph, $blue): void {
+                    /** @var int $fileName */
+                    $fileName = $conflict->get();
 
-                $red = $graph->createVertex($fileName, true);
-                $red->setAttribute('graphviz.color', 'red');
+                    $red = $graph->createVertex($fileName, true);
+                    $red->setAttribute('graphviz.color', 'red');
 
-                $edge = $blue->createEdgeTo($red);
-                $edge->setAttribute('graphviz.color', 'grey');
-            }
+                    $edge = $blue->createEdgeTo($red);
+                    $edge->setAttribute('graphviz.color', 'grey');
+                },
+                $processedFileResult->getConflicts()
+            );
         }
     }
 }

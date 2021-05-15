@@ -19,12 +19,10 @@ class ResultAnalyser implements ResultAnalyserInterface
     {
         $collection = $this->collectedFactory->createEmptyMutableCollection();
 
-        /**
-         * @var ResultProcessedFileInterface $item
-         */
-        foreach ($this->resultCollection as $item) {
-            $collection->addResult($item);
-        }
+        array_map(
+            fn (ResultProcessedFileInterface $item) => $collection->addResult($item),
+            iterator_to_array($this->resultCollection->getIterator())
+        );
 
         $collection->addResult($toAppend);
 

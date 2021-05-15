@@ -2,7 +2,7 @@ version: '2'
 
 services:
   php:
-    image: image-namespace-protector
+    image: brucegithub/namespace-protector:0.1.0
     user: '1000'
     build:
       context: .
