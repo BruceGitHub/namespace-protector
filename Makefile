@@ -62,7 +62,7 @@ composer_shell:
 	docker-compose -f ./.container/docker-compose.yml run --rm composer sh
 
 test:
-	docker-compose -f ./.container/docker-compose.yml run php php ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --debug
+	docker-compose -f ./.container/docker-compose.yml run php php ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
 
 test-filter:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --filter=$(filter)
