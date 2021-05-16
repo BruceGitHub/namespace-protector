@@ -32,23 +32,23 @@ docker_shell:
 	docker run --rm -ti brucegithub/namespace-protector:0.1.0 sh
 
 psalm:
-	docker-compose -f .container/docker-compose.yml run --rm php php ./vendor/bin/psalm
+	docker-compose -f .container/docker-compose.yml exec php php ./vendor/bin/psalm
 
 psalm-clearcache:
-	docker-compose -f .container/docker-compose.yml run --rm php php ./vendor/bin/psalm --clear-cache
+	docker-compose -f .container/docker-compose.yml exec php php ./vendor/bin/psalm --clear-cache
 
 psalm-with-issue:
-	docker-compose -f .container/docker-compose.yml run --rm php ./vendor/bin/psalm --show-info=true
+	docker-compose -f .container/docker-compose.yml exec php php ./vendor/bin/psalm --show-info=true
 
 
 csf:
-	./bin/php-cs-fixer fix --verbose
+	docker-compose -f ./.container/docker-compose.yml exec php7 php ./bin/php-cs-fixer fix --verbose
 
 run:
 	./bin/namespace-protector v
 
 start:
-	docker-compose -f ./.container/docker-compose.yml up -d php
+	docker-compose -f ./.container/docker-compose.yml up php php7
 
 shell: start
 	docker-compose -f ./.container/docker-compose.yml run php sh
@@ -62,7 +62,7 @@ composer_shell:
 	docker-compose -f ./.container/docker-compose.yml run --rm composer sh
 
 test:
-	docker-compose -f ./.container/docker-compose.yml run php php ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
+	docker-compose -f ./.container/docker-compose.yml exec php php ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects
 
 test-filter:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --filter=$(filter)

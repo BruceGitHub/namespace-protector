@@ -11,7 +11,11 @@
             "name": "*.php",
             "exclude": [
                 "tests",
-                "mikey179"
+                "mikey179",
+                "phpspec",
+                "phpunit",
+                "roave",
+                "vimeo"
             ],
             "in": "vendor"
         }
