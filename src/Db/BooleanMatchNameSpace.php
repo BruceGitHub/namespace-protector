@@ -35,8 +35,7 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
             return true;
         }
 
-        $pos = \strpos($matchMe, $checkEntry);
-        if ($pos === false) {
+        if (\str_contains($matchMe, $checkEntry) === false) {
             return false;
         }
 

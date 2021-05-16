@@ -113,9 +113,8 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
         foreach ($collections as $key => $value) {
             /** @var string $checkValue */
             $checkValue = $fetchValue($key, $value);
-            $pos = \strpos($checkValue, self::NAMESPACE_PROJECT);
 
-            if ($pos === false) {
+            if (\str_contains($checkValue, self::NAMESPACE_PROJECT) === false) {
                 /** @psalm-suppress RedundantCastGivenDocblockType */
                 $db->add((string)$key, (string)$value);
             }
