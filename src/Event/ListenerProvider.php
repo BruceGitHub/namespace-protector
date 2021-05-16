@@ -26,6 +26,6 @@ final class ListenerProvider implements ListenerProviderInterface
         $eventClass = \get_class($event);
 
         /** @psalm-suppress UnusedClosureParam */
-        return array_filter($this->map[$eventClass], fn ($item) => true  );
+        return array_filter($this->map[$eventClass], fn ($item) => true);
     }
 }
