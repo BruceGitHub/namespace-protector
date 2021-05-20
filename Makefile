@@ -22,7 +22,13 @@ phar_build:
 	mv ./output/namespace-protector.phar ./output/namespace-protector
 	mv ./output/namespace-protector ./../namespace-protector-phar/
 
-docker_build:
+docker_command_build:
+	docker build . -t brucedockerhub/namespace-protector:0.1.0 --no-cache  -f .container/DockerCommand/Dockerfile
+
+docker_command_push:
+	docker push brucedockerhub/namespace-protector:0.1.0
+
+docker_test_build:
 	docker build . -t brucegithub/namespace-protector:0.1.0 -f .container/Dockerfile
 
 docker_run:

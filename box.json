@@ -13,9 +13,7 @@
                 "tests",
                 "mikey179",
                 "phpspec",
-                "phpunit",
-                "roave",
-                "vimeo"
+                "roave"
             ],
             "in": "vendor"
         }

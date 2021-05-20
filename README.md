@@ -52,15 +52,13 @@ Trought the json configuration it's possible define
 - mode `public` default mode, in this setup only a private namespace it's validated
 - mode `private vendor` in which each access of vendor namespace trigger a violation if was not added public namespace.
 
-
 # Install and Run 
 
-## with composer 
+## with Composer 
 `composer require --dev brucegithub/namespace-protector`
 [![asciicast](https://asciinema.org/a/411325.svg)](https://asciinema.org/a/411325)
 
-
-## with phar 
+## with Phar 
 Adds this to composer.json
 ```json
 "repositories": [{
@@ -70,6 +68,12 @@ Adds this to composer.json
 ```
 composer require --dev brucegithub/namespace-protector-phar --no-cache "dev-main"
 [![asciicast](https://asciinema.org/a/411326.svg)](https://asciinema.org/a/411326)
+
+## with Docker 
+```
+docker run  --rm -it -v $(PWD):/namespace-protector brucedockerhub/namespace-protector:0.1.0 create-config
+docker run  --rm -it -v $(PWD):/namespace-protector brucedockerhub/namespace-protector:0.1.0 validate-namespace
+```
 
 ## setup 
 `vendor/bin/namespace-protector create-config`
