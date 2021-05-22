@@ -71,8 +71,8 @@ composer require --dev brucegithub/namespace-protector-phar --no-cache "dev-main
 
 ## with Docker 
 ```
-docker run  --rm -it -v $(PWD):/namespace-protector brucedockerhub/namespace-protector:0.1.0 create-config
-docker run  --rm -it -v $(PWD):/namespace-protector brucedockerhub/namespace-protector:0.1.0 validate-namespace
+docker run  --rm -it -v $(pwd):/namespace-protector brucedockerhub/namespace-protector:0.1.0 create-config
+docker run  --rm -it -v $(pwd):/namespace-protector brucedockerhub/namespace-protector:0.1.0 validate-namespace
 ```
 
 ## setup 
