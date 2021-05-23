@@ -21,10 +21,20 @@ final class GraphicsDevice implements OutputDeviceInterface
         );
 
         $graphviz = new \Graphp\GraphViz\GraphViz();
-        $graphviz->display($graph);
+        $tmpFile = $graphviz->createImageFile($graph);        
+        $buffer = \Safe\file_get_contents($tmpFile);
+
+        $destFile = $tmpFile;
+        //echo $destFile . PHP_EOL;
+
+        $destPathFile = 'violations.png';
+        //echo $destPathFile . PHP_EOL;
+
+        \Safe\file_put_contents($destPathFile, $buffer);
+        echo 'Graph file: ' . ($destPathFile) . PHP_EOL;
     }
 
-    public function plot(\Fhaculty\Graph\Graph $graph, ResultProcessedFileInterface $processedFileResult): void
+    private function plot(\Fhaculty\Graph\Graph $graph, ResultProcessedFileInterface $processedFileResult): void
     {
         if (\count($processedFileResult->getConflicts()) > 0) {
             /** @var int $fileName */

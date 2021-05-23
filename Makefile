@@ -18,15 +18,17 @@ install:
 	install_csfixer
 
 phar_build:
-	box build -vvv
-	mv ./output/namespace-protector.phar ./output/namespace-protector
-	mv ./output/namespace-protector ./../namespace-protector-phar/
+	box build -v
+	mv ./output/namespace-protector.phar .phar/namespace-protector
 
 docker_command_build:
-	docker build . -t brucedockerhub/namespace-protector:0.1.0 --no-cache  -f .container/DockerCommand/Dockerfile
+	docker build . -t brucedockerhub/namespace-protector:0.1.0  -f .container/DockerCommand/Dockerfile
 
 docker_command_push:
 	docker push brucedockerhub/namespace-protector:0.1.0
+
+docker_command_shell:
+	docker run --entrypoint /bin/sh --rm -it -v $(PWD):/namespace-protector brucedockerhub/namespace-protector:0.1.0
 
 docker_test_build:
 	docker build . -t brucegithub/namespace-protector:0.1.0 -f .container/Dockerfile
