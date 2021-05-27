@@ -20,6 +20,7 @@ install:
 phar_build:
 	box build -v
 	mv ./output/namespace-protector.phar .phar/namespace-protector
+	cp .phar/namespace-protector ./../namespace-protector-phar/namespace-protector
 
 docker_command_build:
 	docker build . -t brucedockerhub/namespace-protector:0.1.0  -f .container/DockerCommand/Dockerfile
