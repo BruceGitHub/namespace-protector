@@ -21,11 +21,8 @@ final class GraphicsDevice implements OutputDeviceInterface
         );
 
         $graphviz = new \Graphp\GraphViz\GraphViz();
-        $tmpFile = $graphviz->createImageFile($graph);        
+        $tmpFile = $graphviz->createImageFile($graph);
         $buffer = \Safe\file_get_contents($tmpFile);
-
-        $destFile = $tmpFile;
-        //echo $destFile . PHP_EOL;
 
         $destPathFile = 'violations.png';
         //echo $destPathFile . PHP_EOL;

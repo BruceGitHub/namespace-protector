@@ -38,6 +38,5 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
 
         $this->assertStringContainsString('Processed file: ./tests/Stub/targetProject/src/First.php', $totalOutput);
         $this->assertStringContainsString("\t > ERROR Line: 5 of use dummy\bovigo\\vfs\\vfsStream", $totalOutput);
-        $this->assertStringContainsString("\t > ERROR Line: 11 of use \Some", $totalOutput);
     }
 }

@@ -98,4 +98,16 @@ abstract class AbstractUnitTestCase extends TestCase
             $this->assertContains($expected, $arr);
         }
     }
+
+    public function assertAbsentsConflicts(ResultCollectedReadable $iterable): void
+    {
+        $iterable->getIterator()->rewind();
+
+        /** @var ResultProcessedFile $item */
+        foreach ($iterable as $item) {
+            foreach ($item->getConflicts() as $c) {
+                $this->fail('Expected no violations: ' . $c->get());
+            }
+        }
+    }
 }

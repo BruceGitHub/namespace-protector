@@ -20,6 +20,10 @@ class FalsePositive implements RuleInterface
 
     public function apply(Entry $entry, EventProcessNodeInterface $event): bool
     {
+        if ($this->isRootNamespace($entry)) {
+            return true;
+        }
+
         $entry = $this->stripFirstSlash($entry);
 
         if ($this->valueExist($this->metadataLoader->getCollectBaseConstants(), new BooleanMatchKey(), $entry)) {
@@ -38,6 +42,18 @@ class FalsePositive implements RuleInterface
             return true;
         }
 
+        return false;
+    }
+
+    private function isRootNamespace(Entry $entry): bool
+    {
+        $v = $entry->get();
+        if ($v[0] === '\\' && \substr_count($v,'\\') === 1) {
+            //var_dump('root: ' . $entry->get());
+            return true;
+        }
+
+        //var_dump('root2: ' . $entry->get());
         return false;
     }
 

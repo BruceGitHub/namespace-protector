@@ -324,6 +324,23 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $this->assertCount(0, $result->getResultCollectionReadable());
     }
 
+    /** @test */
+    public function it_no_violations_when_script_uses_root_namespace(): void
+    {
+        $fileSystem = $this->StartBuildFileSystem()
+            ->addFile('namespace-protector-config-mod-private.json', 'json', 'json')
+            ->addFile('FileThatUseRootNamespace.php', 'php', 'files')
+            ->buildFileSystemUrl();
+
+        $phpFileParser = $this->createPhpFileParser($fileSystem . '/json/namespace-protector-config-mod-private.json');
+
+        //act
+        $result = $phpFileParser->parseFile(new FileSystemPath($fileSystem . '/files/FileThatUseRootNamespace.php'));
+
+        $this->assertCount(0, $result->getResultCollectionReadable());
+        $this->assertAbsentsConflicts($result->getResultCollectionReadable());
+    }
+
     private function getEnvironmentMock(
         array $constans = [],
         array $baseFunctions = [],
@@ -389,6 +406,5 @@ class PhpFileParserTest extends AbstractUnitTestCase
         $data['public-entries'] = $nsPublic;
 
         return \json_encode($data);
-        return $data;
     }
 }
