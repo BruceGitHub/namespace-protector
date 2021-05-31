@@ -9,5 +9,7 @@ class First
         $a = new \NSA();
         $b = \nsB::SOME_VALUE;
         $c = \nsC;
+        \RuntimeException;
+        throw \RuntimeException;
     }
 }

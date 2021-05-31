@@ -76,7 +76,6 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
         $this->collectBaseClasses = $this->fillFromArray($internalClass, $fetchKey);
         $this->collectBaseConstants = $this->fillFromArray(\get_defined_constants(), $fetchKey);
         $this->collectComposerNamespace = $this->fillFromArray($this->composerJson->getPsr4Ns(), $fetchKey);
-
         $this->vendorNamespaces->load();
     }
 
@@ -105,26 +104,32 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
         return $this->collectComposerNamespace;
     }
 
-    private function fillFromArray(array $collections, Closure $fetchValue): DbKeyValue
-    {
-        $db = new DbKeyValue();
-
-        /** @var string $value */
-        foreach ($collections as $key => $value) {
-            /** @var string $checkValue */
-            $checkValue = $fetchValue($key, $value);
-
-            if (\str_contains($checkValue, self::NAMESPACE_PROJECT) === false) {
-                /** @psalm-suppress RedundantCastGivenDocblockType */
-                $db->add((string)$key, (string)$value);
-            }
-        }
-
-        return $db;
-    }
-
     public function vendorNamespaces(): VendorNamespaceInterface
     {
         return $this->vendorNamespaces;
     }
+
+    private function fillFromArray(array $collections, Closure $fetchStrategy): DbKeyValue
+    {
+        $db = new DbKeyValue();
+
+        \array_map(
+            /** 
+             * @param array-key $key 
+             * @param mixed $value
+            */
+            function (string $key, $value) use ($db, $fetchStrategy) {
+
+                /** @var string $checkValue */
+                $checkValue = $fetchStrategy($key, $value);
+
+                $db->add($checkValue, $checkValue);
+            },
+            array_keys($collections),
+            $collections
+        );
+
+        return $db;
+    }
+
 }
