@@ -40,6 +40,9 @@ docker_run:
 docker_shell:
 	docker run --rm -ti brucegithub/namespace-protector:0.1.0 sh
 
+prepare_release: phar_build docker_command_build
+	echo "Release ready"
+
 psalm:
 	docker-compose -f .container/docker-compose.yml exec php php ./vendor/bin/psalm
 

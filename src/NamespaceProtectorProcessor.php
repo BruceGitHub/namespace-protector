@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector;
 
+use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Result\ResultAnalyser;
 use NamespaceProtector\Result\ResultProcessor;
@@ -22,7 +23,8 @@ final class NamespaceProtectorProcessor
         private Analyser $analyser,
         private EnvironmentDataLoader $environmentDataLoader,
         private CollectionFactoryInterface $collectedFactory
-    ) {}
+    ) {
+    }
 
     public function load(): void
     {
@@ -59,16 +61,14 @@ final class NamespaceProtectorProcessor
     {
         $totalResult = new ResultAnalyser($this->collectedFactory);
 
-        foreach ($filesToAnalyser->getFileLoaded() as $file) {
-            $tmp = $analyser->execute($file);
-
-            /**
-             * @var \NamespaceProtector\Result\ResultProcessedFileInterface $processedFile
-             */
-            foreach ($tmp->getResultCollected() as $processedFile) {
-                $totalResult->append($processedFile);
-            }
-        }
+        \array_map(
+            fn (PathInterface $file) =>
+            \array_map(
+                fn (ResultProcessedFileInterface $processedFile) => $totalResult->append($processedFile),
+                \iterator_to_array($analyser->execute($file)->getResultCollected()->getIterator())
+            ),
+            $filesToAnalyser->getFileLoaded()
+        );
 
         return $totalResult;
     }

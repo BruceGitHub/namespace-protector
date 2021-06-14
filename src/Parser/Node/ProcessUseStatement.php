@@ -26,8 +26,6 @@ final class ProcessUseStatement
 
     public function __invoke(EventProcessNodeInterface $event): void
     {
-        $val = new Entry($event->getNodeName());
-
         $isConfiguredComposerPsr4 = new IsInConfigureComposerPsr4($this->metadataLoader);
         $rules = [
             new FalsePositive($this->metadataLoader),
@@ -38,7 +36,7 @@ final class ProcessUseStatement
         ];
 
         foreach ($rules as $rule) {
-            if ($rule->apply($val, $event)) {
+            if ($rule->apply(new Entry($event->getNodeName()), $event)) {
                 return;
             }
         }
