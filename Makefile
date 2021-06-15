@@ -6,8 +6,8 @@ install_phpunit:
 	./vendor/bin/phpunit --check-version
 
 install_csfixer:
-	wget -O ./bin/php-cs-fixer https://cs.symfony.com/download/php-cs-fixer-v2.phar 
-	chmod a+x ./bin/php-cs-fixer
+	mkdir --parents tools/php-cs-fixer 
+	composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
 
 install_composer:
 	docker-compose -f .container/docker-compose.yml run composer install
@@ -52,9 +52,8 @@ psalm-clearcache:
 psalm-with-issue:
 	docker-compose -f .container/docker-compose.yml exec php php ./vendor/bin/psalm --show-info=true
 
-
 csf:
-	docker-compose -f ./.container/docker-compose.yml exec php7 php ./bin/php-cs-fixer fix --verbose
+	docker-compose -f ./.container/docker-compose.yml exec php php ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
 
 run:
 	./bin/namespace-protector v
