@@ -6,7 +6,6 @@ use Webmozart\Assert\Assert;
 
 final class FileSystemPath implements PathInterface
 {
-
     public function __construct(private string $path, bool $noCheck = false)
     {
         if ($noCheck === false) {

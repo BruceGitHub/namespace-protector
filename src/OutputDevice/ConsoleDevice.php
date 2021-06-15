@@ -49,7 +49,7 @@ final class ConsoleDevice implements OutputDeviceInterface
             $resultbuffer .= $this->plotResult($conflict);
             $this->totalErrors++;
         }
-        
+
         if ($resultbuffer === '') {
             return $resultbuffer;
         }

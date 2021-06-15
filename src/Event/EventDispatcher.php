@@ -16,7 +16,7 @@ final class EventDispatcher implements EventDispatcherInterface
     public function dispatch(object $event)
     {
         $this->listenerProvider->getListenersForEvent($event);
-        
+
         /** @var array<callable> */
         $listeners = $this->listenerProvider->getListenersForEvent($event);
 

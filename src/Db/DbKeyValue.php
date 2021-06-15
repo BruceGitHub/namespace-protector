@@ -10,7 +10,9 @@ final class DbKeyValue implements DbKeyValueInterface
     /**
      * @param array<string> $collections
      */
-    public function __construct(private array $collections = []) {}
+    public function __construct(private array $collections = [])
+    {
+    }
 
     public function add(string $key, string $value): void
     {

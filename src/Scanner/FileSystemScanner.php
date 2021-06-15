@@ -10,7 +10,6 @@ use NamespaceProtector\Common\FileSystemPath;
 
 final class FileSystemScanner implements ScannerInterface
 {
-
     /** @var array<PathInterface>  */
     private array $fileLoaded = [];
 

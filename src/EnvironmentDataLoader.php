@@ -114,8 +114,8 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
         $db = new DbKeyValue();
 
         \array_map(
-            /** 
-             * @param array-key $key 
+            /**
+             * @param array-key $key
              * @param mixed $value
             */
             function (string $key, $value) use ($db, $fetchStrategy) {
@@ -131,5 +131,4 @@ final class EnvironmentDataLoader implements EnvironmentDataLoaderInterface
 
         return $db;
     }
-
 }

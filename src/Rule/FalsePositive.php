@@ -48,7 +48,7 @@ class FalsePositive implements RuleInterface
     private function isRootNamespace(Entry $entry): bool
     {
         $v = $entry->get();
-        if ($v[0] === '\\' && \substr_count($v,'\\') === 1) {
+        if ($v[0] === '\\' && \substr_count($v, '\\') === 1) {
             //var_dump('root: ' . $entry->get());
             return true;
         }

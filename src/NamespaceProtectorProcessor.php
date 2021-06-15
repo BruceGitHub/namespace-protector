@@ -62,8 +62,7 @@ final class NamespaceProtectorProcessor
         $totalResult = new ResultAnalyser($this->collectedFactory);
 
         \array_map(
-            fn (PathInterface $file) =>
-            \array_map(
+            fn (PathInterface $file) => \array_map(
                 fn (ResultProcessedFileInterface $processedFile) => $totalResult->append($processedFile),
                 \iterator_to_array($analyser->execute($file)->getResultCollected()->getIterator())
             ),
