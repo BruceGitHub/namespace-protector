@@ -7,6 +7,7 @@ install: composer install --no-interaction
 
 script:
   - vendor/bin/phpunit tests
+  - ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
   - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
