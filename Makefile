@@ -17,9 +17,6 @@ docker_run:
 docker_shell:
 	docker run --rm -ti brucegithub/namespace-protector:0.1.0 sh
 
-prepare_release: phar_build docker_command_build
-	echo "Release ready"
-
 psalm:
 	docker-compose -f .container/docker-compose.yml exec php php ./vendor/bin/psalm
 
@@ -83,6 +80,13 @@ local_phar_build:
 	box build -v
 	mv ./output/namespace-protector.phar .phar/namespace-protector
 	cp .phar/namespace-protector ./../namespace-protector-phar/namespace-protector
+
+local_prepare_release: phar_build docker_command_build
+	echo "Release ready"
+	make docker_command_push
+	cd ..
+	cd namespace-protector-phar
+	make push_all
 
 
 .SILENT:
