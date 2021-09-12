@@ -1,3 +1,4 @@
+.ONESHELL:
 
 docker_command_build:
 	docker build . -t brucedockerhub/namespace-protector:0.1.0  -f .container/DockerCommand/Dockerfile
@@ -81,12 +82,10 @@ local_phar_build:
 	mv ./output/namespace-protector.phar .phar/namespace-protector
 	cp .phar/namespace-protector ./../namespace-protector-phar/namespace-protector
 
-local_prepare_release: phar_build docker_command_build
-	echo "Release ready"
-	make docker_command_push
-	cd ..
-	cd namespace-protector-phar
-	make push_all
+local_prepare_phar_release:
+	$(MAKE) -C ./ -C ./../namespace-protector-phar/
 
+local_prepare_release: local_phar_build docker_command_build local_prepare_phar_release
+	echo "Release ready"
 
 .SILENT:
