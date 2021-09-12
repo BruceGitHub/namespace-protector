@@ -26,6 +26,9 @@ use PhpCsFixer\Tokenizer\Token;
  */
 final class Utils
 {
+    /**
+     * @var array<string,true>
+     */
     private static $deprecations = [];
 
     /**
@@ -34,21 +37,6 @@ final class Utils
     public static function camelCaseToUnderscore(string $string): string
     {
         return strtolower(Preg::replace('/(?<!^)((?=[A-Z][^A-Z])|(?<![A-Z])(?=[A-Z]))/', '_', $string));
-    }
-
-    /**
-     * Compare two integers for equality.
-     *
-     * We'll return 0 if they're equal, 1 if the first is bigger than the
-     * second, and -1 if the second is bigger than the first.
-     */
-    public static function cmpInt(int $a, int $b): int
-    {
-        if ($a === $b) {
-            return 0;
-        }
-
-        return $a < $b ? -1 : 1;
     }
 
     /**
@@ -98,7 +86,7 @@ final class Utils
                 return $comparison;
             }
 
-            return self::cmpInt($a[1], $b[1]);
+            return $a[1] <=> $b[1];
         });
 
         return array_map(static function (array $item) {
@@ -123,7 +111,7 @@ final class Utils
                 return $fixer->getPriority();
             },
             static function (int $a, int $b) {
-                return self::cmpInt($b, $a);
+                return $b <=> $a;
             }
         );
     }
@@ -154,21 +142,27 @@ final class Utils
         return $last;
     }
 
-    /**
-     * Handle triggering deprecation error.
-     */
-    public static function triggerDeprecation(string $message, string $exceptionClass = \RuntimeException::class): void
+    public static function triggerDeprecation(\Exception $futureException): void
     {
         if (getenv('PHP_CS_FIXER_FUTURE_MODE')) {
-            throw new $exceptionClass("{$message} This check was performed as `PHP_CS_FIXER_FUTURE_MODE` env var is set.");
+            throw new \RuntimeException(
+                'Your are using something deprecated, see previous exception. Aborting execution because `PHP_CS_FIXER_FUTURE_MODE` environment variable is set.',
+                0,
+                $futureException
+            );
         }
 
-        self::$deprecations[] = $message;
+        $message = $futureException->getMessage();
+
+        self::$deprecations[$message] = true;
         @trigger_error($message, E_USER_DEPRECATED);
     }
 
     public static function getTriggeredDeprecations(): array
     {
-        return self::$deprecations;
+        $triggeredDeprecations = array_keys(self::$deprecations);
+        sort($triggeredDeprecations);
+
+        return $triggeredDeprecations;
     }
 }

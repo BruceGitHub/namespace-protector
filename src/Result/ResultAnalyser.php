@@ -29,11 +29,6 @@ class ResultAnalyser implements ResultAnalyserInterface
         $this->resultCollection = new ResultCollectedReadable($collection);
     }
 
-    public function withResults(): bool
-    {
-        return ($this->count()) >= 0 ? true : false;
-    }
-
     public function getResultCollected(): ResultCollectedReadable
     {
         return $this->resultCollection;

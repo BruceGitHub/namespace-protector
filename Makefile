@@ -1,27 +1,4 @@
 
-install_phpunit:
-	wget -O phpunit https://phar.phpunit.de/phpunit-9.phar
-	mv phpunit ./vendor/bin/phpunit
-	chmod +x ./vendor/bin/phpunit
-	./vendor/bin/phpunit --check-version
-
-install_csfixer:
-	mkdir --parents tools/php-cs-fixer 
-	composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
-
-install_composer:
-	docker-compose -f .container/docker-compose.yml run composer install
-
-install: 
-	install_composer && 
-	install_phpunit &&
-	install_csfixer
-
-phar_build:
-	box build -v
-	mv ./output/namespace-protector.phar .phar/namespace-protector
-	cp .phar/namespace-protector ./../namespace-protector-phar/namespace-protector
-
 docker_command_build:
 	docker build . -t brucedockerhub/namespace-protector:0.1.0  -f .container/DockerCommand/Dockerfile
 
@@ -55,11 +32,8 @@ psalm-with-issue:
 csf:
 	docker-compose -f ./.container/docker-compose.yml exec php php ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
 
-run:
-	./bin/namespace-protector v
-
 start:
-	docker-compose -f ./.container/docker-compose.yml up php php7
+	docker-compose -f ./.container/docker-compose.yml up php
 
 shell: start
 	docker-compose -f ./.container/docker-compose.yml run php sh
@@ -78,7 +52,37 @@ test:
 test-filter:
 	docker-compose -f ./.container/docker-compose.yml exec php php ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --testdox --colors=always --order-by=defects --filter=$(filter)
 
-test-coverage:
+
+#Local file sysyem 
+
+local_run:
+	./bin/namespace-protector v
+
+local_test_coverage:
 	./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests --coverage-html=./.coverage/ --whitelist=./src
+
+local_install_phpunit:
+	wget -O phpunit https://phar.phpunit.de/phpunit-9.phar
+	mv phpunit ./vendor/bin/phpunit
+	chmod +x ./vendor/bin/phpunit
+	./vendor/bin/phpunit --check-version
+
+local_install_csfixer:
+	mkdir --parents tools/php-cs-fixer 
+	composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
+
+local_install_composer:
+	docker-compose -f .container/docker-compose.yml run composer install
+
+local_install: 
+	install_composer && 
+	install_phpunit &&
+	install_csfixer
+
+local_phar_build:
+	box build -v
+	mv ./output/namespace-protector.phar .phar/namespace-protector
+	cp .phar/namespace-protector ./../namespace-protector-phar/namespace-protector
+
 
 .SILENT:

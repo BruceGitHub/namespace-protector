@@ -63,7 +63,6 @@ class AnalyserTest extends AbstractUnitTestCase
         $analyser = $this->createAnalyser($parser->reveal(), $file);
         $result = $analyser->execute($file);
 
-        $this->assertTrue($result->withResults());
         $this->assertEquals(1, $result->count());
     }
 

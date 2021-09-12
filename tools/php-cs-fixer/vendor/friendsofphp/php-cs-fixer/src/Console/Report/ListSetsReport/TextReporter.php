@@ -26,7 +26,7 @@ final class TextReporter implements ReporterInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormat()
+    public function getFormat(): string
     {
         return 'txt';
     }
@@ -34,19 +34,18 @@ final class TextReporter implements ReporterInterface
     /**
      * {@inheritdoc}
      */
-    public function generate(ReportSummary $reportSummary)
+    public function generate(ReportSummary $reportSummary): string
     {
-        $output = '';
-        $i = 0;
-
         $sets = $reportSummary->getSets();
+
         usort($sets, function (RuleSetDescriptionInterface $a, RuleSetDescriptionInterface $b) {
-            return $a->getName() > $b->getName() ? 1 : -1;
+            return strcmp($a->getName(), $b->getName());
         });
 
-        foreach ($sets as $set) {
-            ++$i;
-            $output .= sprintf('%2d) %s', $i, $set->getName()).PHP_EOL.'      '.$set->getDescription().PHP_EOL;
+        $output = '';
+
+        foreach ($sets as $i => $set) {
+            $output .= sprintf('%2d) %s', $i + 1, $set->getName()).PHP_EOL.'      '.$set->getDescription().PHP_EOL;
 
             if ($set->isRisky()) {
                 $output .= '      Set contains risky rules.'.PHP_EOL;

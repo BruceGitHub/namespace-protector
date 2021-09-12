@@ -73,6 +73,7 @@ final class SingleSpaceAfterConstructFixer extends AbstractFixer implements Conf
         'interface' => T_INTERFACE,
         'match' => null,
         'named_argument' => CT::T_NAMED_ARGUMENT_COLON,
+        'namespace' => T_NAMESPACE,
         'new' => T_NEW,
         'open_tag_with_echo' => T_OPEN_TAG_WITH_ECHO,
         'php_doc' => T_DOC_COMMENT,
@@ -208,7 +209,7 @@ yield  from  baz();
 
             $whitespaceTokenIndex = $index + 1;
 
-            if ($tokens[$whitespaceTokenIndex]->equalsAny([';', ')', [CT::T_ARRAY_SQUARE_BRACE_CLOSE]])) {
+            if ($tokens[$whitespaceTokenIndex]->equalsAny([',', ';', ')', [CT::T_ARRAY_SQUARE_BRACE_CLOSE]])) {
                 continue;
             }
 

@@ -190,12 +190,7 @@ final class MyTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    /**
-     * @param int $startIndex
-     * @param int $endIndex
-     * @param int $objectOperator
-     */
-    private function applyPhpUnitClassFixWithObjectOperator(Tokens $tokens, $startIndex, $endIndex, $objectOperator): void
+    private function applyPhpUnitClassFixWithObjectOperator(Tokens $tokens, int $startIndex, int $endIndex, int $objectOperator): void
     {
         $argumentsAnalyzer = new ArgumentsAnalyzer();
 
@@ -212,7 +207,7 @@ final class MyTest extends \PHPUnit_Framework_TestCase
                 return;
             }
 
-            list($thisIndex, , $index) = array_keys($match);
+            [$thisIndex, , $index] = array_keys($match);
 
             if (!isset($this->methodMap[$tokens[$index]->getContent()])) {
                 continue;

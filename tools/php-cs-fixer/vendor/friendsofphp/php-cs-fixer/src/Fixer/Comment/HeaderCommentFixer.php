@@ -125,6 +125,7 @@ echo 1;
     /**
      * {@inheritdoc}
      *
+     * Must run before SingleLineCommentStyleFixer.
      * Must run after DeclareStrictTypesFixer, NoBlankLinesAfterPhpdocFixer.
      */
     public function getPriority(): int
@@ -435,7 +436,7 @@ echo 1;
         }
 
         $nextIndex = $index + 1;
-        $nextToken = isset($tokens[$nextIndex]) ? $tokens[$nextIndex] : null;
+        $nextToken = $tokens[$nextIndex] ?? null;
 
         if (!$newlineRemoved && null !== $nextToken && $nextToken->isWhitespace()) {
             $content = Preg::replace('/^\R/', '', $nextToken->getContent());

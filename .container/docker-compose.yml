@@ -24,13 +24,6 @@ services:
 
       PHP_IDE_CONFIG: "serverName=namespace-protector"
       XDG_CACHE_HOME: "./.cache/"
-  php7:
-    image: php:7-cli-alpine
-    volumes:
-      - ./..:/var/www/html
-    working_dir: /var/www/html
-    tty: true
-    stdin_open: true
 
   composer:
     image: composer:2.0.3

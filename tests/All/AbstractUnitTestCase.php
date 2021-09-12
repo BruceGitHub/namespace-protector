@@ -56,7 +56,7 @@ abstract class AbstractUnitTestCase extends TestCase
         return $this;
     }
 
-    protected function addFileWithCallable(string $pathFile, string $directoryReal = '', string $directoryVirtual, callable $callable): self
+    protected function addFileWithCallable(string $pathFile, string $directoryReal, string $directoryVirtual, callable $callable): self
     {
         $this->fileSystemtoBuild[$directoryVirtual][$pathFile] = $callable($directoryReal, $pathFile);
         return $this;

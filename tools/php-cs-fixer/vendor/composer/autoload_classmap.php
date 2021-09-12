@@ -26,6 +26,7 @@ return array(
     'PhpCsFixer\\Diff\\Output\\UnifiedDiffOutputBuilder' => $vendorDir . '/php-cs-fixer/diff/src/Output/UnifiedDiffOutputBuilder.php',
     'PhpCsFixer\\Diff\\Parser' => $vendorDir . '/php-cs-fixer/diff/src/Parser.php',
     'PhpCsFixer\\Diff\\TimeEfficientLongestCommonSubsequenceCalculator' => $vendorDir . '/php-cs-fixer/diff/src/TimeEfficientLongestCommonSubsequenceCalculator.php',
+    'ReturnTypeWillChange' => $vendorDir . '/symfony/polyfill-php81/Resources/stubs/ReturnTypeWillChange.php',
     'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
     'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
     'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',

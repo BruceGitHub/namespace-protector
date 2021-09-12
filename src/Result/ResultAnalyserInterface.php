@@ -10,8 +10,6 @@ interface ResultAnalyserInterface extends Countable
 {
     public function append(ResultProcessedFileInterface $toAppend): void;
 
-    public function withResults(): bool;
-
     public function count(): int;
 
     public function getResultCollected(): ResultCollectedReadable;

@@ -34,6 +34,9 @@ use Symfony\Component\OptionsResolver\Options;
  */
 final class PhpdocReturnSelfReferenceFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
+    /**
+     * @var string[]
+     */
     private static $toTypes = [
         '$this',
         'static',
@@ -216,7 +219,7 @@ class Sample
         $newTypes = [];
         foreach ($types as $type) {
             $lower = strtolower($type);
-            $newTypes[] = isset($this->configuration['replacements'][$lower]) ? $this->configuration['replacements'][$lower] : $type;
+            $newTypes[] = $this->configuration['replacements'][$lower] ?? $type;
         }
 
         if ($types === $newTypes) {

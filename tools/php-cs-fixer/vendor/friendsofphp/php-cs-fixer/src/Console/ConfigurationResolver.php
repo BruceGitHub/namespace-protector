@@ -134,15 +134,49 @@ final class ConfigurationResolver
     ];
 
     private $cacheFile;
+
+    /**
+     * @var null|CacheManagerInterface
+     */
     private $cacheManager;
+
+    /**
+     * @var null|DifferInterface
+     */
     private $differ;
+
+    /**
+     * @var null|Directory
+     */
     private $directory;
+
+    /**
+     * @var null|iterable
+     */
     private $finder;
+
     private $format;
+
+    /**
+     * @var null|Linter
+     */
     private $linter;
+
     private $path;
+
+    /**
+     * @var null|string
+     */
     private $progress;
+
+    /**
+     * @var null|RuleSet
+     */
     private $ruleSet;
+
+    /**
+     * @var null|bool
+     */
     private $usingCache;
 
     /**
@@ -691,7 +725,7 @@ final class ConfigurationResolver
                     ? sprintf(' and will be removed in version %d.0.', Application::getMajorVersion() + 1)
                     : sprintf('. Use %s instead.', str_replace('`', '"', Utils::naturalLanguageJoinWithBackticks($successors)));
 
-                Utils::triggerDeprecation("Rule \"{$fixerName}\" is deprecated{$messageEnd}");
+                Utils::triggerDeprecation(new \RuntimeException("Rule \"{$fixerName}\" is deprecated{$messageEnd}"));
             }
         }
     }

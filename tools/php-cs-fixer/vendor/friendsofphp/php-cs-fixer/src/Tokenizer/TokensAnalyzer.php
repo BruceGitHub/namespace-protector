@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\Tokenizer;
 
+use PhpCsFixer\Tokenizer\Analyzer\AttributeAnalyzer;
 use PhpCsFixer\Tokenizer\Analyzer\GotoLabelAnalyzer;
 
 /**
@@ -57,7 +58,7 @@ final class TokensAnalyzer
 
         for ($index = 1, $count = \count($this->tokens) - 2; $index < $count; ++$index) {
             if ($this->tokens[$index]->isClassy()) {
-                list($index, $newElements) = $this->findClassyElements($index, $index);
+                [$index, $newElements] = $this->findClassyElements($index, $index);
                 $elements += $newElements;
             }
         }
@@ -141,12 +142,7 @@ final class TokensAnalyzer
         return $this->isBlockMultiline($tokens, $index);
     }
 
-    /**
-     * @param int $index
-     *
-     * @return bool
-     */
-    public function isBlockMultiline(Tokens $tokens, $index)
+    public function isBlockMultiline(Tokens $tokens, int $index): bool
     {
         $blockType = Tokens::detectBlockType($tokens[$index]);
 
@@ -361,6 +357,11 @@ final class TokensAnalyzer
             }
         }
 
+        // check for attribute: `#[Foo]`
+        if (AttributeAnalyzer::isAttribute($this->tokens, $index)) {
+            return false;
+        }
+
         // check for goto label
         if ($this->tokens[$nextIndex]->equals(':')) {
             if (null === $this->gotoLabelAnalyzer) {
@@ -368,6 +369,18 @@ final class TokensAnalyzer
             }
 
             if ($this->gotoLabelAnalyzer->belongsToGoToLabel($this->tokens, $nextIndex)) {
+                return false;
+            }
+        }
+
+        // check for non-capturing catches
+        while ($this->tokens[$prevIndex]->isGivenKind([CT::T_TYPE_ALTERNATION, T_STRING])) {
+            $prevIndex = $this->tokens->getPrevMeaningfulToken($prevIndex);
+        }
+
+        if ($this->tokens[$prevIndex]->equals('(')) {
+            $prevPrevIndex = $this->tokens->getPrevMeaningfulToken($prevIndex);
+            if ($this->tokens[$prevPrevIndex]->isGivenKind(T_CATCH)) {
                 return false;
             }
         }
@@ -536,7 +549,6 @@ final class TokensAnalyzer
                 T_SR => true,                   // >>
                 T_SR_EQUAL => true,             // >>=
                 T_XOR_EQUAL => true,            // ^=
-                CT::T_TYPE_ALTERNATION => true, // |
                 T_SPACESHIP => true,            // <=>
                 T_COALESCE => true,             // ??
             ];
@@ -658,7 +670,7 @@ final class TokensAnalyzer
                             --$nestedBracesLevel;
 
                             if (0 === $nestedBracesLevel) {
-                                list($index, $newElements) = $this->findClassyElements($nestedClassIndex, $index);
+                                [$index, $newElements] = $this->findClassyElements($nestedClassIndex, $index);
                                 $elements += $newElements;
 
                                 break;
@@ -668,12 +680,12 @@ final class TokensAnalyzer
                         }
 
                         if ($token->isClassy()) { // anonymous class in class
-                            list($index, $newElements) = $this->findClassyElements($index, $index);
+                            [$index, $newElements] = $this->findClassyElements($index, $index);
                             $elements += $newElements;
                         }
                     }
                 } else {
-                    list($index, $newElements) = $this->findClassyElements($nestedClassIndex, $nestedClassIndex);
+                    [$index, $newElements] = $this->findClassyElements($nestedClassIndex, $nestedClassIndex);
                     $elements += $newElements;
                 }
 

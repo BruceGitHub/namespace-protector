@@ -18,11 +18,11 @@ class ResultParser implements ResultParserInterface
         return new ResultCollectedReadable($this->collectedResultParser);
     }
 
-    public function append(ResultParserInterface $toAppend): void
+    public function append(ResultParserInterface $toAppendInstance): void
     {
         array_map(
             fn ($item) => $this->collectedResultParser->addResult($item),
-            iterator_to_array($toAppend->getResultCollectionReadable()->getIterator())
+            iterator_to_array($toAppendInstance->getResultCollectionReadable()->getIterator())
         );
     }
 }

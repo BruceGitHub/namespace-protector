@@ -81,21 +81,21 @@ final class SimpleFileCache implements \Psr\SimpleCache\CacheInterface
         return $this->path->get() . '/' . $key;
     }
 
-    private function delete_directory(string $dirname): bool
+    private function delete_directory(string $dirname): void
     {
         $dir_handle = \Safe\opendir($dirname);
 
         while ($file = readdir($dir_handle)) {
             if ($file != '.' && $file != '..') {
-                if (!is_dir($dirname . \DIRECTORY_SEPARATOR . $file)) {
+                if (is_dir($dirname . \DIRECTORY_SEPARATOR . $file)) {
+                    $this->delete_directory($dirname . \DIRECTORY_SEPARATOR . $file);
                     \Safe\unlink($dirname . \DIRECTORY_SEPARATOR . $file);
                 } else {
-                    $this->delete_directory($dirname . \DIRECTORY_SEPARATOR . $file);
+                    \Safe\unlink($dirname . \DIRECTORY_SEPARATOR . $file);
                 }
             }
         }
         closedir($dir_handle);
         \rmdir($dirname);
-        return true;
     }
 }

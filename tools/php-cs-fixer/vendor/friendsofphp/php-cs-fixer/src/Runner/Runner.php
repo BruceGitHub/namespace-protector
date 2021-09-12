@@ -127,6 +127,7 @@ final class Runner
             ? new FileCachingLintingIterator($fileFilteredFileIterator, $this->linter)
             : new FileLintingIterator($fileFilteredFileIterator, $this->linter);
 
+        /** @var \SplFileInfo $file */
         foreach ($collection as $file) {
             $fixInfo = $this->fixFile($file, $collection->currentLintingResult());
 
@@ -310,15 +311,6 @@ final class Runner
     private function dispatchEvent(string $name, Event $event): void
     {
         if (null === $this->eventDispatcher) {
-            return;
-        }
-
-        // BC compatibility < Sf 4.3
-        if (
-            !$this->eventDispatcher instanceof \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-        ) {
-            $this->eventDispatcher->dispatch($name, $event);
-
             return;
         }
 

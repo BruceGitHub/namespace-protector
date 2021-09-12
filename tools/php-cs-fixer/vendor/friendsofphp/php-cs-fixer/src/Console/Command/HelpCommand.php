@@ -31,6 +31,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class HelpCommand extends BaseHelpCommand
 {
+    /**
+     * @var string
+     */
     protected static $defaultName = 'help';
 
     /**
@@ -88,36 +91,6 @@ final class HelpCommand extends BaseHelpCommand
     }
 
     /**
-     * Wraps a string to the given number of characters, ignoring style tags.
-     *
-     * @return string[]
-     */
-    private static function wordwrap(string $string, int $width): array
-    {
-        $result = [];
-        $currentLine = 0;
-        $lineLength = 0;
-        foreach (explode(' ', $string) as $word) {
-            $wordLength = \strlen(Preg::replace('~</?(\w+)>~', '', $word));
-            if (0 !== $lineLength) {
-                ++$wordLength; // space before word
-            }
-
-            if ($lineLength + $wordLength > $width) {
-                ++$currentLine;
-                $lineLength = 0;
-            }
-
-            $result[$currentLine][] = $word;
-            $lineLength += $wordLength;
-        }
-
-        return array_map(static function (array $line) {
-            return implode(' ', $line);
-        }, $result);
-    }
-
-    /**
      * @param mixed $value
      */
     private static function scalarToString($value): string
@@ -133,7 +106,7 @@ final class HelpCommand extends BaseHelpCommand
             return '[]';
         }
 
-        $isHash = static::isHash($value);
+        $isHash = !array_is_list($value);
         $str = '[';
 
         foreach ($value as $k => $v) {
@@ -148,20 +121,5 @@ final class HelpCommand extends BaseHelpCommand
         }
 
         return substr($str, 0, -2).']';
-    }
-
-    private static function isHash(array $array): bool
-    {
-        $i = 0;
-
-        foreach ($array as $k => $v) {
-            if ($k !== $i) {
-                return true;
-            }
-
-            ++$i;
-        }
-
-        return false;
     }
 }

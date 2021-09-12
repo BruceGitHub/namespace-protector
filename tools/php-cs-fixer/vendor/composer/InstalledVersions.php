@@ -1,5 +1,15 @@
 <?php
 
+
+
+
+
+
+
+
+
+
+
 namespace Composer;
 
 use Composer\Semver\VersionParser;
@@ -19,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '56d2f68852da5fe3f05d76a7ae22de687615c013',
+    'reference' => 'f9107a280a57f1f24ca4232ab18e6afd62ecf7c7',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +41,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '56d2f68852da5fe3f05d76a7ae22de687615c013',
+      'reference' => 'f9107a280a57f1f24ca4232ab18e6afd62ecf7c7',
     ),
     'composer/semver' => 
     array (
@@ -71,12 +81,12 @@ private static $installed = array (
     ),
     'friendsofphp/php-cs-fixer' => 
     array (
-      'pretty_version' => 'v3.0.0',
-      'version' => '3.0.0.0',
+      'pretty_version' => 'v3.1.0',
+      'version' => '3.1.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c15377bdfa8d1ecf186f1deadec39c89984e1167',
+      'reference' => 'cf4cedb9e8991c2daa94a756176d81bf487e4c4b',
     ),
     'php-cs-fixer/diff' => 
     array (
@@ -269,6 +279,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'eca0bf41ed421bed1b57c4958bab16aa86b757d0',
+    ),
+    'symfony/polyfill-php81' => 
+    array (
+      'pretty_version' => 'v1.23.0',
+      'version' => '1.23.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e66119f3de95efc359483f810c4c3e6436279436',
     ),
     'symfony/process' => 
     array (

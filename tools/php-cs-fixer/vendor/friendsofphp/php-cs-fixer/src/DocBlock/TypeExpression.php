@@ -29,31 +29,73 @@ final class TypeExpression
      * @internal
      */
     public const REGEX_TYPES = '
-    # <simple> is any non-array, non-generic, non-alternated type, eg `int` or `\Foo`
-    # <array> is array of <simple>, eg `int[]` or `\Foo[]`
-    # <generic> is generic collection type, like `array<string, int>`, `Collection<Item>` and more complex like `Collection<int, \null|SubCollection<string>>`
-    # <type> is <simple>, <array> or <generic> type, like `int`, `bool[]` or `Collection<ItemKey, ItemVal>`
-    # <types> is one or more types alternated via `|`, like `int|bool[]|Collection<ItemKey, ItemVal>`
-    (?<types>
-        (?<type>
-            (?<array>
-                (?&simple)(\[\])*
+    (?<types> # alternation of several types separated by `|`
+        (?<type> # single type
+            \?? # optionally nullable
+            (?:
+                (?<object_like_array>
+                    array\h*\{
+                        (?<object_like_array_key>
+                            \h*[^?:\h]+\h*\??\h*:\h*(?&types)
+                        )
+                        (?:\h*,(?&object_like_array_key))*
+                    \h*\}
+                )
+                |
+                (?<callable> # callable syntax, e.g. `callable(string): bool`
+                    (?:callable|Closure)\h*\(\h*
+                        (?&types)
+                        (?:
+                            \h*,\h*
+                            (?&types)
+                        )*
+                    \h*\)
+                    (?:
+                        \h*\:\h*
+                        (?&types)
+                    )?
+                )
+                |
+                (?<generic> # generic syntax, e.g.: `array<int, \Foo\Bar>`
+                    (?&name)+
+                    \h*<\h*
+                        (?&types)
+                        (?:
+                            \h*,\h*
+                            (?&types)
+                        )*
+                    \h*>
+                )
+                |
+                (?<class_constant> # class constants with optional wildcard, e.g.: `Foo::*`, `Foo::CONST_A`, `FOO::CONST_*`
+                    (?&name)::(\*|\w+\*?)
+                )
+                |
+                (?<array> # array expression, e.g.: `string[]`, `string[][]`
+                    (?&name)(\[\])+
+                )
+                |
+                (?<constant> # single constant value (case insensitive), e.g.: 1, `\'a\'`
+                    (?i)
+                    null | true | false
+                    | [\d.]+
+                    | \'[^\']+?\' | "[^"]+?"
+                    | [@$]?(?:this | self | static)
+                    (?-i)
+                )
+                |
+                (?<name> # single type, e.g.: `null`, `int`, `\Foo\Bar`
+                    [\\\\\w-]++
+                )
             )
-            |
-            (?<simple>
-                [@$?]?[\\\\\w]+
-            )
-            |
-            (?<generic>
-                (?&simple)
-                <
-                    (?:(?&types),\s*)?(?:(?&types)|(?&generic))
-                >
-            )
+            (?: # intersection
+                \h*&\h*
+                (?&type)
+            )*
         )
         (?:
-            \|
-            (?:(?&simple)|(?&array)|(?&generic))
+            \h*\|\h*
+            (?&type)
         )*
     )
     ';
@@ -74,13 +116,11 @@ final class TypeExpression
     private $namespaceUses;
 
     /**
-     * @param string                 $value
-     * @param null|NamespaceAnalysis $namespace
      * @param NamespaceUseAnalysis[] $namespaceUses
      */
-    public function __construct($value, $namespace, array $namespaceUses)
+    public function __construct(string $value, ?NamespaceAnalysis $namespace, array $namespaceUses)
     {
-        while ('' !== $value && false !== $value) {
+        while ('' !== $value) {
             Preg::match(
                 '{^'.self::REGEX_TYPES.'$}x',
                 $value,
@@ -88,7 +128,11 @@ final class TypeExpression
             );
 
             $this->types[] = $matches['type'];
-            $value = substr($value, \strlen($matches['type']) + 1);
+            $value = Preg::replace(
+                '/^'.preg_quote($matches['type'], '/').'(\h*\|\h*)?/',
+                '',
+                $value
+            );
         }
 
         $this->namespace = $namespace;
@@ -98,15 +142,12 @@ final class TypeExpression
     /**
      * @return string[]
      */
-    public function getTypes()
+    public function getTypes(): array
     {
         return $this->types;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getCommonType()
+    public function getCommonType(): ?string
     {
         $aliases = [
             'true' => 'bool',
@@ -149,10 +190,7 @@ final class TypeExpression
         return $mainType;
     }
 
-    /**
-     * @return bool
-     */
-    public function allowsNull()
+    public function allowsNull(): bool
     {
         foreach ($this->types as $type) {
             if (\in_array($type, ['null', 'mixed'], true)) {
@@ -163,7 +201,7 @@ final class TypeExpression
         return false;
     }
 
-    private function getParentType($type1, $type2)
+    private function getParentType(string $type1, string $type2): ?string
     {
         $types = [
             $this->normalize($type1),
@@ -186,12 +224,7 @@ final class TypeExpression
         return null;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return string
-     */
-    private function normalize($type)
+    private function normalize(string $type): string
     {
         $aliases = [
             'true' => 'bool',
