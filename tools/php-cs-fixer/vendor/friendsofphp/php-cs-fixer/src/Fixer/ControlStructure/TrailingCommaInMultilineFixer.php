@@ -127,6 +127,7 @@ SAMPLE
                     if (\PHP_VERSION_ID < 70300 && \in_array(self::ELEMENTS_ARGUMENTS, $value, true)) {
                         throw new InvalidOptionsForEnvException(sprintf('"%s" option can only be enabled with PHP 7.3+.', self::ELEMENTS_ARGUMENTS));
                     }
+
                     if (\PHP_VERSION_ID < 80000 && \in_array(self::ELEMENTS_PARAMETERS, $value, true)) {
                         throw new InvalidOptionsForEnvException(sprintf('"%s" option can only be enabled with PHP 8.0+.', self::ELEMENTS_PARAMETERS));
                     }
@@ -206,7 +207,7 @@ SAMPLE
         // if there is some item between braces then add `,` after it
         if (
             $startIndex !== $beforeEndIndex && !$beforeEndToken->equals(',')
-            && ($this->configuration['after_heredoc'] || !$beforeEndToken->isGivenKind(T_END_HEREDOC))
+            && (true === $this->configuration['after_heredoc'] || !$beforeEndToken->isGivenKind(T_END_HEREDOC))
         ) {
             $tokens->insertAt($beforeEndIndex + 1, new Token(','));
 

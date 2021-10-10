@@ -36,8 +36,9 @@ abstract class AbstractValidateNamespaceCommand extends Command
 
         $configMaker = new ConfigMaker();
         $config = $configMaker->createFromFile(new FileSystemPath(\getcwd() . '/namespace-protector-config.json'));
-        $plotter = $input->getArgument(self::PLOTTER_ARGUMENT);
-        if ($plotter && \is_string($plotter)) {
+
+        $plotter = (string)$input->getArgument(self::PLOTTER_ARGUMENT);
+        if ($plotter === self::PLOTTER_ARGUMENT) { //todo remove
             $config = $configMaker->createFromItSelf($config, ['plotter' => $plotter]);
         }
 

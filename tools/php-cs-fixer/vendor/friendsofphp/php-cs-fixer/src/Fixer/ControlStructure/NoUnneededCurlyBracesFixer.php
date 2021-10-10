@@ -25,9 +25,6 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
-/**
- * @author SpacePossum
- */
 final class NoUnneededCurlyBracesFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
     /**
@@ -91,7 +88,7 @@ namespace Foo {
             }
         }
 
-        if ($this->configuration['namespaces']) {
+        if (true === $this->configuration['namespaces']) {
             $this->clearIfIsOverCompleteNamespaceBlock($tokens);
         }
     }

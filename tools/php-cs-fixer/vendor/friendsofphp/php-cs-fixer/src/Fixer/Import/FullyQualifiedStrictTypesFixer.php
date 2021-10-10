@@ -18,8 +18,6 @@ use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
-use PhpCsFixer\FixerDefinition\VersionSpecification;
-use PhpCsFixer\FixerDefinition\VersionSpecificCodeSample;
 use PhpCsFixer\Tokenizer\Analyzer\Analysis\TypeAnalysis;
 use PhpCsFixer\Tokenizer\Analyzer\FunctionsAnalyzer;
 use PhpCsFixer\Tokenizer\Analyzer\NamespacesAnalyzer;
@@ -55,7 +53,7 @@ class SomeClass
 }
 '
                 ),
-                new VersionSpecificCodeSample(
+                new CodeSample(
                     '<?php
 
 use Foo\Bar;
@@ -67,8 +65,7 @@ class SomeClass
     {
     }
 }
-',
-                    new VersionSpecification(70000)
+'
                 ),
             ]
         );
@@ -91,8 +88,8 @@ class SomeClass
     public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_FUNCTION) && (
-            \count((new NamespacesAnalyzer())->getDeclarations($tokens))
-            || \count((new NamespaceUsesAnalyzer())->getDeclarationsFromTokens($tokens))
+            \count((new NamespacesAnalyzer())->getDeclarations($tokens)) > 0
+            || \count((new NamespaceUsesAnalyzer())->getDeclarationsFromTokens($tokens)) > 0
         );
     }
 
@@ -129,12 +126,9 @@ class SomeClass
 
     private function fixFunctionReturnType(Tokens $tokens, int $index): void
     {
-        if (\PHP_VERSION_ID < 70000) {
-            return;
-        }
-
         $returnType = (new FunctionsAnalyzer())->getFunctionReturnType($tokens, $index);
-        if (!$returnType) {
+
+        if (null === $returnType) {
             return;
         }
 
@@ -157,7 +151,7 @@ class SomeClass
         foreach ($this->getSimpleTypes($tokens, $typeStartIndex, $type->getEndIndex()) as $simpleType) {
             $typeName = $tokens->generatePartialCode($simpleType['start'], $simpleType['end']);
 
-            if (0 !== strpos($typeName, '\\')) {
+            if (!str_starts_with($typeName, '\\')) {
                 continue;
             }
 
@@ -197,7 +191,7 @@ class SomeClass
                 break;
             }
 
-            if ($tokens[$index]->isGivenKind(CT::T_TYPE_ALTERNATION)) {
+            if ($tokens[$index]->isGivenKind([CT::T_TYPE_ALTERNATION, CT::T_TYPE_INTERSECTION])) {
                 yield ['start' => $startIndex, 'end' => $prevIndex];
                 $startIndex = null;
             }

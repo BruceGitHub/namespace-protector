@@ -23,8 +23,6 @@ use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
-use PhpCsFixer\FixerDefinition\VersionSpecification;
-use PhpCsFixer\FixerDefinition\VersionSpecificCodeSample;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
@@ -55,6 +53,7 @@ final class SingleSpaceAfterConstructFixer extends AbstractFixer implements Conf
         'echo' => T_ECHO,
         'else' => T_ELSE,
         'elseif' => T_ELSEIF,
+        'enum' => null,
         'extends' => T_EXTENDS,
         'final' => T_FINAL,
         'finally' => T_FINALLY,
@@ -82,10 +81,12 @@ final class SingleSpaceAfterConstructFixer extends AbstractFixer implements Conf
         'private' => T_PRIVATE,
         'protected' => T_PROTECTED,
         'public' => T_PUBLIC,
+        'readonly' => null,
         'require' => T_REQUIRE,
         'require_once' => T_REQUIRE_ONCE,
         'return' => T_RETURN,
         'static' => T_STATIC,
+        'switch' => T_SWITCH,
         'throw' => T_THROW,
         'trait' => T_TRAIT,
         'try' => T_TRY,
@@ -110,15 +111,24 @@ final class SingleSpaceAfterConstructFixer extends AbstractFixer implements Conf
     {
         parent::configure($configuration);
 
-        // @TODO: drop condition when PHP 8.0+ is required
-        if (\defined('T_MATCH')) {
+        if (\defined('T_MATCH')) { // @TODO: drop condition when PHP 8.0+ is required
             self::$tokenMap['match'] = T_MATCH;
+        }
+
+        if (\defined('T_READONLY')) { // @TODO: drop condition when PHP 8.1+ is required
+            self::$tokenMap['readonly'] = T_READONLY;
+        }
+
+        if (\defined('T_ENUM')) { // @TODO: drop condition when PHP 8.1+ is required
+            self::$tokenMap['enum'] = T_ENUM;
         }
 
         $this->fixTokenMap = [];
 
         foreach ($this->configuration['constructs'] as $key) {
-            $this->fixTokenMap[$key] = self::$tokenMap[$key];
+            if (null !== self::$tokenMap[$key]) {
+                $this->fixTokenMap[$key] = self::$tokenMap[$key];
+            }
         }
 
         if (isset($this->fixTokenMap['public'])) {
@@ -159,12 +169,11 @@ echo  "Hello!";
                         ],
                     ]
                 ),
-                new VersionSpecificCodeSample(
+                new CodeSample(
                     '<?php
 
 yield  from  baz();
 ',
-                    new VersionSpecification(70000),
                     [
                         'constructs' => [
                             'yield_from',
@@ -179,6 +188,7 @@ yield  from  baz();
      * {@inheritdoc}
      *
      * Must run before BracesFixer, FunctionDeclarationFixer.
+     * Must run after ModernizeStrposFixer.
      */
     public function getPriority(): int
     {
@@ -221,7 +231,7 @@ yield  from  baz();
             }
 
             if ($token->isGivenKind(T_OPEN_TAG)) {
-                if ($tokens[$whitespaceTokenIndex]->equals([T_WHITESPACE]) && false === strpos($token->getContent(), "\n")) {
+                if ($tokens[$whitespaceTokenIndex]->equals([T_WHITESPACE]) && !str_contains($token->getContent(), "\n")) {
                     $tokens->clearAt($whitespaceTokenIndex);
                 }
 
@@ -241,7 +251,7 @@ yield  from  baz();
             }
 
             if ($token->isComment() || $token->isGivenKind(CT::T_ATTRIBUTE_CLOSE)) {
-                if ($tokens[$whitespaceTokenIndex]->equals([T_WHITESPACE]) && false !== strpos($tokens[$whitespaceTokenIndex]->getContent(), "\n")) {
+                if ($tokens[$whitespaceTokenIndex]->equals([T_WHITESPACE]) && str_contains($tokens[$whitespaceTokenIndex]->getContent(), "\n")) {
                     continue;
                 }
             }
@@ -253,8 +263,7 @@ yield  from  baz();
             }
 
             if (
-                70000 <= \PHP_VERSION_ID
-                && $token->isGivenKind(T_YIELD_FROM)
+                $token->isGivenKind(T_YIELD_FROM)
                 && 'yield from' !== strtolower($token->getContent())
             ) {
                 $tokens[$index] = new Token([T_YIELD_FROM, Preg::replace(
@@ -268,11 +277,13 @@ yield  from  baz();
 
     protected function createConfigurationDefinition(): FixerConfigurationResolverInterface
     {
+        $tokens = array_keys(self::$tokenMap);
+
         return new FixerConfigurationResolver([
             (new FixerOptionBuilder('constructs', 'List of constructs which must be followed by a single space.'))
                 ->setAllowedTypes(['array'])
-                ->setAllowedValues([new AllowedValueSubset(array_keys(self::$tokenMap))])
-                ->setDefault(array_keys(self::$tokenMap))
+                ->setAllowedValues([new AllowedValueSubset($tokens)])
+                ->setDefault($tokens)
                 ->getOption(),
         ]);
     }
@@ -284,7 +295,7 @@ yield  from  baz();
 
         if (
             !$tokenFollowingReturn->isGivenKind(T_WHITESPACE)
-            || false === strpos($tokenFollowingReturn->getContent(), "\n")
+            || !str_contains($tokenFollowingReturn->getContent(), "\n")
         ) {
             return false;
         }
@@ -292,7 +303,7 @@ yield  from  baz();
         $nestedCount = 0;
 
         for ($indexEnd = \count($tokens) - 1, ++$index; $index < $indexEnd; ++$index) {
-            if (false !== strpos($tokens[$index]->getContent(), "\n")) {
+            if (str_contains($tokens[$index]->getContent(), "\n")) {
                 return true;
             }
 
@@ -325,7 +336,7 @@ yield  from  baz();
                 return false;
             }
 
-            if ($hasMoreThanOneAncestor && false !== strpos($token->getContent(), "\n")) {
+            if ($hasMoreThanOneAncestor && str_contains($token->getContent(), "\n")) {
                 return true;
             }
         }

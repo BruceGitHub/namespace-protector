@@ -27,7 +27,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author SpacePossum
  */
 final class ConcatSpaceFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
@@ -123,7 +122,8 @@ final class ConcatSpaceFixer extends AbstractFixer implements ConfigurableFixerI
     private function fixConcatenationToNoSpace(Tokens $tokens, int $index): void
     {
         $prevNonWhitespaceToken = $tokens[$tokens->getPrevNonWhitespace($index)];
-        if (!$prevNonWhitespaceToken->isGivenKind([T_LNUMBER, T_COMMENT, T_DOC_COMMENT]) || '/*' === substr($prevNonWhitespaceToken->getContent(), 0, 2)) {
+
+        if (!$prevNonWhitespaceToken->isGivenKind([T_LNUMBER, T_COMMENT, T_DOC_COMMENT]) || str_starts_with($prevNonWhitespaceToken->getContent(), '/*')) {
             $tokens->removeLeadingWhitespace($index, " \t");
         }
 
@@ -155,7 +155,7 @@ final class ConcatSpaceFixer extends AbstractFixer implements ConfigurableFixerI
             return;
         }
 
-        if (false !== strpos($tokens[$offsetIndex]->getContent(), "\n")) {
+        if (str_contains($tokens[$offsetIndex]->getContent(), "\n")) {
             return;
         }
 

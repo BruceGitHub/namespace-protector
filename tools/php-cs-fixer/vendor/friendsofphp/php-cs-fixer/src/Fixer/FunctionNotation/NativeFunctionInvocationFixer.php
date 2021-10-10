@@ -31,7 +31,6 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**
  * @author Andreas Möller <am@localheinz.com>
- * @author SpacePossum
  */
 final class NativeFunctionInvocationFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
@@ -168,7 +167,7 @@ $c = get_class($d);
      * {@inheritdoc}
      *
      * Must run before GlobalNamespaceImportFixer.
-     * Must run after BacktickToShellExecFixer, StrictParamFixer.
+     * Must run after BacktickToShellExecFixer, RegularCallableCallFixer, StrictParamFixer.
      */
     public function getPriority(): int
     {
@@ -219,7 +218,7 @@ $c = get_class($d);
         return new FixerConfigurationResolver([
             (new FixerOptionBuilder('exclude', 'List of functions to ignore.'))
                 ->setAllowedTypes(['array'])
-                ->setAllowedValues([static function (array $value) {
+                ->setAllowedValues([static function (array $value): bool {
                     foreach ($value as $functionName) {
                         if (!\is_string($functionName) || '' === trim($functionName) || trim($functionName) !== $functionName) {
                             throw new InvalidOptionsException(sprintf(
@@ -235,7 +234,7 @@ $c = get_class($d);
                 ->getOption(),
             (new FixerOptionBuilder('include', 'List of function names or sets to fix. Defined sets are `@internal` (all native functions), `@all` (all global functions) and `@compiler_optimized` (functions that are specially optimized by Zend).'))
                 ->setAllowedTypes(['array'])
-                ->setAllowedValues([static function (array $value) {
+                ->setAllowedValues([static function (array $value): bool {
                     foreach ($value as $functionName) {
                         if (!\is_string($functionName) || '' === trim($functionName) || trim($functionName) !== $functionName) {
                             throw new InvalidOptionsException(sprintf(
@@ -250,7 +249,7 @@ $c = get_class($d);
                             self::SET_COMPILER_OPTIMIZED,
                         ];
 
-                        if ('@' === $functionName[0] && !\in_array($functionName, $sets, true)) {
+                        if (str_starts_with($functionName, '@') && !\in_array($functionName, $sets, true)) {
                             throw new InvalidOptionsException(sprintf('Unknown set "%s", known sets are "%s".', $functionName, implode('", "', $sets)));
                         }
                     }
@@ -283,9 +282,10 @@ $c = get_class($d);
             $prevIndex = $tokens->getPrevMeaningfulToken($index);
 
             if (!$functionFilter($tokens[$index]->getContent()) || $tryToRemove) {
-                if (!$this->configuration['strict']) {
+                if (false === $this->configuration['strict']) {
                     continue;
                 }
+
                 if ($tokens[$prevIndex]->isGivenKind(T_NS_SEPARATOR)) {
                     $tokens->clearTokenAndMergeSurroundingWhitespace($prevIndex);
                 }
@@ -309,17 +309,18 @@ $c = get_class($d);
 
         if (\in_array(self::SET_ALL, $this->configuration['include'], true)) {
             if (\count($exclude) > 0) {
-                return static function (string $functionName) use ($exclude) {
+                return static function (string $functionName) use ($exclude): bool {
                     return !isset($exclude[strtolower($functionName)]);
                 };
             }
 
-            return static function () {
+            return static function (): bool {
                 return true;
             };
         }
 
         $include = [];
+
         if (\in_array(self::SET_INTERNAL, $this->configuration['include'], true)) {
             $include = $this->getAllInternalFunctionsNormalized();
         } elseif (\in_array(self::SET_COMPILER_OPTIMIZED, $this->configuration['include'], true)) {
@@ -327,18 +328,18 @@ $c = get_class($d);
         }
 
         foreach ($this->configuration['include'] as $additional) {
-            if ('@' !== $additional[0]) {
+            if (!str_starts_with($additional, '@')) {
                 $include[strtolower($additional)] = true;
             }
         }
 
         if (\count($exclude) > 0) {
-            return static function (string $functionName) use ($include, $exclude) {
+            return static function (string $functionName) use ($include, $exclude): bool {
                 return isset($include[strtolower($functionName)]) && !isset($exclude[strtolower($functionName)]);
             };
         }
 
-        return static function (string $functionName) use ($include) {
+        return static function (string $functionName) use ($include): bool {
             return isset($include[strtolower($functionName)]);
         };
     }

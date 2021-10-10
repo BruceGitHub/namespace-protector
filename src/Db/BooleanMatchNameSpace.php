@@ -22,7 +22,7 @@ final class BooleanMatchNameSpace implements MatchCollectionInterface
             $matchMeLiteral = \strtolower($this->stripQueueSlash($matchMe->get()));
 
             if ($this->isMatchMeNameSpaceInCheckEntry($matchMeLiteral, $currentEntry)) {
-                return new MatchedResult($item);
+                return new MatchedResult();
             }
         }
 

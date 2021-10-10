@@ -41,7 +41,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author SpacePossum
  *
  * @internal
  */
@@ -108,7 +107,7 @@ final class DescribeCommand extends Command
         $name = $input->getArgument('name');
 
         try {
-            if ('@' === $name[0]) {
+            if (str_starts_with($name, '@')) {
                 $this->describeSet($output, $name);
 
                 return 0;
@@ -148,7 +147,7 @@ final class DescribeCommand extends Command
 
         $definition = $fixer->getDefinition();
 
-        $description = $definition->getSummary();
+        $summary = $definition->getSummary();
 
         if ($fixer instanceof DeprecatedFixerInterface) {
             $successors = $fixer->getSuccessorsNames();
@@ -156,7 +155,7 @@ final class DescribeCommand extends Command
                 ? 'will be removed on next major version'
                 : sprintf('use %s instead', Utils::naturalLanguageJoinWithBackticks($successors));
             $message = Preg::replace('/(`.+?`)/', '<info>$1</info>', $message);
-            $description .= sprintf(' <error>DEPRECATED</error>: %s.', $message);
+            $summary .= sprintf(' <error>DEPRECATED</error>: %s.', $message);
         }
 
         $output->writeln(sprintf('<info>Description of</info> %s <info>rule</info>.', $name));
@@ -165,10 +164,12 @@ final class DescribeCommand extends Command
             $output->writeln(sprintf('Fixer class: <comment>%s</comment>.', \get_class($fixer)));
         }
 
-        $output->writeln($description);
+        $output->writeln($summary);
 
-        if ($definition->getDescription()) {
-            $output->writeln($definition->getDescription());
+        $description = $definition->getDescription();
+
+        if (null !== $description) {
+            $output->writeln($description);
         }
 
         $output->writeln('');
@@ -176,8 +177,10 @@ final class DescribeCommand extends Command
         if ($fixer->isRisky()) {
             $output->writeln('<error>Fixer applying this rule is risky.</error>');
 
-            if ($definition->getRiskyDescription()) {
-                $output->writeln($definition->getRiskyDescription());
+            $riskyDescription = $definition->getRiskyDescription();
+
+            if (null !== $riskyDescription) {
+                $output->writeln($riskyDescription);
             }
 
             $output->writeln('');
@@ -193,7 +196,14 @@ final class DescribeCommand extends Command
                 $line = '* <info>'.OutputFormatter::escape($option->getName()).'</info>';
                 $allowed = HelpCommand::getDisplayableAllowedValues($option);
 
-                if (null !== $allowed) {
+                if (null === $allowed) {
+                    $allowed = array_map(
+                        static function (string $type): string {
+                            return '<comment>'.$type.'</comment>';
+                        },
+                        $option->getAllowedTypes()
+                    );
+                } else {
                     foreach ($allowed as &$value) {
                         if ($value instanceof AllowedValueSubset) {
                             $value = 'a subset of <comment>'.HelpCommand::toString($value->getAllowedValues()).'</comment>';
@@ -201,18 +211,9 @@ final class DescribeCommand extends Command
                             $value = '<comment>'.HelpCommand::toString($value).'</comment>';
                         }
                     }
-                } else {
-                    $allowed = array_map(
-                        static function (string $type) {
-                            return '<comment>'.$type.'</comment>';
-                        },
-                        $option->getAllowedTypes()
-                    );
                 }
 
-                if (null !== $allowed) {
-                    $line .= ' ('.implode(', ', $allowed).')';
-                }
+                $line .= ' ('.implode(', ', $allowed).')';
 
                 $description = Preg::replace('/(`.+?`)/', '<info>$1</info>', OutputFormatter::escape($option->getDescription()));
                 $line .= ': '.lcfirst(Preg::replace('/\.$/', '', $description)).'; ';
@@ -245,7 +246,7 @@ final class DescribeCommand extends Command
         }
 
         /** @var CodeSampleInterface[] $codeSamples */
-        $codeSamples = array_filter($definition->getCodeSamples(), static function (CodeSampleInterface $codeSample) {
+        $codeSamples = array_filter($definition->getCodeSamples(), static function (CodeSampleInterface $codeSample): bool {
             if ($codeSample instanceof VersionSpecificCodeSampleInterface) {
                 return $codeSample->isSuitableFor(\PHP_VERSION_ID);
             }
@@ -253,9 +254,9 @@ final class DescribeCommand extends Command
             return true;
         });
 
-        if (!\count($codeSamples)) {
+        if (0 === \count($codeSamples)) {
             $output->writeln([
-                'Fixing examples can not be demonstrated on the current PHP version.',
+                'Fixing examples cannot be demonstrated on the current PHP version.',
                 '',
             ]);
         } else {
@@ -278,7 +279,7 @@ final class DescribeCommand extends Command
                 $configuration = $codeSample->getConfiguration();
 
                 if ($fixer instanceof ConfigurableFixerInterface) {
-                    $fixer->configure(null === $configuration ? [] : $configuration);
+                    $fixer->configure($configuration ?? []);
                 }
 
                 $file = $codeSample instanceof FileSpecificCodeSampleInterface
@@ -325,7 +326,7 @@ final class DescribeCommand extends Command
         $help = '';
 
         foreach ($ruleSetDefinitions[$name]->getRules() as $rule => $config) {
-            if ('@' === $rule[0]) {
+            if (str_starts_with($rule, '@')) {
                 $set = $ruleSetDefinitions[$rule];
                 $help .= sprintf(
                     " * <info>%s</info>%s\n   | %s\n\n",
@@ -421,7 +422,7 @@ final class DescribeCommand extends Command
             static function (array $matches) {
                 return Preg::replaceCallback(
                     '/`(.*)<(.*)>`_/',
-                    static function (array $matches) {
+                    static function (array $matches): string {
                         return $matches[1].'('.$matches[2].')';
                     },
                     $matches[1]

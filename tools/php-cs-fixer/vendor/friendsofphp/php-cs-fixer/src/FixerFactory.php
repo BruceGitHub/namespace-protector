@@ -89,12 +89,10 @@ final class FixerFactory
             $builtInFixers = [];
 
             /** @var SplFileInfo $file */
-            foreach (SymfonyFinder::create()->files()->in(__DIR__.'/Fixer')->depth(1) as $file) {
+            foreach (SymfonyFinder::create()->files()->in(__DIR__.'/Fixer')->name('*Fixer.php')->depth(1) as $file) {
                 $relativeNamespace = $file->getRelativePath();
                 $fixerClass = 'PhpCsFixer\\Fixer\\'.($relativeNamespace ? $relativeNamespace.'\\' : '').$file->getBasename('.php');
-                if ('Fixer' === substr($fixerClass, -5)) {
-                    $builtInFixers[] = $fixerClass;
-                }
+                $builtInFixers[] = $fixerClass;
             }
         }
 
@@ -158,11 +156,11 @@ final class FixerFactory
             }
 
             $fixer = $this->fixersByName[$name];
-
             $config = $ruleSet->getRuleConfiguration($name);
+
             if (null !== $config) {
                 if ($fixer instanceof ConfigurableFixerInterface) {
-                    if (!\is_array($config) || !\count($config)) {
+                    if (\count($config) < 1) {
                         throw new InvalidFixerConfigurationException($fixer->getName(), 'Configuration must be an array and may not be empty.');
                     }
 
@@ -225,7 +223,7 @@ final class FixerFactory
             // filter mutual conflicts
             $report[$fixer] = array_filter(
                 $fixers,
-                static function (string $candidate) use ($report, $fixer) {
+                static function (string $candidate) use ($report, $fixer): bool {
                     return !\array_key_exists($candidate, $report) || !\in_array($fixer, $report[$candidate], true);
                 }
             );

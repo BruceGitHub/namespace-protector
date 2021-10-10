@@ -31,7 +31,6 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author SpacePossum
  */
 final class BinaryOperatorSpacesFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
@@ -132,6 +131,9 @@ final class BinaryOperatorSpacesFixer extends AbstractFixer implements Configura
      */
     private $currentLevel;
 
+    /**
+     * @var array<null|string>
+     */
     private static $allowedValues = [
         self::ALIGN,
         self::ALIGN_SINGLE_SPACE,
@@ -254,7 +256,7 @@ $array = [
     /**
      * {@inheritdoc}
      *
-     * Must run after ArrayIndentationFixer, ArraySyntaxFixer, ListSyntaxFixer, NoMultilineWhitespaceAroundDoubleArrowFixer, NoUnsetCastFixer, PowToExponentiationFixer, StandardizeNotEqualsFixer, StrictComparisonFixer.
+     * Must run after ArrayIndentationFixer, ArraySyntaxFixer, AssignNullCoalescingToCoalesceEqualFixer, ListSyntaxFixer, ModernizeStrposFixer, NoMultilineWhitespaceAroundDoubleArrowFixer, NoUnsetCastFixer, PowToExponentiationFixer, StandardizeNotEqualsFixer, StrictComparisonFixer.
      */
     public function getPriority(): int
     {
@@ -297,7 +299,7 @@ $array = [
             --$index;
         }
 
-        if (\count($this->alignOperatorTokens)) {
+        if (\count($this->alignOperatorTokens) > 0) {
             $this->fixAlignment($tokens, $this->alignOperatorTokens);
         }
     }
@@ -312,9 +314,9 @@ $array = [
                 ->setDefault(self::SINGLE_SPACE)
                 ->setAllowedValues(self::$allowedValues)
                 ->getOption(),
-            (new FixerOptionBuilder('operators', 'Dictionary of `binary operator` => `fix strategy` values that differ from the default strategy.'))
+            (new FixerOptionBuilder('operators', 'Dictionary of `binary operator` => `fix strategy` values that differ from the default strategy. Supported are: `'.implode('`, `', self::SUPPORTED_OPERATORS).'`'))
                 ->setAllowedTypes(['array'])
-                ->setAllowedValues([static function (array $option) {
+                ->setAllowedValues([static function (array $option): bool {
                     foreach ($option as $operator => $value) {
                         if (!\in_array($operator, self::SUPPORTED_OPERATORS, true)) {
                             throw new InvalidOptionsException(
@@ -389,7 +391,7 @@ $array = [
         // fix white space after operator
         if ($tokens[$index + 1]->isWhitespace()) {
             $content = $tokens[$index + 1]->getContent();
-            if (' ' !== $content && false === strpos($content, "\n") && !$tokens[$tokens->getNextNonWhitespace($index + 1)]->isComment()) {
+            if (' ' !== $content && !str_contains($content, "\n") && !$tokens[$tokens->getNextNonWhitespace($index + 1)]->isComment()) {
                 $tokens[$index + 1] = new Token([T_WHITESPACE, ' ']);
             }
         } else {
@@ -399,7 +401,7 @@ $array = [
         // fix white space before operator
         if ($tokens[$index - 1]->isWhitespace()) {
             $content = $tokens[$index - 1]->getContent();
-            if (' ' !== $content && false === strpos($content, "\n") && !$tokens[$tokens->getPrevNonWhitespace($index - 1)]->isComment()) {
+            if (' ' !== $content && !str_contains($content, "\n") && !$tokens[$tokens->getPrevNonWhitespace($index - 1)]->isComment()) {
                 $tokens[$index - 1] = new Token([T_WHITESPACE, ' ']);
             }
         } else {
@@ -412,7 +414,7 @@ $array = [
         // fix white space after operator
         if ($tokens[$index + 1]->isWhitespace()) {
             $content = $tokens[$index + 1]->getContent();
-            if (false === strpos($content, "\n") && !$tokens[$tokens->getNextNonWhitespace($index + 1)]->isComment()) {
+            if (!str_contains($content, "\n") && !$tokens[$tokens->getNextNonWhitespace($index + 1)]->isComment()) {
                 $tokens->clearAt($index + 1);
             }
         }
@@ -420,7 +422,7 @@ $array = [
         // fix white space before operator
         if ($tokens[$index - 1]->isWhitespace()) {
             $content = $tokens[$index - 1]->getContent();
-            if (false === strpos($content, "\n") && !$tokens[$tokens->getPrevNonWhitespace($index - 1)]->isComment()) {
+            if (!str_contains($content, "\n") && !$tokens[$tokens->getPrevNonWhitespace($index - 1)]->isComment()) {
                 $tokens->clearAt($index - 1);
             }
         }
@@ -625,7 +627,7 @@ $array = [
 
             if ($token->equals(',')) {
                 for ($i = $index; $i < $endAt - 1; ++$i) {
-                    if (false !== strpos($tokens[$i - 1]->getContent(), "\n")) {
+                    if (str_contains($tokens[$i - 1]->getContent(), "\n")) {
                         break;
                     }
 
@@ -673,7 +675,7 @@ $array = [
         }
 
         $content = $tokens[$index - 1]->getContent();
-        if (' ' !== $content && false === strpos($content, "\n")) {
+        if (' ' !== $content && !str_contains($content, "\n")) {
             $tokens[$index - 1] = new Token([T_WHITESPACE, ' ']);
         }
     }
@@ -688,7 +690,7 @@ $array = [
         for ($j = 0; $j <= $this->deepestLevel; ++$j) {
             $placeholder = sprintf(self::ALIGN_PLACEHOLDER, $j);
 
-            if (false === strpos($tmpCode, $placeholder)) {
+            if (!str_contains($tmpCode, $placeholder)) {
                 continue;
             }
 
@@ -718,7 +720,7 @@ $array = [
                         $before = substr($lines[$index], 0, $currentPosition);
 
                         if (self::ALIGN_SINGLE_SPACE === $alignStrategy) {
-                            if (1 > \strlen($before) || ' ' !== substr($before, -1)) { // if last char of before-content is not ' '; add it
+                            if (!str_ends_with($before, ' ')) { // if last char of before-content is not ' '; add it
                                 $before .= ' ';
                             }
                         } elseif (self::ALIGN_SINGLE_SPACE_MINIMAL === $alignStrategy) {

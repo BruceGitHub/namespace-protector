@@ -78,15 +78,15 @@ final class PhpdocLineSpanFixer extends AbstractFixer implements WhitespacesAwar
     {
         return new FixerConfigurationResolver([
             (new FixerOptionBuilder('const', 'Whether const blocks should be single or multi line'))
-                ->setAllowedValues(['single', 'multi'])
+                ->setAllowedValues(['single', 'multi', null])
                 ->setDefault('multi')
                 ->getOption(),
             (new FixerOptionBuilder('property', 'Whether property doc blocks should be single or multi line'))
-                ->setAllowedValues(['single', 'multi'])
+                ->setAllowedValues(['single', 'multi', null])
                 ->setDefault('multi')
                 ->getOption(),
             (new FixerOptionBuilder('method', 'Whether method doc blocks should be single or multi line'))
-                ->setAllowedValues(['single', 'multi'])
+                ->setAllowedValues(['single', 'multi', null])
                 ->setDefault('multi')
                 ->getOption(),
         ]);
@@ -96,20 +96,23 @@ final class PhpdocLineSpanFixer extends AbstractFixer implements WhitespacesAwar
     {
         $analyzer = new TokensAnalyzer($tokens);
 
-        $elements = $analyzer->getClassyElements();
-
-        foreach ($elements as $index => $element) {
+        foreach ($analyzer->getClassyElements() as $index => $element) {
             if (!$this->hasDocBlock($tokens, $index)) {
                 continue;
             }
 
             $type = $element['type'];
+
+            if (!isset($this->configuration[$type])) {
+                continue;
+            }
+
             $docIndex = $this->getDocBlockIndex($tokens, $index);
             $doc = new DocBlock($tokens[$docIndex]->getContent());
 
             if ('multi' === $this->configuration[$type]) {
-                $doc->makeMultiLine($originalIndent = WhitespacesAnalyzer::detectIndent($tokens, $docIndex), $this->whitespacesConfig->getLineEnding());
-            } else {
+                $doc->makeMultiLine(WhitespacesAnalyzer::detectIndent($tokens, $docIndex), $this->whitespacesConfig->getLineEnding());
+            } elseif ('single' === $this->configuration[$type]) {
                 $doc->makeSingleLine();
             }
 
@@ -126,9 +129,7 @@ final class PhpdocLineSpanFixer extends AbstractFixer implements WhitespacesAwar
 
     private function getDocBlockIndex(Tokens $tokens, int $index): int
     {
-        do {
-            $index = $tokens->getPrevNonWhitespace($index);
-        } while ($tokens[$index]->isGivenKind([
+        $propertyPartKinds = [
             T_PUBLIC,
             T_PROTECTED,
             T_PRIVATE,
@@ -141,7 +142,15 @@ final class PhpdocLineSpanFixer extends AbstractFixer implements WhitespacesAwar
             T_NS_SEPARATOR,
             CT::T_ARRAY_TYPEHINT,
             CT::T_NULLABLE_TYPE,
-        ]));
+        ];
+
+        if (\defined('T_READONLY')) { // @TODO: drop condition when PHP 8.1+ is required
+            $propertyPartKinds[] = T_READONLY;
+        }
+
+        do {
+            $index = $tokens->getPrevNonWhitespace($index);
+        } while ($tokens[$index]->isGivenKind($propertyPartKinds));
 
         return $index;
     }

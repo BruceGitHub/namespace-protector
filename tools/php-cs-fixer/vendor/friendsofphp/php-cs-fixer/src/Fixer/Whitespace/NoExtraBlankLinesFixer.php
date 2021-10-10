@@ -29,10 +29,10 @@ use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\Tokenizer\TokensAnalyzer;
+use PhpCsFixer\Utils;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author SpacePossum
  */
 final class NoExtraBlankLinesFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
@@ -80,6 +80,10 @@ final class NoExtraBlankLinesFixer extends AbstractFixer implements Configurable
      */
     public function configure(array $configuration): void
     {
+        if (isset($configuration['tokens']) && \in_array('use_trait', $configuration['tokens'], true)) {
+            Utils::triggerDeprecation(new \RuntimeException('Option "use_trait" is deprecated, use the rule `class_attributes_separation` with `elements: trait_import` instead.'));
+        }
+
         parent::configure($configuration);
 
         static $reprToTokenMap = [
@@ -248,18 +252,6 @@ class Bar
                 ),
                 new CodeSample(
                     '<?php
-
-class Foo
-{
-    use Bar;
-
-    use Baz;
-}
-',
-                    ['tokens' => ['use_trait']]
-                ),
-                new CodeSample(
-                    '<?php
 switch($a) {
 
     case 1:
@@ -279,7 +271,7 @@ switch($a) {
      * {@inheritdoc}
      *
      * Must run before BlankLineBeforeStatementFixer.
-     * Must run after CombineConsecutiveUnsetsFixer, EmptyLoopBodyFixer, FunctionToConstantFixer, NoEmptyCommentFixer, NoEmptyPhpdocFixer, NoEmptyStatementFixer, NoUnusedImportsFixer, NoUselessElseFixer, NoUselessReturnFixer, NoUselessSprintfFixer.
+     * Must run after ClassAttributesSeparationFixer, CombineConsecutiveUnsetsFixer, EmptyLoopBodyFixer, EmptyLoopConditionFixer, FunctionToConstantFixer, ModernizeStrposFixer, NoEmptyCommentFixer, NoEmptyPhpdocFixer, NoEmptyStatementFixer, NoUnusedImportsFixer, NoUselessElseFixer, NoUselessReturnFixer, NoUselessSprintfFixer, StringLengthToEmptyFixer.
      */
     public function getPriority(): int
     {
@@ -381,7 +373,7 @@ switch($a) {
                 return;
             }
 
-            if ($this->tokens[$i]->isWhitespace() && false !== strpos($this->tokens[$i]->getContent(), "\n")) {
+            if ($this->tokens[$i]->isWhitespace() && str_contains($this->tokens[$i]->getContent(), "\n")) {
                 break;
             }
         }
@@ -408,7 +400,7 @@ switch($a) {
         $bodyEnd = $this->tokens->findBlockEnd($blockTypeInfo['type'], $index);
 
         for ($i = $bodyEnd - 1; $i >= $index; --$i) {
-            if (false !== strpos($this->tokens[$i]->getContent(), "\n")) {
+            if (str_contains($this->tokens[$i]->getContent(), "\n")) {
                 $this->removeEmptyLinesAfterLineWithTokenAt($i);
                 $this->removeEmptyLinesAfterLineWithTokenAt($index);
 
@@ -424,7 +416,7 @@ switch($a) {
         for ($end = $index; $end < $tokenCount; ++$end) {
             if (
                 $this->tokens[$end]->equals('}')
-                || false !== strpos($this->tokens[$end]->getContent(), "\n")
+                || str_contains($this->tokens[$end]->getContent(), "\n")
             ) {
                 break;
             }

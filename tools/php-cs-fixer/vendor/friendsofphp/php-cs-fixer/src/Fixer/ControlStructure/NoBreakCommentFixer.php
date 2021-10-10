@@ -78,7 +78,7 @@ switch ($foo) {
      */
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAnyTokenKindsFound([T_CASE, T_DEFAULT]);
+        return $tokens->isTokenKindFound(T_SWITCH);
     }
 
     /**
@@ -100,7 +100,7 @@ switch ($foo) {
             (new FixerOptionBuilder('comment_text', 'The text to use in the added comment and to detect it.'))
                 ->setAllowedTypes(['string'])
                 ->setAllowedValues([
-                    static function (string $value) {
+                    static function (string $value): bool {
                         if (Preg::match('/\R/', $value)) {
                             throw new InvalidOptionsException('The comment text must not contain new lines.');
                         }
@@ -108,7 +108,7 @@ switch ($foo) {
                         return true;
                     },
                 ])
-                ->setNormalizer(static function (Options $options, $value) {
+                ->setNormalizer(static function (Options $options, string $value): string {
                     return rtrim($value);
                 })
                 ->setDefault('no break')
@@ -122,17 +122,15 @@ switch ($foo) {
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         for ($index = \count($tokens) - 1; $index >= 0; --$index) {
-            if (!$tokens[$index]->isGivenKind([T_CASE, T_DEFAULT])) {
+            if ($tokens[$index]->isGivenKind(T_DEFAULT)) {
+                if ($tokens[$tokens->getNextMeaningfulToken($index)]->isGivenKind(T_DOUBLE_ARROW)) {
+                    continue; // this is "default" from "match"
+                }
+            } elseif (!$tokens[$index]->isGivenKind(T_CASE)) {
                 continue;
             }
 
-            $caseColonIndex = $tokens->getNextTokenOfKind($index, [':', ';', [T_DOUBLE_ARROW]]);
-
-            if ($tokens[$caseColonIndex]->isGivenKind(T_DOUBLE_ARROW)) {
-                continue; // this is "default" from "match"
-            }
-
-            $this->fixCase($tokens, $caseColonIndex);
+            $this->fixCase($tokens, $tokens->getNextTokenOfKind($index, [':', ';']));
         }
     }
 
@@ -219,7 +217,7 @@ switch ($foo) {
 
         $text = preg_quote($this->configuration['comment_text'], '~');
 
-        return 1 === Preg::match("~^((//|#)\\s*{$text}\\s*)|(/\\*\\*?\\s*{$text}\\s*\\*/)$~i", $token->getContent());
+        return 1 === Preg::match("~^((//|#)\\s*{$text}\\s*)|(/\\*\\*?\\s*{$text}(\\s+.*)*\\*/)$~i", $token->getContent());
     }
 
     private function insertCommentAt(Tokens $tokens, int $casePosition): void

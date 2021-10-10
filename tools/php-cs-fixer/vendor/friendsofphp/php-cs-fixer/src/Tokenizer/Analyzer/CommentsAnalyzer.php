@@ -21,7 +21,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Kuba Werłos <werlos@gmail.com>
- * @author SpacePossum
  *
  * @internal
  */
@@ -91,9 +90,7 @@ final class CommentsAnalyzer
             return false;
         }
 
-        $nextToken = $tokens[$nextIndex];
-
-        if ($this->isStructuralElement($nextToken)) {
+        if ($this->isStructuralElement($tokens, $nextIndex)) {
             return true;
         }
 
@@ -155,26 +152,46 @@ final class CommentsAnalyzer
     /**
      * @see https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md#3-definitions
      */
-    private function isStructuralElement(Token $token): bool
+    private function isStructuralElement(Tokens $tokens, int $index): bool
     {
-        static $skip = [
-            T_PRIVATE,
-            T_PROTECTED,
-            T_PUBLIC,
-            T_VAR,
-            T_FUNCTION,
-            T_ABSTRACT,
-            T_CONST,
-            T_NAMESPACE,
-            T_REQUIRE,
-            T_REQUIRE_ONCE,
-            T_INCLUDE,
-            T_INCLUDE_ONCE,
-            T_FINAL,
-            T_STATIC,
-        ];
+        static $skip;
 
-        return $token->isClassy() || $token->isGivenKind($skip);
+        if (null === $skip) {
+            $skip = [
+                T_PRIVATE,
+                T_PROTECTED,
+                T_PUBLIC,
+                T_VAR,
+                T_FUNCTION,
+                T_ABSTRACT,
+                T_CONST,
+                T_NAMESPACE,
+                T_REQUIRE,
+                T_REQUIRE_ONCE,
+                T_INCLUDE,
+                T_INCLUDE_ONCE,
+                T_FINAL,
+                CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PUBLIC,
+                CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PROTECTED,
+                CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PRIVATE,
+            ];
+
+            if (\defined('T_READONLY')) { // @TODO: drop condition when PHP 8.1+ is required
+                $skip[] = T_READONLY;
+            }
+        }
+
+        $token = $tokens[$index];
+
+        if ($token->isClassy() || $token->isGivenKind($skip)) {
+            return true;
+        }
+
+        if ($token->isGivenKind(T_STATIC)) {
+            return !$tokens[$tokens->getNextMeaningfulToken($index)]->isGivenKind(T_DOUBLE_COLON);
+        }
+
+        return false;
     }
 
     /**
@@ -206,7 +223,7 @@ final class CommentsAnalyzer
 
             if (
                 $token->isGivenKind(T_VARIABLE)
-                && false !== strpos($docsContent, $token->getContent())
+                && str_contains($docsContent, $token->getContent())
             ) {
                 return true;
             }
@@ -245,7 +262,7 @@ final class CommentsAnalyzer
         for ($index = $languageConstructIndex + 1; $index < $endIndex; ++$index) {
             $token = $tokens[$index];
 
-            if ($token->isGivenKind(T_VARIABLE) && false !== strpos($docsContent, $token->getContent())) {
+            if ($token->isGivenKind(T_VARIABLE) && str_contains($docsContent, $token->getContent())) {
                 return true;
             }
         }
@@ -271,7 +288,7 @@ final class CommentsAnalyzer
 
     private function getCommentType(string $content): int
     {
-        if ('#' === $content[0]) {
+        if (str_starts_with($content, '#')) {
             return self::TYPE_HASH;
         }
 

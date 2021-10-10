@@ -17,7 +17,7 @@ final class BooleanMatchValue implements MatchCollectionInterface
     {
         /** @var array $data */
         if (\in_array($matchMe->get(), $data, true)) {
-            return new MatchedResult($matchMe());
+            return new MatchedResult();
         }
         return new EmptyMatchedResult();
     }

@@ -24,11 +24,22 @@ final class CaseAnalysis
     /**
      * @var int
      */
+    private $index;
+
+    /**
+     * @var int
+     */
     private $colonIndex;
 
-    public function __construct(int $colonIndex)
+    public function __construct(int $index, int $colonIndex)
     {
+        $this->index = $index;
         $this->colonIndex = $colonIndex;
+    }
+
+    public function getIndex(): int
+    {
+        return $this->index;
     }
 
     public function getColonIndex(): int

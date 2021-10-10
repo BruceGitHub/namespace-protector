@@ -31,7 +31,6 @@ use PhpCsFixer\Tokenizer\TokensAnalyzer;
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  * @author Andreas Möller <am@localheinz.com>
- * @author SpacePossum
  */
 final class BlankLineBeforeStatementFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
@@ -314,7 +313,7 @@ if (true) {
 
         if ($prevNonWhitespaceToken->isComment()) {
             for ($j = $prevNonWhitespace - 1; $j >= 0; --$j) {
-                if (false !== strpos($tokens[$j]->getContent(), "\n")) {
+                if (str_contains($tokens[$j]->getContent(), "\n")) {
                     return false;
                 }
 

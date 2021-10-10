@@ -21,9 +21,6 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Tokens;
 
-/**
- * @author SpacePossum
- */
 final class NoEmptyCommentFixer extends AbstractFixer
 {
     private const TYPE_HASH = 1;
@@ -124,7 +121,7 @@ final class NoEmptyCommentFixer extends AbstractFixer
 
     private function getCommentType(string $content): int
     {
-        if ('#' === $content[0]) {
+        if (str_starts_with($content, '#')) {
             return self::TYPE_HASH;
         }
 

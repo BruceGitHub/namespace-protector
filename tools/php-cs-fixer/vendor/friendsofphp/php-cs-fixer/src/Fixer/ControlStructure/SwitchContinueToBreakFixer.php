@@ -24,6 +24,9 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 final class SwitchContinueToBreakFixer extends AbstractFixer
 {
+    /**
+     * @var int[]
+     */
     private $switchLevels = [];
 
     /**
@@ -79,7 +82,7 @@ switch ($foo) {
      */
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAllTokenKindsFound([T_SWITCH, T_CONTINUE, T_LNUMBER]) && !$tokens->hasAlternativeSyntax();
+        return $tokens->isAllTokenKindsFound([T_SWITCH, T_CONTINUE]) && !$tokens->hasAlternativeSyntax();
     }
 
     /**
@@ -152,7 +155,7 @@ switch ($foo) {
     {
         $openCount = 1;
 
-        do {
+        while (true) {
             ++$openIndex;
             $token = $tokens[$openIndex];
 
@@ -173,7 +176,7 @@ switch ($foo) {
             }
 
             $openIndex = $this->doFix($tokens, $openIndex, $depth, false);
-        } while (true);
+        }
 
         return $openIndex;
     }

@@ -110,11 +110,11 @@ final class DoctrineAnnotationSpacesFixer extends AbstractDoctrineAnnotationFixe
      */
     protected function fixAnnotations(Tokens $doctrineAnnotationTokens): void
     {
-        if ($this->configuration['around_parentheses']) {
+        if (true === $this->configuration['around_parentheses']) {
             $this->fixSpacesAroundParentheses($doctrineAnnotationTokens);
         }
 
-        if ($this->configuration['around_commas']) {
+        if (true === $this->configuration['around_commas']) {
             $this->fixSpacesAroundCommas($doctrineAnnotationTokens);
         }
 
@@ -170,7 +170,7 @@ final class DoctrineAnnotationSpacesFixer extends AbstractDoctrineAnnotationFixe
             }
 
             if ($token->isType(DocLexer::T_NONE)) {
-                if (false !== strpos($token->getContent(), "\n")) {
+                if (str_contains($token->getContent(), "\n")) {
                     continue;
                 }
 

@@ -21,11 +21,11 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
-/**
- * @author SpacePossum
- */
 final class MagicMethodCasingFixer extends AbstractFixer
 {
+    /**
+     * @var array<string,string>
+     */
     private static $magicNames = [
         '__call' => '__call',
         '__callstatic' => '__callStatic',
@@ -116,7 +116,8 @@ $foo->__INVOKE(1);
             }
 
             $content = $tokens[$index]->getContent();
-            if ('__' !== substr($content, 0, 2)) {
+
+            if (!str_starts_with($content, '__')) {
                 continue; // cheap look ahead
             }
 

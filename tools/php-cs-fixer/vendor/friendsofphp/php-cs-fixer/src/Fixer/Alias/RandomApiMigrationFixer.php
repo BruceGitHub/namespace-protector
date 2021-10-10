@@ -84,14 +84,6 @@ final class RandomApiMigrationFixer extends AbstractFunctionReferenceFixer imple
     /**
      * {@inheritdoc}
      */
-    public function isCandidate(Tokens $tokens): bool
-    {
-        return $tokens->isTokenKindFound(T_STRING);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         $argumentsAnalyzer = new ArgumentsAnalyzer();
@@ -103,7 +95,7 @@ final class RandomApiMigrationFixer extends AbstractFunctionReferenceFixer imple
 
             $currIndex = 0;
 
-            while (null !== $currIndex) {
+            do {
                 // try getting function reference and translate boundaries for humans
                 $boundaries = $this->find($functionIdentity, $tokens, $currIndex, $tokens->count() - 1);
 
@@ -135,7 +127,7 @@ final class RandomApiMigrationFixer extends AbstractFunctionReferenceFixer imple
 
                     $currIndex += 6;
                 }
-            }
+            } while (null !== $currIndex);
         }
     }
 
@@ -147,7 +139,7 @@ final class RandomApiMigrationFixer extends AbstractFunctionReferenceFixer imple
         return new FixerConfigurationResolver([
             (new FixerOptionBuilder('replacements', 'Mapping between replaced functions with the new ones.'))
                 ->setAllowedTypes(['array'])
-                ->setAllowedValues([static function (array $value) {
+                ->setAllowedValues([static function (array $value): bool {
                     foreach ($value as $functionName => $replacement) {
                         if (!\array_key_exists($functionName, self::$argumentCounts)) {
                             throw new InvalidOptionsException(sprintf(

@@ -15,10 +15,9 @@ declare(strict_types=1);
 namespace PhpCsFixer\Fixer\Import;
 
 use PhpCsFixer\AbstractFixer;
+use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
-use PhpCsFixer\FixerDefinition\VersionSpecification;
-use PhpCsFixer\FixerDefinition\VersionSpecificCodeSample;
 use PhpCsFixer\Tokenizer\Analyzer\Analysis\NamespaceUseAnalysis;
 use PhpCsFixer\Tokenizer\Analyzer\NamespaceUsesAnalyzer;
 use PhpCsFixer\Tokenizer\CT;
@@ -38,9 +37,8 @@ final class GroupImportFixer extends AbstractFixer
         return new FixerDefinition(
             'There MUST be group use for the same namespaces.',
             [
-                new VersionSpecificCodeSample(
-                    "<?php\nuse Foo\\Bar;\nuse Foo\\Baz;\n",
-                    new VersionSpecification(70000)
+                new CodeSample(
+                    "<?php\nuse Foo\\Bar;\nuse Foo\\Baz;\n"
                 ),
             ]
         );
@@ -51,7 +49,7 @@ final class GroupImportFixer extends AbstractFixer
      */
     public function isCandidate(Tokens $tokens): bool
     {
-        return \PHP_VERSION_ID >= 70000 && $tokens->isTokenKindFound(T_USE);
+        return $tokens->isTokenKindFound(T_USE);
     }
 
     /**
@@ -83,24 +81,24 @@ final class GroupImportFixer extends AbstractFixer
         }
 
         $allNamespaceAndType = array_map(
-            function (NamespaceUseAnalysis $useDeclaration) {
+            function (NamespaceUseAnalysis $useDeclaration): string {
                 return $this->getNamespaceNameWithSlash($useDeclaration).$useDeclaration->getType();
             },
             $useDeclarations
         );
 
-        $sameNamespaces = array_filter(array_count_values($allNamespaceAndType), function (int $count) {
+        $sameNamespaces = array_filter(array_count_values($allNamespaceAndType), static function (int $count): bool {
             return $count > 1;
         });
         $sameNamespaces = array_keys($sameNamespaces);
 
-        $sameNamespaceAnalysis = array_filter($useDeclarations, function (NamespaceUseAnalysis $useDeclaration) use ($sameNamespaces) {
+        $sameNamespaceAnalysis = array_filter($useDeclarations, function (NamespaceUseAnalysis $useDeclaration) use ($sameNamespaces): bool {
             $namespaceNameAndType = $this->getNamespaceNameWithSlash($useDeclaration).$useDeclaration->getType();
 
             return \in_array($namespaceNameAndType, $sameNamespaces, true);
         });
 
-        usort($sameNamespaceAnalysis, function (NamespaceUseAnalysis $a, NamespaceUseAnalysis $b) {
+        usort($sameNamespaceAnalysis, function (NamespaceUseAnalysis $a, NamespaceUseAnalysis $b): int {
             $namespaceA = $this->getNamespaceNameWithSlash($a);
             $namespaceB = $this->getNamespaceNameWithSlash($b);
 

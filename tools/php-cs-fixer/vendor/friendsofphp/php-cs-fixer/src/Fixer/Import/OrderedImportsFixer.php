@@ -23,8 +23,6 @@ use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
-use PhpCsFixer\FixerDefinition\VersionSpecification;
-use PhpCsFixer\FixerDefinition\VersionSpecificCodeSample;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
@@ -35,7 +33,6 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 /**
  * @author Sebastiaan Stok <s.stok@rollerscapes.net>
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author SpacePossum
  * @author Darius Matulionis <darius@matulionis.lt>
  * @author Adriano Pilger <adriano.pilger@gmail.com>
  */
@@ -93,7 +90,9 @@ final class OrderedImportsFixer extends AbstractFixer implements ConfigurableFix
         return new FixerDefinition(
             'Ordering `use` statements.',
             [
-                new CodeSample("<?php\nuse Z; use A;\n"),
+                new CodeSample(
+                    "<?php\nuse function AAC;\nuse const AAB;\nuse AAA;\n"
+                ),
                 new CodeSample(
                     '<?php
 use Acme\Bar;
@@ -103,11 +102,7 @@ use Bar;
 ',
                     ['sort_algorithm' => self::SORT_LENGTH]
                 ),
-                new VersionSpecificCodeSample(
-                    "<?php\nuse function AAC;\nuse const AAB;\nuse AAA;\n",
-                    new VersionSpecification(70000)
-                ),
-                new VersionSpecificCodeSample(
+                new CodeSample(
                     '<?php
 use const AAAA;
 use const BBB;
@@ -119,7 +114,6 @@ use Acme;
 use function CCC\AA;
 use function DDD;
 ',
-                    new VersionSpecification(70000),
                     [
                         'sort_algorithm' => self::SORT_LENGTH,
                         'imports_order' => [
@@ -129,7 +123,7 @@ use function DDD;
                         ],
                     ]
                 ),
-                new VersionSpecificCodeSample(
+                new CodeSample(
                     '<?php
 use const BBB;
 use const AAAA;
@@ -141,7 +135,6 @@ use Bar;
 use function DDD;
 use function CCC\AA;
 ',
-                    new VersionSpecification(70000),
                     [
                         'sort_algorithm' => self::SORT_ALPHA,
                         'imports_order' => [
@@ -151,7 +144,7 @@ use function CCC\AA;
                         ],
                     ]
                 ),
-                new VersionSpecificCodeSample(
+                new CodeSample(
                     '<?php
 use const BBB;
 use const AAAA;
@@ -163,7 +156,6 @@ use Acme;
 use AAC;
 use Bar;
 ',
-                    new VersionSpecification(70000),
                     [
                         'sort_algorithm' => self::SORT_NONE,
                         'imports_order' => [
@@ -264,10 +256,10 @@ use Bar;
                 ->getOption(),
             (new FixerOptionBuilder('imports_order', 'Defines the order of import types.'))
                 ->setAllowedTypes(['array', 'null'])
-                ->setAllowedValues([static function (?array $value) use ($supportedSortTypes) {
+                ->setAllowedValues([static function (?array $value) use ($supportedSortTypes): bool {
                     if (null !== $value) {
                         $missing = array_diff($supportedSortTypes, $value);
-                        if (\count($missing)) {
+                        if (\count($missing) > 0) {
                             throw new InvalidOptionsException(sprintf(
                                 'Missing sort %s "%s".',
                                 1 === \count($missing) ? 'type' : 'types',
@@ -276,7 +268,7 @@ use Bar;
                         }
 
                         $unknown = array_diff($value, $supportedSortTypes);
-                        if (\count($unknown)) {
+                        if (\count($unknown) > 0) {
                             throw new InvalidOptionsException(sprintf(
                                 'Unknown sort %s "%s".',
                                 1 === \count($unknown) ? 'type' : 'types',
@@ -414,7 +406,7 @@ use Bar;
                                 if (
                                     '' === $firstIndent
                                     && $namespaceTokens[$k2]->isWhitespace()
-                                    && false !== strpos($namespaceTokens[$k2]->getContent(), $lineEnding)
+                                    && str_contains($namespaceTokens[$k2]->getContent(), $lineEnding)
                                 ) {
                                     $lastIndent = $lineEnding;
                                     $firstIndent = $lineEnding.$this->whitespacesConfig->getIndent();
@@ -490,8 +482,8 @@ use Bar;
             }
 
             // Sorting each group by algorithm.
-            foreach ($groupedByTypes as $type => $indexes) {
-                $groupedByTypes[$type] = $this->sortByAlgorithm($indexes);
+            foreach ($groupedByTypes as $type => $groupIndexes) {
+                $groupedByTypes[$type] = $this->sortByAlgorithm($groupIndexes);
             }
 
             // Ordering groups

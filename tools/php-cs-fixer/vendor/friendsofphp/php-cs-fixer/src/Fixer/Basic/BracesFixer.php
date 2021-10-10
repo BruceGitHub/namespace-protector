@@ -16,6 +16,7 @@ namespace PhpCsFixer\Fixer\Basic;
 
 use PhpCsFixer\AbstractProxyFixer;
 use PhpCsFixer\Fixer\ConfigurableFixerInterface;
+use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\DeclareParenthesesFixer;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use PhpCsFixer\FixerConfiguration\FixerConfigurationResolver;
@@ -47,6 +48,11 @@ final class BracesFixer extends AbstractProxyFixer implements ConfigurableFixerI
      * @internal
      */
     public const LINE_SAME = 'same';
+
+    /**
+     * @var null|ControlStructureContinuationPositionFixer
+     */
+    private $controlStructureContinuationPositionFixer;
 
     /**
      * {@inheritdoc}
@@ -138,6 +144,17 @@ class Foo
         return 35;
     }
 
+    public function configure(array $configuration = null): void
+    {
+        parent::configure($configuration);
+
+        $this->getControlStructureContinuationPositionFixer()->configure([
+            'position' => self::LINE_NEXT === $this->configuration['position_after_control_structures']
+                ? ControlStructureContinuationPositionFixer::NEXT_LINE
+                : ControlStructureContinuationPositionFixer::SAME_LINE,
+        ]);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -154,7 +171,6 @@ class Foo
         $this->fixCommentBeforeBrace($tokens);
         $this->fixMissingControlBraces($tokens);
         $this->fixIndents($tokens);
-        $this->fixControlContinuationBraces($tokens);
         $this->fixSpaceAroundToken($tokens);
         $this->fixDoWhile($tokens);
 
@@ -193,6 +209,7 @@ class Foo
     protected function createProxyFixers(): array
     {
         return [
+            $this->getControlStructureContinuationPositionFixer(),
             new DeclareParenthesesFixer(),
         ];
     }
@@ -220,7 +237,7 @@ class Foo
             $commentIndex = $tokens->getNextNonWhitespace($prevIndex);
             $commentToken = $tokens[$commentIndex];
 
-            if (!$commentToken->isGivenKind(T_COMMENT) || 0 === strpos($commentToken->getContent(), '/*')) {
+            if (!$commentToken->isGivenKind(T_COMMENT) || str_starts_with($commentToken->getContent(), '/*')) {
                 continue;
             }
 
@@ -255,34 +272,6 @@ class Foo
         }
     }
 
-    private function fixControlContinuationBraces(Tokens $tokens): void
-    {
-        $controlContinuationTokens = $this->getControlContinuationTokens();
-
-        for ($index = \count($tokens) - 1; 0 <= $index; --$index) {
-            $token = $tokens[$index];
-
-            if (!$token->isGivenKind($controlContinuationTokens)) {
-                continue;
-            }
-
-            $prevIndex = $tokens->getPrevNonWhitespace($index);
-            $prevToken = $tokens[$prevIndex];
-
-            if (!$prevToken->equals('}')) {
-                continue;
-            }
-
-            $tokens->ensureWhitespaceAtIndex(
-                $index - 1,
-                1,
-                self::LINE_NEXT === $this->configuration['position_after_control_structures'] ?
-                    $this->whitespacesConfig->getLineEnding().WhitespacesAnalyzer::detectIndent($tokens, $index)
-                    : ' '
-            );
-        }
-    }
-
     private function fixDoWhile(Tokens $tokens): void
     {
         for ($index = \count($tokens) - 1; 0 <= $index; --$index) {
@@ -313,7 +302,7 @@ class Foo
         $controlTokens = $this->getControlTokens();
         $indentTokens = array_filter(
             array_merge($classyAndFunctionTokens, $controlTokens),
-            static function (int $item) {
+            static function (int $item): bool {
                 return T_SWITCH !== $item;
             }
         );
@@ -610,7 +599,7 @@ class Foo
                 if (
                     !$isAnonymousClass
                     && $tokens[$closingParenthesisIndex - 1]->isWhitespace()
-                    && false !== strpos($tokens[$closingParenthesisIndex - 1]->getContent(), "\n")
+                    && str_contains($tokens[$closingParenthesisIndex - 1]->getContent(), "\n")
                 ) {
                     if (!$tokens[$startBraceIndex - 2]->isComment()) {
                         $tokens->ensureWhitespaceAtIndex($startBraceIndex - 1, 1, ' ');
@@ -899,8 +888,8 @@ class Foo
                 $previousToken->isWhitespace()
                 && 1 === Preg::match('/\R$/', $previousToken->getContent())
                 && (
-                    (0 === strpos($nextTokenContent, '//'.$this->whitespacesConfig->getIndent()) || '//' === $nextTokenContent)
-                    || (0 === strpos($nextTokenContent, '#'.$this->whitespacesConfig->getIndent()) || '#' === $nextTokenContent)
+                    (str_starts_with($nextTokenContent, '//'.$this->whitespacesConfig->getIndent()) || '//' === $nextTokenContent)
+                    || (str_starts_with($nextTokenContent, '#'.$this->whitespacesConfig->getIndent()) || '#' === $nextTokenContent)
                 )
             ) {
                 return;
@@ -922,7 +911,7 @@ class Foo
     private function isMultilined(Tokens $tokens, int $startParenthesisIndex, int $endParenthesisIndex): bool
     {
         for ($i = $startParenthesisIndex; $i < $endParenthesisIndex; ++$i) {
-            if (false !== strpos($tokens[$i]->getContent(), "\n")) {
+            if (str_contains($tokens[$i]->getContent(), "\n")) {
                 return true;
             }
         }
@@ -944,7 +933,7 @@ class Foo
             return false;
         }
 
-        if (0 === strpos($tokens[$index]->getContent(), '/*')) {
+        if (str_starts_with($tokens[$index]->getContent(), '/*')) {
             return true;
         }
 
@@ -990,7 +979,7 @@ class Foo
             if (null === $siblingIndex) {
                 return null;
             }
-        } while (0 === strpos($tokens[$siblingIndex]->getContent(), '/*'));
+        } while (str_starts_with($tokens[$siblingIndex]->getContent(), '/*'));
 
         $newLines = 0;
         for ($i = min($siblingIndex, $index) + 1, $max = max($siblingIndex, $index); $i < $max; ++$i) {
@@ -1004,5 +993,14 @@ class Foo
         }
 
         return $siblingIndex;
+    }
+
+    private function getControlStructureContinuationPositionFixer(): ControlStructureContinuationPositionFixer
+    {
+        if (null === $this->controlStructureContinuationPositionFixer) {
+            $this->controlStructureContinuationPositionFixer = new ControlStructureContinuationPositionFixer();
+        }
+
+        return $this->controlStructureContinuationPositionFixer;
     }
 }

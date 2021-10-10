@@ -148,7 +148,7 @@ if (count($x)) {
 
         $newImports = array_filter($newImports);
 
-        if ($newImports) {
+        if (\count($newImports) > 0) {
             $this->insertImports($tokens, $newImports, $useDeclarations);
         }
     }
@@ -176,7 +176,7 @@ if (count($x)) {
      */
     private function importConstants(Tokens $tokens, array $useDeclarations): array
     {
-        [$global, $other] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration) {
+        [$global, $other] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration): bool {
             return $declaration->isConstant();
         }, true);
 
@@ -248,7 +248,7 @@ if (count($x)) {
      */
     private function importFunctions(Tokens $tokens, array $useDeclarations): array
     {
-        [$global, $other] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration) {
+        [$global, $other] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration): bool {
             return $declaration->isFunction();
         }, false);
 
@@ -299,7 +299,7 @@ if (count($x)) {
      */
     private function importClasses(Tokens $tokens, array $useDeclarations): array
     {
-        [$global, $other] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration) {
+        [$global, $other] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration): bool {
             return $declaration->isClass();
         }, false);
 
@@ -315,7 +315,7 @@ if (count($x)) {
                 $docBlocks[$index] = new DocBlock($token->getContent());
 
                 $this->traverseDocBlockTypes($docBlocks[$index], static function (string $type) use ($global, &$other): void {
-                    if (false !== strpos($type, '\\')) {
+                    if (str_contains($type, '\\')) {
                         return;
                     }
 
@@ -378,7 +378,7 @@ if (count($x)) {
         $imports = [];
 
         foreach ($docBlocks as $index => $docBlock) {
-            $changed = $this->traverseDocBlockTypes($docBlock, static function (string $type) use ($global, $other, &$imports) {
+            $changed = $this->traverseDocBlockTypes($docBlock, static function (string $type) use ($global, $other, &$imports): string {
                 if ('\\' !== $type[0]) {
                     return $type;
                 }
@@ -386,7 +386,7 @@ if (count($x)) {
                 $name = substr($type, 1);
                 $checkName = strtolower($name);
 
-                if (false !== strpos($checkName, '\\') || isset($other[$checkName])) {
+                if (str_contains($checkName, '\\') || isset($other[$checkName])) {
                     return $type;
                 }
 
@@ -443,7 +443,7 @@ if (count($x)) {
      */
     private function insertImports(Tokens $tokens, array $imports, array $useDeclarations): void
     {
-        if ($useDeclarations) {
+        if (\count($useDeclarations) > 0) {
             $useDeclaration = end($useDeclarations);
             $index = $useDeclaration->getEndIndex() + 1;
         } else {
@@ -453,7 +453,7 @@ if (count($x)) {
 
         $lineEnding = $this->whitespacesConfig->getLineEnding();
 
-        if (!$tokens[$index]->isWhitespace() || false === strpos($tokens[$index]->getContent(), "\n")) {
+        if (!$tokens[$index]->isWhitespace() || !str_contains($tokens[$index]->getContent(), "\n")) {
             $tokens->insertAt($index, new Token([T_WHITESPACE, $lineEnding]));
         }
 
@@ -490,7 +490,7 @@ if (count($x)) {
             return;
         }
 
-        [$global] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration) {
+        [$global] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration): bool {
             return $declaration->isConstant() && !$declaration->isAliased();
         }, true);
 
@@ -532,7 +532,7 @@ if (count($x)) {
             return;
         }
 
-        [$global] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration) {
+        [$global] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration): bool {
             return $declaration->isFunction() && !$declaration->isAliased();
         }, false);
 
@@ -574,7 +574,7 @@ if (count($x)) {
             return;
         }
 
-        [$global] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration) {
+        [$global] = $this->filterUseDeclarations($useDeclarations, static function (NamespaceUseAnalysis $declaration): bool {
             return $declaration->isClass() && !$declaration->isAliased();
         }, false);
 
@@ -590,7 +590,7 @@ if (count($x)) {
             if ($token->isGivenKind(T_DOC_COMMENT)) {
                 $doc = new DocBlock($token->getContent());
 
-                $changed = $this->traverseDocBlockTypes($doc, static function (string $type) use ($global) {
+                $changed = $this->traverseDocBlockTypes($doc, static function (string $type) use ($global): string {
                     if (!isset($global[strtolower($type)])) {
                         return $type;
                     }
@@ -640,7 +640,7 @@ if (count($x)) {
 
             $fullName = ltrim($declaration->getFullName(), '\\');
 
-            if (false !== strpos($fullName, '\\')) {
+            if (str_contains($fullName, '\\')) {
                 $name = $caseSensitive ? $declaration->getShortName() : strtolower($declaration->getShortName());
                 $other[$name] = true;
 
@@ -709,7 +709,7 @@ if (count($x)) {
     {
         $annotations = $doc->getAnnotationsOfType(Annotation::getTagsWithTypes());
 
-        if (!$annotations) {
+        if (0 === \count($annotations)) {
             return false;
         }
 

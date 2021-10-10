@@ -23,6 +23,7 @@ use PhpCsFixer\Cache\NullCacheManager;
 use PhpCsFixer\Cache\Signature;
 use PhpCsFixer\ConfigInterface;
 use PhpCsFixer\ConfigurationException\InvalidConfigurationException;
+use PhpCsFixer\Console\Command\HelpCommand;
 use PhpCsFixer\Console\Report\FixReport\ReporterFactory;
 use PhpCsFixer\Console\Report\FixReport\ReporterInterface;
 use PhpCsFixer\Differ\DifferInterface;
@@ -133,6 +134,9 @@ final class ConfigurationResolver
         'verbosity' => null,
     ];
 
+    /**
+     * @var null|string
+     */
     private $cacheFile;
 
     /**
@@ -330,18 +334,18 @@ final class ConfigurationResolver
 
             if (false === $this->getRiskyAllowed()) {
                 $riskyFixers = array_map(
-                    static function (FixerInterface $fixer) {
+                    static function (FixerInterface $fixer): string {
                         return $fixer->getName();
                     },
                     array_filter(
                         $this->fixers,
-                        static function (FixerInterface $fixer) {
+                        static function (FixerInterface $fixer): bool {
                             return $fixer->isRisky();
                         }
                     )
                 );
 
-                if (\count($riskyFixers)) {
+                if (\count($riskyFixers) > 0) {
                     throw new InvalidConfigurationException(sprintf('The rules contain risky fixers ("%s"), but they are not allowed to run. Perhaps you forget to use --allow-risky=yes option?', implode('", "', $riskyFixers)));
                 }
             }
@@ -374,7 +378,7 @@ final class ConfigurationResolver
                 $this->path = $this->options['path'];
             } else {
                 $this->path = array_map(
-                    static function (string $rawPath) use ($cwd, $filesystem) {
+                    static function (string $rawPath) use ($cwd, $filesystem): string {
                         $path = trim($rawPath);
 
                         if ('' === $path) {
@@ -591,9 +595,7 @@ final class ConfigurationResolver
     private function getFormat(): string
     {
         if (null === $this->format) {
-            $this->format = null === $this->options['format']
-                ? $this->getConfig()->getFormat()
-                : $this->options['format'];
+            $this->format = $this->options['format'] ?? $this->getConfig()->getFormat();
         }
 
         return $this->format;
@@ -639,8 +641,9 @@ final class ConfigurationResolver
             throw new InvalidConfigurationException('Empty rules value is not allowed.');
         }
 
-        if ('{' === $rules[0]) {
+        if (str_starts_with($rules, '{')) {
             $rules = json_decode($rules, true);
+
             if (JSON_ERROR_NONE !== json_last_error()) {
                 throw new InvalidConfigurationException(sprintf('Invalid JSON rules input: "%s".', json_last_error_msg()));
             }
@@ -652,11 +655,12 @@ final class ConfigurationResolver
 
         foreach (explode(',', $this->options['rules']) as $rule) {
             $rule = trim($rule);
+
             if ('' === $rule) {
                 throw new InvalidConfigurationException('Empty rule name is not allowed.');
             }
 
-            if ('-' === $rule[0]) {
+            if (str_starts_with($rule, '-')) {
                 $rules[substr($rule, 1)] = false;
             } else {
                 $rules[$rule] = true;
@@ -677,6 +681,7 @@ final class ConfigurationResolver
          * @see RuleSet::resolveSet()
          */
         $ruleSet = [];
+
         foreach ($rules as $key => $value) {
             if (\is_int($key)) {
                 throw new InvalidConfigurationException(sprintf('Missing value for "%s" rule/set.', $value));
@@ -684,6 +689,7 @@ final class ConfigurationResolver
 
             $ruleSet[$key] = true;
         }
+
         $ruleSet = new RuleSet($ruleSet);
 
         /** @var string[] $configuredFixers */
@@ -692,7 +698,7 @@ final class ConfigurationResolver
         $fixers = $this->createFixerFactory()->getFixers();
 
         /** @var string[] $availableFixers */
-        $availableFixers = array_map(static function (FixerInterface $fixer) {
+        $availableFixers = array_map(static function (FixerInterface $fixer): string {
             return $fixer->getName();
         }, $fixers);
 
@@ -701,20 +707,90 @@ final class ConfigurationResolver
             $availableFixers
         );
 
-        if (\count($unknownFixers)) {
-            $matcher = new WordMatcher($availableFixers);
+        if (\count($unknownFixers) > 0) {
+            $renamedRules = [
+                'blank_line_before_return' => [
+                    'new_name' => 'blank_line_before_statement',
+                    'config' => ['statements' => ['return']],
+                ],
+                'final_static_access' => [
+                    'new_name' => 'self_static_accessor',
+                ],
+                'hash_to_slash_comment' => [
+                    'new_name' => 'single_line_comment_style',
+                    'config' => ['comment_types' => ['hash']],
+                ],
+                'lowercase_constants' => [
+                    'new_name' => 'constant_case',
+                    'config' => ['case' => 'lower'],
+                ],
+                'no_extra_consecutive_blank_lines' => [
+                    'new_name' => 'no_extra_blank_lines',
+                ],
+                'no_multiline_whitespace_before_semicolons' => [
+                    'new_name' => 'multiline_whitespace_before_semicolons',
+                ],
+                'no_short_echo_tag' => [
+                    'new_name' => 'echo_tag_syntax',
+                    'config' => ['format' => 'long'],
+                ],
+                'php_unit_ordered_covers' => [
+                    'new_name' => 'phpdoc_order_by_value',
+                    'config' => ['annotations' => ['covers']],
+                ],
+                'phpdoc_inline_tag' => [
+                    'new_name' => 'general_phpdoc_tag_rename, phpdoc_inline_tag_normalizer and phpdoc_tag_type',
+                ],
+                'pre_increment' => [
+                    'new_name' => 'increment_style',
+                    'config' => ['style' => 'pre'],
+                ],
+                'psr0' => [
+                    'new_name' => 'psr_autoloading',
+                    'config' => ['dir' => 'x'],
+                ],
+                'psr4' => [
+                    'new_name' => 'psr_autoloading',
+                ],
+                'silenced_deprecation_error' => [
+                    'new_name' => 'error_suppression',
+                ],
+                'trailing_comma_in_multiline_array' => [
+                    'new_name' => 'trailing_comma_in_multiline',
+                    'config' => ['elements' => ['arrays']],
+                ],
+            ];
 
             $message = 'The rules contain unknown fixers: ';
+            $hasOldRule = false;
+
             foreach ($unknownFixers as $unknownFixer) {
-                $alternative = $matcher->match($unknownFixer);
-                $message .= sprintf(
-                    '"%s"%s, ',
-                    $unknownFixer,
-                    null === $alternative ? '' : ' (did you mean "'.$alternative.'"?)'
-                );
+                if (isset($renamedRules[$unknownFixer])) { // Check if present as old renamed rule
+                    $hasOldRule = true;
+                    $message .= sprintf(
+                        '"%s" is renamed (did you mean "%s"?%s), ',
+                        $unknownFixer,
+                        $renamedRules[$unknownFixer]['new_name'],
+                        isset($renamedRules[$unknownFixer]['config']) ? ' (note: use configuration "'.HelpCommand::toString($renamedRules[$unknownFixer]['config']).'")' : ''
+                    );
+                } else { // Go to normal matcher if it is not a renamed rule
+                    $matcher = new WordMatcher($availableFixers);
+                    $alternative = $matcher->match($unknownFixer);
+                    $message .= sprintf(
+                        '"%s"%s, ',
+                        $unknownFixer,
+                        null === $alternative ? '' : ' (did you mean "'.$alternative.'"?)'
+                    );
+                }
             }
 
-            throw new InvalidConfigurationException(substr($message, 0, -2).'.');
+            $message = substr($message, 0, -2).'.';
+
+            if ($hasOldRule) {
+                $message .= "\nFor more info about updating see: https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/v3.0.0/UPGRADE-v3.md#renamed-ruless.";
+            }
+
+            throw new InvalidConfigurationException($message);
         }
 
         foreach ($fixers as $fixer) {
@@ -764,7 +840,7 @@ final class ConfigurationResolver
             $this->getPath()
         ));
 
-        if (!\count($paths)) {
+        if (0 === \count($paths)) {
             if ($isIntersectionPathMode) {
                 return new \ArrayIterator([]);
             }
@@ -802,7 +878,7 @@ final class ConfigurationResolver
 
             return new \CallbackFilterIterator(
                 new \IteratorIterator($nestedFinder),
-                static function (\SplFileInfo $current) use ($pathsByType) {
+                static function (\SplFileInfo $current) use ($pathsByType): bool {
                     $currentRealPath = $current->getRealPath();
 
                     if (\in_array($currentRealPath, $pathsByType['file'], true)) {
@@ -810,7 +886,7 @@ final class ConfigurationResolver
                     }
 
                     foreach ($pathsByType['dir'] as $path) {
-                        if (0 === strpos($currentRealPath, $path)) {
+                        if (str_starts_with($currentRealPath, $path)) {
                             return true;
                         }
                     }

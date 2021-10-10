@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'f9107a280a57f1f24ca4232ab18e6afd62ecf7c7',
+    'reference' => '6220de257ef770d28e92d60693b3da2b9bfacaa2',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'f9107a280a57f1f24ca4232ab18e6afd62ecf7c7',
+      'reference' => '6220de257ef770d28e92d60693b3da2b9bfacaa2',
     ),
     'composer/semver' => 
     array (
@@ -58,12 +58,12 @@
     ),
     'friendsofphp/php-cs-fixer' => 
     array (
-      'pretty_version' => 'v3.1.0',
-      'version' => '3.1.0.0',
+      'pretty_version' => 'v3.2.1',
+      'version' => '3.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'cf4cedb9e8991c2daa94a756176d81bf487e4c4b',
+      'reference' => '13ae36a76b6e329e44ca3cafaa784ea02db9ff14',
     ),
     'php-cs-fixer/diff' => 
     array (

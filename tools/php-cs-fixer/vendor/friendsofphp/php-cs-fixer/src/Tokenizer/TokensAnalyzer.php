@@ -24,7 +24,6 @@ use PhpCsFixer\Tokenizer\Analyzer\GotoLabelAnalyzer;
  *
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  * @author Gregor Harlan <gharlan@web.de>
- * @author SpacePossum
  *
  * @internal
  */
@@ -133,7 +132,7 @@ final class TokensAnalyzer
 
         $tokens = $this->tokens;
 
-        // Skip only when its an array, for short arrays we need the brace for correct
+        // Skip only when it's an array, for short arrays we need the brace for correct
         // level counting
         if ($tokens[$index]->isGivenKind(T_ARRAY)) {
             $index = $tokens->getNextMeaningfulToken($index);
@@ -156,7 +155,7 @@ final class TokensAnalyzer
             $token = $tokens[$index];
             $blockType = Tokens::detectBlockType($token);
 
-            if ($blockType && $blockType['isStart']) {
+            if (null !== $blockType && $blockType['isStart']) {
                 $index = $tokens->findBlockEnd($blockType['type'], $index);
 
                 continue;
@@ -165,7 +164,7 @@ final class TokensAnalyzer
             if (
                 $token->isWhitespace()
                 && !$tokens[$index - 1]->isGivenKind(T_END_HEREDOC)
-                && false !== strpos($token->getContent(), "\n")
+                && str_contains($token->getContent(), "\n")
             ) {
                 return true;
             }
@@ -266,7 +265,14 @@ final class TokensAnalyzer
             return false;
         }
 
-        return $this->tokens[$this->tokens->getPrevMeaningfulToken($index)]->isGivenKind(T_NEW);
+        $index = $this->tokens->getPrevMeaningfulToken($index);
+
+        while ($this->tokens[$index]->isGivenKind(CT::T_ATTRIBUTE_CLOSE)) {
+            $index = $this->tokens->findBlockStart(Tokens::BLOCK_TYPE_ATTRIBUTE, $index);
+            $index = $this->tokens->getPrevMeaningfulToken($index);
+        }
+
+        return $this->tokens[$index]->isGivenKind(T_NEW);
     }
 
     /**
@@ -306,14 +312,14 @@ final class TokensAnalyzer
 
         if (
             $this->tokens[$nextIndex]->equalsAny(['(', '{'])
-            || $this->tokens[$nextIndex]->isGivenKind([T_AS, T_DOUBLE_COLON, T_ELLIPSIS, T_NS_SEPARATOR, CT::T_RETURN_REF, CT::T_TYPE_ALTERNATION, T_VARIABLE])
+            || $this->tokens[$nextIndex]->isGivenKind([T_AS, T_DOUBLE_COLON, T_ELLIPSIS, T_NS_SEPARATOR, CT::T_RETURN_REF, CT::T_TYPE_ALTERNATION, CT::T_TYPE_INTERSECTION, T_VARIABLE])
         ) {
             return false;
         }
 
         $prevIndex = $this->tokens->getPrevMeaningfulToken($index);
 
-        if ($this->tokens[$prevIndex]->isGivenKind([T_AS, T_CLASS, T_CONST, T_DOUBLE_COLON, T_FUNCTION, T_GOTO, CT::T_GROUP_IMPORT_BRACE_OPEN, T_INTERFACE, T_TRAIT, CT::T_TYPE_COLON]) || $this->tokens[$prevIndex]->isObjectOperator()) {
+        if ($this->tokens[$prevIndex]->isGivenKind([T_AS, T_CLASS, T_CONST, T_DOUBLE_COLON, T_FUNCTION, T_GOTO, CT::T_GROUP_IMPORT_BRACE_OPEN, T_INTERFACE, T_TRAIT, CT::T_TYPE_COLON, CT::T_TYPE_ALTERNATION, CT::T_TYPE_INTERSECTION]) || $this->tokens[$prevIndex]->isObjectOperator()) {
             return false;
         }
 
@@ -374,10 +380,6 @@ final class TokensAnalyzer
         }
 
         // check for non-capturing catches
-        while ($this->tokens[$prevIndex]->isGivenKind([CT::T_TYPE_ALTERNATION, T_STRING])) {
-            $prevIndex = $this->tokens->getPrevMeaningfulToken($prevIndex);
-        }
-
         if ($this->tokens[$prevIndex]->equals('(')) {
             $prevPrevIndex = $this->tokens->getPrevMeaningfulToken($prevIndex);
             if ($this->tokens[$prevPrevIndex]->isGivenKind(T_CATCH)) {
@@ -389,7 +391,7 @@ final class TokensAnalyzer
     }
 
     /**
-     * Checks if there is an unary successor operator under given index.
+     * Checks if there is a unary successor operator under given index.
      */
     public function isUnarySuccessorOperator(int $index): bool
     {
@@ -415,7 +417,7 @@ final class TokensAnalyzer
     }
 
     /**
-     * Checks if there is an unary predecessor operator under given index.
+     * Checks if there is a unary predecessor operator under given index.
      */
     public function isUnaryPredecessorOperator(int $index): bool
     {
@@ -726,9 +728,9 @@ final class TokensAnalyzer
 
             if (0 === $bracesLevel && $token->isGivenKind(T_VARIABLE)) {
                 $elements[$index] = [
+                    'classIndex' => $classIndex,
                     'token' => $token,
                     'type' => 'property',
-                    'classIndex' => $classIndex,
                 ];
 
                 continue;
@@ -736,21 +738,21 @@ final class TokensAnalyzer
 
             if ($token->isGivenKind(T_FUNCTION)) {
                 $elements[$index] = [
+                    'classIndex' => $classIndex,
                     'token' => $token,
                     'type' => 'method',
-                    'classIndex' => $classIndex,
                 ];
             } elseif ($token->isGivenKind(T_CONST)) {
                 $elements[$index] = [
+                    'classIndex' => $classIndex,
                     'token' => $token,
                     'type' => 'const',
-                    'classIndex' => $classIndex,
                 ];
             } elseif ($token->isGivenKind(CT::T_USE_TRAIT)) {
                 $elements[$index] = [
+                    'classIndex' => $classIndex,
                     'token' => $token,
                     'type' => 'trait_import',
-                    'classIndex' => $classIndex,
                 ];
             }
         }

@@ -29,7 +29,6 @@ use PhpCsFixer\Tokenizer\TokensAnalyzer;
  * Fixer for rules defined in PSR2 ¶3.
  *
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author SpacePossum
  */
 final class SingleImportPerStatementFixer extends AbstractFixer implements WhitespacesAwareFixerInterface
 {
@@ -156,7 +155,7 @@ final class SingleImportPerStatementFixer extends AbstractFixer implements White
                     $i += 2;
                 }
 
-                if ($token->isWhitespace(" \t") || '//' !== substr($tokens[$i - 1]->getContent(), 0, 2)) {
+                if ($token->isWhitespace(" \t") || !str_starts_with($tokens[$i - 1]->getContent(), '//')) {
                     continue;
                 }
             }
@@ -232,7 +231,7 @@ final class SingleImportPerStatementFixer extends AbstractFixer implements White
 
             if ($tokens[$i - 1]->isWhitespace()) {
                 $tokens[$i - 1] = new Token([T_WHITESPACE, $ending.$indent]);
-            } elseif (false === strpos($tokens[$i - 1]->getContent(), "\n")) {
+            } elseif (!str_contains($tokens[$i - 1]->getContent(), "\n")) {
                 $tokens->insertAt($i, new Token([T_WHITESPACE, $ending.$indent]));
             }
         }

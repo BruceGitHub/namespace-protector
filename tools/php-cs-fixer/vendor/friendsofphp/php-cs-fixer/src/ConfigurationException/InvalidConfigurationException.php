@@ -19,8 +19,6 @@ use PhpCsFixer\Console\Command\FixCommandExitStatusCalculator;
 /**
  * Exceptions of this type are thrown on misconfiguration of the Fixer.
  *
- * @author SpacePossum
- *
  * @internal
  * @final Only internal extending this class is supported
  */
@@ -30,7 +28,7 @@ class InvalidConfigurationException extends \InvalidArgumentException
     {
         parent::__construct(
             $message,
-            null === $code ? FixCommandExitStatusCalculator::EXIT_STATUS_FLAG_HAS_INVALID_CONFIG : $code,
+            $code ?? FixCommandExitStatusCalculator::EXIT_STATUS_FLAG_HAS_INVALID_CONFIG,
             $previous
         );
     }

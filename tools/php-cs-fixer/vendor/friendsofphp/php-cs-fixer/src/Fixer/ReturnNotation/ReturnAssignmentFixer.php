@@ -23,9 +23,6 @@ use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\Tokenizer\TokensAnalyzer;
 
-/**
- * @author SpacePossum
- */
 final class ReturnAssignmentFixer extends AbstractFixer
 {
     /**
@@ -180,7 +177,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
                 continue;
             }
 
-            // test if there this is anything in the function body that might
+            // test if there is anything in the function body that might
             // change global state or indirect changes (like through references, eval, etc.)
 
             if ($tokens[$index]->isGivenKind($riskyKinds)) {
@@ -231,7 +228,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
             }
 
             // Note: here we are @ "; return $a;" (or "; return $a ? >")
-            do {
+            while (true) {
                 $prevMeaningFul = $tokens->getPrevMeaningfulToken($assignVarEndIndex);
 
                 if (!$tokens[$prevMeaningFul]->equals(')')) {
@@ -239,7 +236,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
                 }
 
                 $assignVarEndIndex = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $prevMeaningFul);
-            } while (true);
+            }
 
             $assignVarOperatorIndex = $tokens->getPrevTokenOfKind(
                 $assignVarEndIndex,

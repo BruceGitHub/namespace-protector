@@ -23,8 +23,6 @@ use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
-use PhpCsFixer\FixerDefinition\VersionSpecification;
-use PhpCsFixer\FixerDefinition\VersionSpecificCodeSample;
 use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
@@ -34,7 +32,6 @@ use PhpCsFixer\Tokenizer\TokensAnalyzer;
  * Fixer for rules defined in PSR2 ¶4.3, ¶4.5.
  *
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author SpacePossum
  */
 final class VisibilityRequiredFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
@@ -59,14 +56,13 @@ class Sample
 }
 '
                 ),
-                new VersionSpecificCodeSample(
+                new CodeSample(
                     '<?php
 class Sample
 {
     const SAMPLE = 1;
 }
 ',
-                    new VersionSpecification(70100),
                     ['elements' => ['const']]
                 ),
             ]
@@ -101,14 +97,21 @@ class Sample
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         $tokensAnalyzer = new TokensAnalyzer($tokens);
-        $propertyTypeDeclarationKinds = [T_STRING, T_NS_SEPARATOR, CT::T_NULLABLE_TYPE, CT::T_ARRAY_TYPEHINT, CT::T_TYPE_ALTERNATION];
+
+        $propertyTypeDeclarationKinds = [T_STRING, T_NS_SEPARATOR, CT::T_NULLABLE_TYPE, CT::T_ARRAY_TYPEHINT, CT::T_TYPE_ALTERNATION, CT::T_TYPE_INTERSECTION];
+
+        if (\defined('T_READONLY')) { // @TODO: drop condition when PHP 8.1+ is required
+            $propertyReadOnlyType = T_READONLY;
+            $propertyTypeDeclarationKinds[] = T_READONLY;
+        } else {
+            $propertyReadOnlyType = -999;
+        }
+
+        $expectedKindsGeneric = [T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_STATIC, T_VAR];
+        $expectedKindsPropertyKinds = array_merge($expectedKindsGeneric, $propertyTypeDeclarationKinds);
 
         foreach (array_reverse($tokensAnalyzer->getClassyElements(), true) as $index => $element) {
             if (!\in_array($element['type'], $this->configuration['elements'], true)) {
-                continue;
-            }
-
-            if (\PHP_VERSION_ID < 70100 && 'const' === $element['type']) {
                 continue;
             }
 
@@ -116,18 +119,20 @@ class Sample
             $visibilityIndex = null;
             $staticIndex = null;
             $typeIndex = null;
+            $readOnlyIndex = null;
             $prevIndex = $tokens->getPrevMeaningfulToken($index);
-            $expectedKinds = [T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC, T_STATIC, T_VAR];
-
-            if ('property' === $element['type']) {
-                $expectedKinds = array_merge($expectedKinds, $propertyTypeDeclarationKinds);
-            }
+            $expectedKinds = 'property' === $element['type']
+                ? $expectedKindsPropertyKinds
+                : $expectedKindsGeneric
+            ;
 
             while ($tokens[$prevIndex]->isGivenKind($expectedKinds)) {
                 if ($tokens[$prevIndex]->isGivenKind([T_ABSTRACT, T_FINAL])) {
                     $abstractFinalIndex = $prevIndex;
                 } elseif ($tokens[$prevIndex]->isGivenKind(T_STATIC)) {
                     $staticIndex = $prevIndex;
+                } elseif ($tokens[$prevIndex]->isGivenKind($propertyReadOnlyType)) {
+                    $readOnlyIndex = $prevIndex;
                 } elseif ($tokens[$prevIndex]->isGivenKind($propertyTypeDeclarationKinds)) {
                     $typeIndex = $prevIndex;
                 } else {
@@ -145,11 +150,13 @@ class Sample
                 continue;
             }
 
-            if (null !== $staticIndex) {
-                if ($this->isKeywordPlacedProperly($tokens, $staticIndex, $index)) {
-                    $index = $staticIndex;
+            $swapIndex = $staticIndex ?? $readOnlyIndex; // "static" property cannot be "readonly", so there can always be at most one swap
+
+            if (null !== $swapIndex) {
+                if ($this->isKeywordPlacedProperly($tokens, $swapIndex, $index)) {
+                    $index = $swapIndex;
                 } else {
-                    $this->moveTokenAndEnsureSingleSpaceFollows($tokens, $staticIndex, $index);
+                    $this->moveTokenAndEnsureSingleSpaceFollows($tokens, $swapIndex, $index);
                 }
             }
 
@@ -186,8 +193,8 @@ class Sample
     private function moveTokenAndEnsureSingleSpaceFollows(Tokens $tokens, int $fromIndex, int $toIndex): void
     {
         $tokens->insertAt($toIndex, [$tokens[$fromIndex], new Token([T_WHITESPACE, ' '])]);
-
         $tokens->clearAt($fromIndex);
+
         if ($tokens[$fromIndex + 1]->isWhitespace()) {
             $tokens->clearAt($fromIndex + 1);
         }

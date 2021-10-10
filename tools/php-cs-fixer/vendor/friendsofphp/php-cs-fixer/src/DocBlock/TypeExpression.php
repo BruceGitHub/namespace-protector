@@ -149,15 +149,7 @@ final class TypeExpression
 
     public function getCommonType(): ?string
     {
-        $aliases = [
-            'true' => 'bool',
-            'false' => 'bool',
-            'boolean' => 'bool',
-            'integer' => 'int',
-            'double' => 'float',
-            'real' => 'float',
-            'callback' => 'callable',
-        ];
+        $aliases = $this->getAliases();
 
         $mainType = null;
 
@@ -211,48 +203,37 @@ final class TypeExpression
         $types = implode('|', $types);
 
         $parents = [
-            'array|iterable' => 'iterable',
             'array|Traversable' => 'iterable',
+            'array|iterable' => 'iterable',
             'iterable|Traversable' => 'iterable',
             'self|static' => 'self',
         ];
 
-        if (isset($parents[$types])) {
-            return $parents[$types];
-        }
-
-        return null;
+        return $parents[$types] ?? null;
     }
 
     private function normalize(string $type): string
     {
-        $aliases = [
-            'true' => 'bool',
-            'false' => 'bool',
-            'boolean' => 'bool',
-            'integer' => 'int',
-            'double' => 'float',
-            'real' => 'float',
-            'callback' => 'callable',
-        ];
+        $aliases = $this->getAliases();
 
         if (isset($aliases[$type])) {
             return $aliases[$type];
         }
 
         if (\in_array($type, [
-            'void',
-            'null',
-            'bool',
-            'int',
-            'float',
-            'string',
             'array',
-            'iterable',
-            'object',
+            'bool',
             'callable',
-            'resource',
+            'float',
+            'int',
+            'iterable',
             'mixed',
+            'never',
+            'null',
+            'object',
+            'resource',
+            'string',
+            'void',
         ], true)) {
             return $type;
         }
@@ -265,7 +246,7 @@ final class TypeExpression
             return $matches[1];
         }
 
-        if (0 === strpos($type, '\\')) {
+        if (str_starts_with($type, '\\')) {
             return substr($type, 1);
         }
 
@@ -280,5 +261,21 @@ final class TypeExpression
         }
 
         return "{$this->namespace->getFullName()}\\{$type}";
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private function getAliases(): array
+    {
+        return [
+            'boolean' => 'bool',
+            'callback' => 'callable',
+            'double' => 'float',
+            'false' => 'bool',
+            'integer' => 'int',
+            'real' => 'float',
+            'true' => 'bool',
+        ];
     }
 }

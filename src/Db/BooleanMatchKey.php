@@ -17,7 +17,7 @@ final class BooleanMatchKey implements MatchCollectionInterface
     {
         /** @var array $data */
         if (\array_key_exists($matchMe->get(), $data)) {
-            return new MatchedResult($matchMe());
+            return new MatchedResult();
         }
 
         return new EmptyMatchedResult();

@@ -27,7 +27,7 @@ use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
 /**
- * @author Graham Campbell <graham@alt-three.com>
+ * @author Graham Campbell <hello@gjcampbell.co.uk>
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  */
 final class GeneralPhpdocAnnotationRemoveFixer extends AbstractFixer implements ConfigurableFixerInterface
@@ -90,7 +90,7 @@ function foo() {}
      */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
-        if (!\count($this->configuration['annotations'])) {
+        if (0 === \count($this->configuration['annotations'])) {
             return;
         }
 

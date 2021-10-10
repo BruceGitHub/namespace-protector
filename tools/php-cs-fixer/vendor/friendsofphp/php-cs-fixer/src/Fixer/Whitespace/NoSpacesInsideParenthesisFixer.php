@@ -50,8 +50,8 @@ function foo( \$bar, \$baz )
     /**
      * {@inheritdoc}
      *
-     * Must run before FunctionToConstantFixer.
-     * Must run after CombineConsecutiveIssetsFixer, CombineNestedDirnameFixer, LambdaNotUsedImportFixer, NoUselessSprintfFixer, PowToExponentiationFixer.
+     * Must run before FunctionToConstantFixer, StringLengthToEmptyFixer.
+     * Must run after CombineConsecutiveIssetsFixer, CombineNestedDirnameFixer, LambdaNotUsedImportFixer, ModernizeStrposFixer, NoUselessSprintfFixer, PowToExponentiationFixer.
      */
     public function getPriority(): int
     {
@@ -104,7 +104,7 @@ function foo( \$bar, \$baz )
     {
         $token = $tokens[$index];
 
-        if ($token->isWhitespace() && false === strpos($token->getContent(), "\n")) {
+        if ($token->isWhitespace() && !str_contains($token->getContent(), "\n")) {
             $tokens->clearAt($index);
         }
     }

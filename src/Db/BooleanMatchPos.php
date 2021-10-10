@@ -20,8 +20,14 @@ final class BooleanMatchPos implements MatchCollectionInterface
          * @var string $value
          */
         foreach ($data as $entry => $value) { //todo: remove
+
+            if ($value) {
+                //todo: no-op
+                //this interface will change! soon
+            }
+
             if (\str_contains($matchMe->get(), $entry) === true) {
-                return new MatchedResult($matchMe());
+                return new MatchedResult();
             }
         }
 

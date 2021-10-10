@@ -24,7 +24,7 @@ class IsInPrivateConfiguredEntries implements RuleInterface
         $result = $this->isInPrivateConfiguredEntries($entry, new BooleanMatchNameSpace());
 
         if ($result->matched()) {
-            $event->foundError($result->getInfo());
+            $event->foundError();
             return true;
         }
 

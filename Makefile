@@ -66,7 +66,6 @@ local_install_phpunit:
 	./vendor/bin/phpunit --check-version
 
 local_install_csfixer:
-	mkdir --parents tools/php-cs-fixer 
 	composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
 
 local_install_composer:

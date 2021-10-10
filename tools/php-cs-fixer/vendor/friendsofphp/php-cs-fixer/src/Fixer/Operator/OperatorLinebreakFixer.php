@@ -23,10 +23,10 @@ use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Preg;
-use PhpCsFixer\Tokenizer\Analyzer\Analysis\CaseAnalysis;
+use PhpCsFixer\Tokenizer\Analyzer\Analysis\SwitchAnalysis;
+use PhpCsFixer\Tokenizer\Analyzer\ControlCaseStructuresAnalyzer;
 use PhpCsFixer\Tokenizer\Analyzer\GotoLabelAnalyzer;
 use PhpCsFixer\Tokenizer\Analyzer\ReferenceAnalyzer;
-use PhpCsFixer\Tokenizer\Analyzer\SwitchAnalyzer;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
@@ -81,15 +81,12 @@ function foo() {
     {
         parent::configure($configuration);
 
-        $this->operators = self::BOOLEAN_OPERATORS;
-        if (!$this->configuration['only_booleans']) {
-            $this->operators = array_merge($this->operators, self::getNonBooleanOperators());
-            if (\PHP_VERSION_ID >= 70000) {
-                $this->operators[] = [T_COALESCE];
-                $this->operators[] = [T_SPACESHIP];
-            }
-        }
         $this->position = $this->configuration['position'];
+        $this->operators = self::BOOLEAN_OPERATORS;
+
+        if (false === $this->configuration['only_booleans']) {
+            $this->operators = array_merge($this->operators, self::getNonBooleanOperators());
+        }
     }
 
     /**
@@ -168,27 +165,23 @@ function foo() {
      */
     private function getExcludedIndices(Tokens $tokens): array
     {
-        $indices = [];
-        for ($index = $tokens->count() - 1; $index > 0; --$index) {
-            if ($tokens[$index]->isGivenKind(T_SWITCH)) {
-                $indices = array_merge($indices, $this->getCasesColonsForSwitch($tokens, $index));
+        $colonIndexes = [];
+
+        foreach (ControlCaseStructuresAnalyzer::findControlStructures($tokens, [T_SWITCH]) as $analysis) {
+            foreach ($analysis->getCases() as $case) {
+                $colonIndexes[] = $case->getColonIndex();
+            }
+
+            if ($analysis instanceof SwitchAnalysis) {
+                $defaultAnalysis = $analysis->getDefaultAnalysis();
+
+                if (null !== $defaultAnalysis) {
+                    $colonIndexes[] = $defaultAnalysis->getColonIndex();
+                }
             }
         }
 
-        return $indices;
-    }
-
-    /**
-     * @return int[]
-     */
-    private function getCasesColonsForSwitch(Tokens $tokens, int $switchIndex): array
-    {
-        return array_map(
-            static function (CaseAnalysis $caseAnalysis) {
-                return $caseAnalysis->getColonIndex();
-            },
-            (new SwitchAnalyzer())->getSwitchAnalysis($tokens, $switchIndex)->getCases()
-        );
+        return $colonIndexes;
     }
 
     /**
@@ -281,11 +274,13 @@ function foo() {
     private function getReplacementsAndClear(Tokens $tokens, array $indices, int $direction): array
     {
         return array_map(
-            static function (int $index) use ($tokens, $direction) {
+            static function (int $index) use ($tokens, $direction): Token {
                 $clone = $tokens[$index];
+
                 if ($tokens[$index + $direction]->isWhitespace()) {
                     $tokens->clearAt($index + $direction);
                 }
+
                 $tokens->clearAt($index);
 
                 return $clone;
@@ -297,7 +292,7 @@ function foo() {
     private function isMultiline(Tokens $tokens, int $indexStart, int $indexEnd): bool
     {
         for ($index = $indexStart; $index <= $indexEnd; ++$index) {
-            if (false !== strpos($tokens[$index]->getContent(), "\n")) {
+            if (str_contains($tokens[$index]->getContent(), "\n")) {
                 return true;
             }
         }
@@ -314,8 +309,9 @@ function foo() {
                 [T_IS_IDENTICAL], [T_IS_NOT_EQUAL], [T_IS_NOT_IDENTICAL], [T_IS_SMALLER_OR_EQUAL], [T_MINUS_EQUAL],
                 [T_MOD_EQUAL], [T_MUL_EQUAL], [T_OR_EQUAL], [T_PAAMAYIM_NEKUDOTAYIM], [T_PLUS_EQUAL], [T_POW],
                 [T_POW_EQUAL], [T_SL], [T_SL_EQUAL], [T_SR], [T_SR_EQUAL], [T_XOR_EQUAL],
+                [T_COALESCE], [T_SPACESHIP],
             ],
-            array_map(function ($id) { return [$id]; }, Token::getObjectOperatorKinds())
+            array_map(static function ($id): array { return [$id]; }, Token::getObjectOperatorKinds())
         );
     }
 }

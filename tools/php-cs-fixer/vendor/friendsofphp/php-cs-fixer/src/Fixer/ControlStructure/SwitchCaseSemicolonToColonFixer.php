@@ -18,13 +18,13 @@ use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
+use PhpCsFixer\Tokenizer\Analyzer\Analysis\SwitchAnalysis;
+use PhpCsFixer\Tokenizer\Analyzer\ControlCaseStructuresAnalyzer;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * Fixer for rules defined in PSR2 ¶5.2.
- *
- * @author SpacePossum
  */
 final class SwitchCaseSemicolonToColonFixer extends AbstractFixer
 {
@@ -65,7 +65,7 @@ final class SwitchCaseSemicolonToColonFixer extends AbstractFixer
      */
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAnyTokenKindsFound([T_CASE, T_DEFAULT]);
+        return $tokens->isTokenKindFound(T_SWITCH);
     }
 
     /**
@@ -73,55 +73,22 @@ final class SwitchCaseSemicolonToColonFixer extends AbstractFixer
      */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
-        foreach ($tokens as $index => $token) {
-            if ($token->isGivenKind(T_CASE)) {
-                $this->fixSwitchCase($tokens, $index);
+        /** @var SwitchAnalysis $analysis */
+        foreach (ControlCaseStructuresAnalyzer::findControlStructures($tokens, [T_SWITCH]) as $analysis) {
+            $default = $analysis->getDefaultAnalysis();
+
+            if (null !== $default) {
+                $this->fixTokenIfNeeded($tokens, $default->getColonIndex());
             }
-            if ($token->isGivenKind(T_DEFAULT)) {
-                $this->fixSwitchDefault($tokens, $index);
+
+            foreach ($analysis->getCases() as $caseAnalysis) {
+                $this->fixTokenIfNeeded($tokens, $caseAnalysis->getColonIndex());
             }
         }
     }
 
-    protected function fixSwitchCase(Tokens $tokens, int $index): void
+    private function fixTokenIfNeeded(Tokens $tokens, int $index): void
     {
-        $ternariesCount = 0;
-        do {
-            if ($tokens[$index]->equalsAny(['(', '{'])) { // skip constructs
-                $type = Tokens::detectBlockType($tokens[$index]);
-                $index = $tokens->findBlockEnd($type['type'], $index);
-
-                continue;
-            }
-
-            if ($tokens[$index]->equals('?')) {
-                ++$ternariesCount;
-
-                continue;
-            }
-
-            if ($tokens[$index]->equalsAny([':', ';'])) {
-                if (0 === $ternariesCount) {
-                    break;
-                }
-
-                --$ternariesCount;
-            }
-        } while (++$index);
-
-        if ($tokens[$index]->equals(';')) {
-            $tokens[$index] = new Token(':');
-        }
-    }
-
-    protected function fixSwitchDefault(Tokens $tokens, int $index): void
-    {
-        do {
-            if ($tokens[$index]->equalsAny([':', ';', [T_DOUBLE_ARROW]])) {
-                break;
-            }
-        } while (++$index);
-
         if ($tokens[$index]->equals(';')) {
             $tokens[$index] = new Token(':');
         }

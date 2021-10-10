@@ -18,8 +18,6 @@ use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
-use PhpCsFixer\FixerDefinition\VersionSpecification;
-use PhpCsFixer\FixerDefinition\VersionSpecificCodeSample;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\Tokenizer\TokensAnalyzer;
@@ -79,7 +77,7 @@ final class Foo
 }
 '
                 ),
-                new VersionSpecificCodeSample(
+                new CodeSample(
                     '<?php
 $a = new class() {
     public function getBar()
@@ -87,8 +85,7 @@ $a = new class() {
         return static::class;
     }
 };
-',
-                    new VersionSpecification(70000)
+'
                 ),
             ]
         );
@@ -117,14 +114,14 @@ $a = new class() {
      */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
-        $this->tokensAnalyzer = $tokensAnalyzer = new TokensAnalyzer($tokens);
+        $this->tokensAnalyzer = new TokensAnalyzer($tokens);
 
         $classIndex = $tokens->getNextTokenOfKind(0, [[T_CLASS]]);
 
         while (null !== $classIndex) {
             if (
-                $tokens[$tokens->getPrevMeaningfulToken($classIndex)]->isGivenKind(T_FINAL)
-                || $tokensAnalyzer->isAnonymousClass($classIndex)
+                $this->tokensAnalyzer->isAnonymousClass($classIndex)
+                || $tokens[$tokens->getPrevMeaningfulToken($classIndex)]->isGivenKind(T_FINAL)
             ) {
                 $classIndex = $this->fixClass($tokens, $classIndex);
             }

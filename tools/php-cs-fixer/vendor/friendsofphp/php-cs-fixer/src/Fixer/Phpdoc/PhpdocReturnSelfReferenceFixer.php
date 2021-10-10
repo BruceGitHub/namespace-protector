@@ -29,9 +29,6 @@ use PhpCsFixer\Tokenizer\TokensAnalyzer;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 
-/**
- * @author SpacePossum
- */
 final class PhpdocReturnSelfReferenceFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
     /**
@@ -125,6 +122,7 @@ class Sample
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         $tokensAnalyzer = new TokensAnalyzer($tokens);
+
         foreach ($tokensAnalyzer->getClassyElements() as $index => $element) {
             if ('method' === $element['type']) {
                 $this->fixMethod($tokens, $index);
@@ -149,8 +147,9 @@ class Sample
         return new FixerConfigurationResolver([
             (new FixerOptionBuilder('replacements', 'Mapping between replaced return types with new ones.'))
                 ->setAllowedTypes(['array'])
-                ->setNormalizer(static function (Options $options, $value) use ($default) {
+                ->setNormalizer(static function (Options $options, array $value) use ($default): array {
                     $normalizedValue = [];
+
                     foreach ($value as $from => $to) {
                         if (\is_string($from)) {
                             $from = strtolower($from);
@@ -159,7 +158,7 @@ class Sample
                         if (!isset($default[$from])) {
                             throw new InvalidOptionsException(sprintf(
                                 'Unknown key "%s", expected any of "%s".',
-                                \is_object($from) ? \get_class($from) : \gettype($from).(\is_resource($from) ? '' : '#'.$from),
+                                \gettype($from).'#'.$from,
                                 implode('", "', array_keys($default))
                             ));
                         }
@@ -187,14 +186,14 @@ class Sample
         static $methodModifiers = [T_STATIC, T_FINAL, T_ABSTRACT, T_PRIVATE, T_PROTECTED, T_PUBLIC];
 
         // find PHPDoc of method (if any)
-        do {
+        while (true) {
             $tokenIndex = $tokens->getPrevMeaningfulToken($index);
             if (!$tokens[$tokenIndex]->isGivenKind($methodModifiers)) {
                 break;
             }
 
             $index = $tokenIndex;
-        } while (true);
+        }
 
         $docIndex = $tokens->getPrevNonWhitespace($index);
         if (!$tokens[$docIndex]->isGivenKind(T_DOC_COMMENT)) {
@@ -205,21 +204,21 @@ class Sample
         $docBlock = new DocBlock($tokens[$docIndex]->getContent());
         $returnsBlock = $docBlock->getAnnotationsOfType('return');
 
-        if (!\count($returnsBlock)) {
+        if (0 === \count($returnsBlock)) {
             return; // no return annotation found
         }
 
         $returnsBlock = $returnsBlock[0];
         $types = $returnsBlock->getTypes();
 
-        if (!\count($types)) {
+        if (0 === \count($types)) {
             return; // no return type(s) found
         }
 
         $newTypes = [];
+
         foreach ($types as $type) {
-            $lower = strtolower($type);
-            $newTypes[] = $this->configuration['replacements'][$lower] ?? $type;
+            $newTypes[] = $this->configuration['replacements'][strtolower($type)] ?? $type;
         }
 
         if ($types === $newTypes) {

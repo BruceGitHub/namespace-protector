@@ -119,7 +119,7 @@ function f9(string $foo, $bar, $baz) {}
             }
 
             // ignore one-line phpdocs like `/** foo */`, as there is no place to put new annotations
-            if (false === strpos($tokenContent, "\n")) {
+            if (!str_contains($tokenContent, "\n")) {
                 continue;
             }
 
@@ -154,12 +154,12 @@ function f9(string $foo, $bar, $baz) {}
             foreach ($argumentsAnalyzer->getArguments($tokens, $openIndex, $index) as $start => $end) {
                 $argumentInfo = $this->prepareArgumentInformation($tokens, $start, $end);
 
-                if (!$this->configuration['only_untyped'] || '' === $argumentInfo['type']) {
+                if (false === $this->configuration['only_untyped'] || '' === $argumentInfo['type']) {
                     $arguments[$argumentInfo['name']] = $argumentInfo;
                 }
             }
 
-            if (!\count($arguments)) {
+            if (0 === \count($arguments)) {
                 continue;
             }
 
@@ -176,7 +176,7 @@ function f9(string $foo, $bar, $baz) {}
                 $lastParamLine = max($lastParamLine, $annotation->getEnd());
             }
 
-            if (!\count($arguments)) {
+            if (0 === \count($arguments)) {
                 continue;
             }
 
@@ -191,7 +191,7 @@ function f9(string $foo, $bar, $baz) {}
             foreach ($arguments as $argument) {
                 $type = $argument['type'] ?: 'mixed';
 
-                if ('?' !== $type[0] && 'null' === strtolower($argument['default'])) {
+                if (!str_starts_with($type, '?') && 'null' === strtolower($argument['default'])) {
                     $type = 'null|'.$type;
                 }
 

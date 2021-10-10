@@ -39,8 +39,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class Application extends BaseApplication
 {
-    public const VERSION = '3.1.0';
-    public const VERSION_CODENAME = 'River';
+    public const VERSION = '3.2.1';
+    public const VERSION_CODENAME = 'Mountains';
 
     /**
      * @var ToolInfo
@@ -86,7 +86,7 @@ final class Application extends BaseApplication
             $warningsDetector->detectOldMajor();
             $warnings = $warningsDetector->getWarnings();
 
-            if ($warnings) {
+            if (\count($warnings) > 0) {
                 foreach ($warnings as $warning) {
                     $stdErr->writeln(sprintf($stdErr->isDecorated() ? '<bg=yellow;fg=black;>%s</>' : '%s', $warning));
                 }
@@ -101,7 +101,8 @@ final class Application extends BaseApplication
             && $output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE
         ) {
             $triggeredDeprecations = Utils::getTriggeredDeprecations();
-            if ($triggeredDeprecations) {
+
+            if (\count($triggeredDeprecations) > 0) {
                 $stdErr->writeln('');
                 $stdErr->writeln($stdErr->isDecorated() ? '<bg=yellow;fg=black;>Detected deprecations in use:</>' : 'Detected deprecations in use:');
                 foreach ($triggeredDeprecations as $deprecation) {

@@ -137,6 +137,7 @@ SAMPLE
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         $expectedTokens = [T_LIST, T_FUNCTION, CT::T_USE_LAMBDA];
+
         if (\PHP_VERSION_ID >= 70400) {
             $expectedTokens[] = T_FN;
         }
@@ -149,6 +150,7 @@ SAMPLE
             }
 
             $meaningfulTokenBeforeParenthesis = $tokens[$tokens->getPrevMeaningfulToken($index)];
+
             if (
                 $meaningfulTokenBeforeParenthesis->isKeyword()
                 && !$meaningfulTokenBeforeParenthesis->isGivenKind($expectedTokens)
@@ -209,10 +211,9 @@ SAMPLE
      */
     private function fixFunction(Tokens $tokens, int $startFunctionIndex): bool
     {
-        $endFunctionIndex = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $startFunctionIndex);
-
         $isMultiline = false;
 
+        $endFunctionIndex = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $startFunctionIndex);
         $firstWhitespaceIndex = $this->findWhitespaceIndexAfterParenthesis($tokens, $startFunctionIndex, $endFunctionIndex);
         $lastWhitespaceIndex = $this->findWhitespaceIndexAfterParenthesis($tokens, $endFunctionIndex, $startFunctionIndex);
 
@@ -228,6 +229,7 @@ SAMPLE
             }
 
             $newLinesRemoved = $this->ensureSingleLine($tokens, $index);
+
             if (!$newLinesRemoved) {
                 $isMultiline = true;
             }
@@ -294,11 +296,13 @@ SAMPLE
     private function ensureSingleLine(Tokens $tokens, int $index): bool
     {
         $previousToken = $tokens[$index - 1];
-        if ($previousToken->isComment() && 0 !== strpos($previousToken->getContent(), '/*')) {
+
+        if ($previousToken->isComment() && !str_starts_with($previousToken->getContent(), '/*')) {
             return false;
         }
 
         $content = Preg::replace('/\R\h*/', '', $tokens[$index]->getContent());
+
         if ('' !== $content) {
             $tokens[$index] = new Token([T_WHITESPACE, $content]);
         } else {
@@ -317,9 +321,10 @@ SAMPLE
                 $searchIndex,
                 [[T_WHITESPACE]]
             );
+
             $searchIndex = $prevWhitespaceTokenIndex;
         } while (null !== $prevWhitespaceTokenIndex
-            && false === strpos($tokens[$prevWhitespaceTokenIndex]->getContent(), "\n")
+            && !str_contains($tokens[$prevWhitespaceTokenIndex]->getContent(), "\n")
         );
 
         if (null === $prevWhitespaceTokenIndex) {
@@ -400,6 +405,7 @@ SAMPLE
         }
 
         $nextMeaningfulTokenIndex = $tokens->getNextMeaningfulToken($index);
+
         if ($tokens[$nextMeaningfulTokenIndex]->equals(')')) {
             return;
         }
@@ -418,7 +424,7 @@ SAMPLE
 
             if (
                 !$tokens[$prevIndex]->equals(',') && !$tokens[$prevIndex]->isComment()
-                && ($this->configuration['after_heredoc'] || !$tokens[$prevIndex]->isGivenKind(T_END_HEREDOC))
+                && (true === $this->configuration['after_heredoc'] || !$tokens[$prevIndex]->isGivenKind(T_END_HEREDOC))
             ) {
                 $tokens->clearAt($index - 1);
             }
@@ -438,7 +444,7 @@ SAMPLE
             }
 
             if (
-                (!$this->configuration['keep_multiple_spaces_after_comma'] || Preg::match('/\R/', $newContent))
+                (false === $this->configuration['keep_multiple_spaces_after_comma'] || Preg::match('/\R/', $newContent))
                 && !$this->isCommentLastLineToken($tokens, $index + 2)
             ) {
                 $newContent = ltrim($newContent, " \t");
@@ -476,6 +482,6 @@ SAMPLE
      */
     private function isNewline(Token $token): bool
     {
-        return $token->isWhitespace() && false !== strpos($token->getContent(), "\n");
+        return $token->isWhitespace() && str_contains($token->getContent(), "\n");
     }
 }

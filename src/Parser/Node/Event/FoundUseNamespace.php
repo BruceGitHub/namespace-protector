@@ -6,13 +6,10 @@ namespace NamespaceProtector\Parser\Node\Event;
 
 final class FoundUseNamespace implements EventProcessNodeInterface
 {
-    private string $additionalInformation;
-
     private bool $erroDetect = false;
 
     public function __construct(private int $line, private string $nodeName)
     {
-        $this->additionalInformation = '';
     }
 
     public function getLine(): int
@@ -25,19 +22,13 @@ final class FoundUseNamespace implements EventProcessNodeInterface
         return $this->nodeName;
     }
 
-    public function foundError(string $addtionalInformation = ''): void
+    public function foundError(): void
     {
-        $this->additionalInformation = $addtionalInformation;
         $this->erroDetect = true;
     }
 
     public function withError(): bool
     {
         return $this->erroDetect;
-    }
-
-    public function getAdditionalInformation(): string
-    {
-        return $this->additionalInformation;
     }
 }

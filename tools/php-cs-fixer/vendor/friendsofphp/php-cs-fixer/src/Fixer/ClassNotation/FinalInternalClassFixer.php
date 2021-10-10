@@ -27,11 +27,11 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Preg;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
+use PhpCsFixer\Tokenizer\TokensAnalyzer;
 use Symfony\Component\OptionsResolver\Options;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author SpacePossum
  */
 final class FinalInternalClassFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
@@ -47,7 +47,7 @@ final class FinalInternalClassFixer extends AbstractFixer implements Configurabl
             $this->configuration['annotation_exclude']
         );
 
-        if (\count($intersect)) {
+        if (\count($intersect) > 0) {
             throw new InvalidFixerConfigurationException($this->getName(), sprintf('Annotation cannot be used in both the include and exclude list, got duplicates: "%s".', implode('", "', array_keys($intersect))));
         }
     }
@@ -106,8 +106,10 @@ final class FinalInternalClassFixer extends AbstractFixer implements Configurabl
      */
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
+        $tokensAnalyzer = new TokensAnalyzer($tokens);
+
         for ($index = $tokens->count() - 1; 0 <= $index; --$index) {
-            if (!$tokens[$index]->isGivenKind(T_CLASS) || !$this->isClassCandidate($tokens, $index)) {
+            if (!$tokens[$index]->isGivenKind(T_CLASS) || $tokensAnalyzer->isAnonymousClass($index) || !$this->isClassCandidate($tokens, $index)) {
                 continue;
             }
 
@@ -183,7 +185,7 @@ final class FinalInternalClassFixer extends AbstractFixer implements Configurabl
      */
     private function isClassCandidate(Tokens $tokens, int $index): bool
     {
-        if ($tokens[$tokens->getPrevMeaningfulToken($index)]->isGivenKind([T_ABSTRACT, T_FINAL, T_NEW])) {
+        if ($tokens[$tokens->getPrevMeaningfulToken($index)]->isGivenKind([T_ABSTRACT, T_FINAL])) {
             return false; // ignore class; it is abstract or already final
         }
 
@@ -202,7 +204,7 @@ final class FinalInternalClassFixer extends AbstractFixer implements Configurabl
             }
             $tag = strtolower(substr(array_shift($matches), 1));
             foreach ($this->configuration['annotation_exclude'] as $tagStart => $true) {
-                if (0 === strpos($tag, $tagStart)) {
+                if (str_starts_with($tag, $tagStart)) {
                     return false; // ignore class: class-level PHPDoc contains tag that has been excluded through configuration
                 }
             }

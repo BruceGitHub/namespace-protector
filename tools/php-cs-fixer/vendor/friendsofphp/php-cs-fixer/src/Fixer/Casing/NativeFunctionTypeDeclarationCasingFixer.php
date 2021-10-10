@@ -25,9 +25,6 @@ use PhpCsFixer\Tokenizer\Analyzer\FunctionsAnalyzer;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
-/**
- * @author SpacePossum
- */
 final class NativeFunctionTypeDeclarationCasingFixer extends AbstractFixer
 {
     /**
@@ -45,6 +42,7 @@ final class NativeFunctionTypeDeclarationCasingFixer extends AbstractFixer
      * object   PHP 7.2
      * static   PHP 8.0 (return type only)
      * mixed    PHP 8.0
+     * never    PHP 8.1
      *
      * @var array<string, true>
      */
@@ -65,27 +63,23 @@ final class NativeFunctionTypeDeclarationCasingFixer extends AbstractFixer
             'self' => true,
         ];
 
-        if (\PHP_VERSION_ID >= 70000) {
-            $this->hints = array_merge(
-                $this->hints,
-                [
-                    'bool' => true,
-                    'float' => true,
-                    'int' => true,
-                    'string' => true,
-                ]
-            );
-        }
+        $this->hints = array_merge(
+            $this->hints,
+            [
+                'bool' => true,
+                'float' => true,
+                'int' => true,
+                'string' => true,
+            ]
+        );
 
-        if (\PHP_VERSION_ID >= 70100) {
-            $this->hints = array_merge(
-                $this->hints,
-                [
-                    'iterable' => true,
-                    'void' => true,
-                ]
-            );
-        }
+        $this->hints = array_merge(
+            $this->hints,
+            [
+                'iterable' => true,
+                'void' => true,
+            ]
+        );
 
         if (\PHP_VERSION_ID >= 70200) {
             $this->hints = array_merge($this->hints, ['object' => true]);
@@ -94,6 +88,10 @@ final class NativeFunctionTypeDeclarationCasingFixer extends AbstractFixer
         if (\PHP_VERSION_ID >= 80000) {
             $this->hints = array_merge($this->hints, ['static' => true]);
             $this->hints = array_merge($this->hints, ['mixed' => true]);
+        }
+
+        if (\PHP_VERSION_ID >= 80100) {
+            $this->hints = array_merge($this->hints, ['never' => true]);
         }
 
         $this->functionsAnalyzer = new FunctionsAnalyzer();
@@ -108,13 +106,11 @@ final class NativeFunctionTypeDeclarationCasingFixer extends AbstractFixer
             'Native type hints for functions should use the correct case.',
             [
                 new CodeSample("<?php\nclass Bar {\n    public function Foo(CALLABLE \$bar)\n    {\n        return 1;\n    }\n}\n"),
-                new VersionSpecificCodeSample(
-                    "<?php\nfunction Foo(INT \$a): Bool\n{\n    return true;\n}\n",
-                    new VersionSpecification(70000)
+                new CodeSample(
+                    "<?php\nfunction Foo(INT \$a): Bool\n{\n    return true;\n}\n"
                 ),
-                new VersionSpecificCodeSample(
-                    "<?php\nfunction Foo(Iterable \$a): VOID\n{\n    echo 'Hello world';\n}\n",
-                    new VersionSpecification(70100)
+                new CodeSample(
+                    "<?php\nfunction Foo(Iterable \$a): VOID\n{\n    echo 'Hello world';\n}\n"
                 ),
                 new VersionSpecificCodeSample(
                     "<?php\nfunction Foo(Object \$a)\n{\n    return 'hi!';\n}\n",
@@ -139,10 +135,7 @@ final class NativeFunctionTypeDeclarationCasingFixer extends AbstractFixer
     {
         for ($index = $tokens->count() - 1; $index >= 0; --$index) {
             if ($tokens[$index]->isGivenKind(T_FUNCTION)) {
-                if (\PHP_VERSION_ID >= 70000) {
-                    $this->fixFunctionReturnType($tokens, $index);
-                }
-
+                $this->fixFunctionReturnType($tokens, $index);
                 $this->fixFunctionArgumentTypes($tokens, $index);
             }
         }

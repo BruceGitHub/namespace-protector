@@ -27,7 +27,7 @@ class VendorNamespace implements VendorNamespaceInterface
     public function hasNamespace(Entry $entry): MatchedResultInterface
     {
         if ($this->collection->booleanSearch($this->macher, $entry)) {
-            return new MatchedResult($entry->get());
+            return new MatchedResult();
         }
 
         return new EmptyMatchedResult();

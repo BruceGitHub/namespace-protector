@@ -69,6 +69,10 @@ final class FunctionsAnalyzer
             return true;
         }
 
+        if ($tokens[$tokens->getNextMeaningfulToken($nextIndex)]->isGivenKind(CT::T_FIRST_CLASS_CALLABLE)) {
+            return false;
+        }
+
         if ($tokens->isChanged() || $tokens->getCodeHash() !== $this->functionsAnalysis['tokens']) {
             $this->buildFunctionsAnalysis($tokens);
         }
@@ -125,15 +129,19 @@ final class FunctionsAnalyzer
             return $functionUse->getShortName() === ltrim($functionUse->getFullName(), '\\');
         }
 
+        if (AttributeAnalyzer::isAttribute($tokens, $index)) {
+            return false;
+        }
+
         return true;
     }
 
     /**
      * @return ArgumentAnalysis[]
      */
-    public function getFunctionArguments(Tokens $tokens, int $methodIndex): array
+    public function getFunctionArguments(Tokens $tokens, int $functionIndex): array
     {
-        $argumentsStart = $tokens->getNextTokenOfKind($methodIndex, ['(']);
+        $argumentsStart = $tokens->getNextTokenOfKind($functionIndex, ['(']);
         $argumentsEnd = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $argumentsStart);
         $argumentAnalyzer = new ArgumentsAnalyzer();
         $arguments = [];

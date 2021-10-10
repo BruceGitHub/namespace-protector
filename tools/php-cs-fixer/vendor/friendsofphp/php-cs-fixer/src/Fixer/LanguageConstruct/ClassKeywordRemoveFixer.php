@@ -124,13 +124,13 @@ $className = Baz::class;
             if ($tokens[$index]->isGivenKind(CT::T_GROUP_IMPORT_BRACE_OPEN)) {
                 $groupEndIndex = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_GROUP_IMPORT_BRACE, $index);
                 $groupImports = array_map(
-                    static function (string $import) {
+                    static function (string $import): string {
                         return trim($import);
                     },
                     explode(',', $tokens->generatePartialCode($index + 1, $groupEndIndex - 1))
                 );
                 foreach ($groupImports as $groupImport) {
-                    $groupImportParts = array_map(static function (string $import) {
+                    $groupImportParts = array_map(static function (string $import): string {
                         return trim($import);
                     }, explode(' as ', $groupImport));
                     if (2 === \count($groupImportParts)) {
@@ -216,7 +216,7 @@ $className = Baz::class;
         }
 
         for ($i = $classBeginIndex; $i <= $classIndex; ++$i) {
-            if (!$tokens[$i]->isComment() && !($tokens[$i]->isWhitespace() && false !== strpos($tokens[$i]->getContent(), "\n"))) {
+            if (!$tokens[$i]->isComment() && !($tokens[$i]->isWhitespace() && str_contains($tokens[$i]->getContent(), "\n"))) {
                 $tokens->clearAt($i);
             }
         }

@@ -6,11 +6,9 @@ use NamespaceProtector\Event\EventInterface;
 
 interface EventProcessNodeInterface extends EventInterface
 {
-    public function foundError(string $additionalInfo = ''): void;
+    public function foundError(): void;
 
     public function withError(): bool;
 
     public function getNodeName(): string;
-
-    public function getAdditionalInformation(): string;
 }

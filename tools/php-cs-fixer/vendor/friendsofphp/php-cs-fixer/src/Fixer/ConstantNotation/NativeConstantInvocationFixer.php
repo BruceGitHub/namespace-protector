@@ -161,7 +161,7 @@ namespace {
 
         $caseInsensitiveConstantsToEscape = array_diff(
             array_unique($caseInsensitiveConstantsToEscape),
-            array_map(static function (string $function) { return strtolower($function); }, $uniqueConfiguredExclude)
+            array_map(static function (string $function): string { return strtolower($function); }, $uniqueConfiguredExclude)
         );
 
         // Store the cache
@@ -269,7 +269,7 @@ namespace {
             $prevIndex = $tokens->getPrevMeaningfulToken($index);
 
             if (!isset($this->constantsToEscape[$tokenContent]) && !isset($this->caseInsensitiveConstantsToEscape[strtolower($tokenContent)])) {
-                if (!$this->configuration['strict']) {
+                if (false === $this->configuration['strict']) {
                     continue;
                 }
 

@@ -202,7 +202,7 @@ final class Token
     }
 
     /**
-     * A helper method used to find out whether or not a certain input token has to be case-sensitively matched.
+     * A helper method used to find out whether a certain input token has to be case-sensitively matched.
      *
      * @param array<int, bool>|bool $caseSensitive global case sensitiveness or an array of booleans, whose keys should match
      *                                             the ones used in $others. If any is missing, the default case-sensitive
@@ -306,7 +306,7 @@ final class Token
                 'T_INTERFACE', 'T_ISSET', 'T_LIST', 'T_LOGICAL_AND', 'T_LOGICAL_OR', 'T_LOGICAL_XOR',
                 'T_NAMESPACE', 'T_MATCH', 'T_NEW', 'T_PRINT', 'T_PRIVATE', 'T_PROTECTED', 'T_PUBLIC', 'T_REQUIRE',
                 'T_REQUIRE_ONCE', 'T_RETURN', 'T_STATIC', 'T_SWITCH', 'T_THROW', 'T_TRAIT', 'T_TRY',
-                'T_UNSET', 'T_USE', 'T_VAR', 'T_WHILE', 'T_YIELD', 'T_YIELD_FROM',
+                'T_UNSET', 'T_USE', 'T_VAR', 'T_WHILE', 'T_YIELD', 'T_YIELD_FROM', 'T_READONLY', 'T_ENUM',
             ]) + [
                 CT::T_ARRAY_TYPEHINT => CT::T_ARRAY_TYPEHINT,
                 CT::T_CLASS_CONSTANT => CT::T_CLASS_CONSTANT,
@@ -464,7 +464,7 @@ final class Token
         if (JSON_ERROR_NONE !== json_last_error()) {
             $jsonResult = json_encode(
                 [
-                    'errorDescription' => 'Can not encode Tokens to JSON.',
+                    'errorDescription' => 'Cannot encode Tokens to JSON.',
                     'rawErrorMessage' => json_last_error_msg(),
                 ],
                 JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK

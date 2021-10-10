@@ -19,7 +19,7 @@ use PhpCsFixer\Tokenizer\Token;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- * @author Graham Campbell <graham@alt-three.com>
+ * @author Graham Campbell <hello@gjcampbell.co.uk>
  * @author Odín del Río <odin.drp@gmail.com>
  *
  * @internal
@@ -30,6 +30,11 @@ final class Utils
      * @var array<string,true>
      */
     private static $deprecations = [];
+
+    private function __construct()
+    {
+        // cannot create instance of util. class
+    }
 
     /**
      * Converts a camel cased string to a snake cased string.
@@ -79,7 +84,7 @@ final class Utils
             $element = [$element, $index, $getComparedValue($element)];
         });
 
-        usort($elements, static function ($a, $b) use ($compareValues) {
+        usort($elements, static function ($a, $b) use ($compareValues): int {
             $comparison = $compareValues($a[2], $b[2]);
 
             if (0 !== $comparison) {
@@ -107,10 +112,10 @@ final class Utils
         // `usort(): Array was modified by the user comparison function` warning for mocked objects.
         return self::stableSort(
             $fixers,
-            static function (FixerInterface $fixer) {
+            static function (FixerInterface $fixer): int {
                 return $fixer->getPriority();
             },
-            static function (int $a, int $b) {
+            static function (int $a, int $b): int {
                 return $b <=> $a;
             }
         );
@@ -129,13 +134,13 @@ final class Utils
             throw new \InvalidArgumentException('Array of names cannot be empty.');
         }
 
-        $names = array_map(static function (string $name) {
+        $names = array_map(static function (string $name): string {
             return sprintf('`%s`', $name);
         }, $names);
 
         $last = array_pop($names);
 
-        if ($names) {
+        if (\count($names) > 0) {
             return implode(', ', $names).' and '.$last;
         }
 
