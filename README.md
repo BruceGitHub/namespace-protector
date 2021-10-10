@@ -28,8 +28,15 @@ For example the namespace of third parts lib.
 - Minimize the @var annotation 
 
 # todo
+### 10/10/2021
+- [] Review the db namespace 
+- [] Remove psalm-suppress
+- [] Remove psalm minor issues 
+
+### Waiting
 - [] Adds mode DISCOVER_CONFIG, so for each lib that in the `extra` node of composer.json declares the visibility settings of the namespace lib, it can perform the validity in autonomy
 
+### Done
 - [x] Adds command to build conflicts graph 
 
 # Minimal config 
