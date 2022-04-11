@@ -2,6 +2,7 @@
 
 namespace Tests\All\Scanner;
 
+use MinimalVo\BaseValueObject\StringVo;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Common\FileSystemPath;
@@ -35,7 +36,7 @@ class ComposerJsonTest extends AbstractUnitTestCase
             ->addFile('composer.json', 'json', 'files')
             ->buildFileSystemUrl();
 
-        $path = new FileSystemPath($fileSystem . '/files');
+        $path = new FileSystemPath(StringVo::fromValue($fileSystem . '/files'));
 
         return $path;
     }

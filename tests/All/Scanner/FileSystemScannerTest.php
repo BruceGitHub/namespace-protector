@@ -2,6 +2,7 @@
 
 namespace Tests\All\Scanner;
 
+use MinimalVo\BaseValueObject\StringVo;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\Scanner\FileSystemScanner;
@@ -28,7 +29,7 @@ class FileSystemScannerTest extends AbstractUnitTestCase
             ->addFile('namespace-protector-config.json', 'json', 'files')
             ->buildFileSystemUrl();
 
-        $file = new FileSystemPath($fileSystem . '/files');
+        $file = new FileSystemPath(StringVo::fromValue($fileSystem . '/files'));
 
         return $file;
     }

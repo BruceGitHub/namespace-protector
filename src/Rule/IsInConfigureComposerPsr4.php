@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Rule;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\Db\BooleanMatchNameSpace;
 use NamespaceProtector\EnvironmentDataLoaderInterface;
@@ -25,7 +26,7 @@ class IsInConfigureComposerPsr4 implements RuleInterface
     private function stripFirstSlash(Entry $token): Entry
     {
         if ($token->get()[0] === '\\') {
-            return new Entry(substr($token->get(), 1, strlen($token->get())));
+            return new Entry(StringVo::fromValue(substr($token->get(), 1, strlen($token->get()))));
         }
 
         return $token;

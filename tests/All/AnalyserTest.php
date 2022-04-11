@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\All;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Analyser;
 use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultParser;
@@ -48,9 +49,9 @@ class AnalyserTest extends AbstractUnitTestCase
 
         $result = [];
         $result[] = new ResultProcessedFileReadOnly(
-            $file->get(),
+            StringVo::fromValue($file->get()),
             [
-                new ErrorResult(1, 'use', 1),
+                new ErrorResult(1, StringVo::fromValue('use'), 1),
             ]
         );
 
@@ -72,7 +73,7 @@ class AnalyserTest extends AbstractUnitTestCase
             ->addFile('ClassPsr4Composer.php', 'php', 'files')
             ->buildFileSystemUrl();
 
-        $file = new FileSystemPath($fileSystem . '/files/ClassPsr4Composer.php');
+        $file = new FileSystemPath(StringVo::fromValue($fileSystem . '/files/ClassPsr4Composer.php'));
 
         return $file;
     }

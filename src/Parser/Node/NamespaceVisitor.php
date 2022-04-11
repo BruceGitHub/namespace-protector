@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Parser\Node;
 
+use MinimalVo\BaseValueObject\StringVo;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\UseUse;
 use PhpParser\Node\Name\FullyQualified;
@@ -45,12 +46,12 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
     {
         $this->listNodeProcessor[UseUse::class] = function (Node $node) use ($eventDispatcher): object {
             /** @var UseUse $node */
-            return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->name->toCodeString()));
+            return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), StringVo::fromValue($node->name->toCodeString())));
         };
 
         $this->listNodeProcessor[FullyQualified::class] = function (Node $node) use ($eventDispatcher): object {
             /** @var FullyQualified $node */
-            return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), $node->toCodeString()));
+            return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), StringVo::fromValue($node->toCodeString())));
         };
 
         $collection = $this->errorCollectionFactory->createForErrorResult();
@@ -95,7 +96,7 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
 
         $err = new ErrorResult(
             $node->getLine(),
-            $resultProcessNode->getNodeName(),
+            StringVo::fromValue($resultProcessNode->getNodeName()->toValue()),
             self::ERR
         );
 

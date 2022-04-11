@@ -2,6 +2,7 @@
 
 namespace Tests\All\Db;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Entry\Entry;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Db\DbKeyValue;
@@ -31,7 +32,7 @@ class DbKeyValueTest extends AbstractUnitTestCase
     public function it_boolean_search_work(): void
     {
         $collections = ['barr' => 'foo'];
-        $entry = new Entry('matchMe');
+        $entry = new Entry(StringVo::fromValue('matchMe'));
 
         $machCriteria = $this->prophesize(MatchCollectionInterface::class);
         $machCriteria->evaluate($collections, $entry)

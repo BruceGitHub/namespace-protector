@@ -7,7 +7,6 @@ namespace Tests\All;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use NamespaceProtector\Result\ResultProcessedFile;
 use NamespaceProtector\Result\ResultCollectedReadable;
 
 abstract class AbstractUnitTestCase extends TestCase
@@ -78,9 +77,8 @@ abstract class AbstractUnitTestCase extends TestCase
     {
         $iterable->getIterator()->rewind();
 
-        /** @var ResultProcessedFile $item */
         foreach ($iterable as $item) {
-            $this->assertStringContainsString($expected, $item->getFileName());
+            $this->assertStringContainsString($expected, $item->getFileName()->toValue());
         }
     }
 
@@ -88,11 +86,10 @@ abstract class AbstractUnitTestCase extends TestCase
     {
         $iterable->getIterator()->rewind();
 
-        /** @var ResultProcessedFile $item */
         foreach ($iterable as $item) {
             $arr = [];
             foreach ($item->getConflicts() as $c) {
-                $arr[] = $c->get();
+                $arr[] = $c->get()->toValue();
             }
 
             $this->assertContains($expected, $arr);
@@ -103,7 +100,6 @@ abstract class AbstractUnitTestCase extends TestCase
     {
         $iterable->getIterator()->rewind();
 
-        /** @var ResultProcessedFile $item */
         foreach ($iterable as $item) {
             foreach ($item->getConflicts() as $c) {
                 $this->fail('Expected no violations: ' . $c->get());

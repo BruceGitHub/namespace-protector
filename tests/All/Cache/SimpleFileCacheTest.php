@@ -2,6 +2,7 @@
 
 namespace Tests\All\Cache;
 
+use MinimalVo\BaseValueObject\StringVo;
 use Psr\SimpleCache\CacheInterface;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Cache\SimpleFileCache;
@@ -91,7 +92,7 @@ class SimpleFileCacheTest extends AbstractUnitTestCase
             ->addFile('ast.json', 'json', 'files')
             ->buildFileSystemUrl();
 
-        $simppleFileCache = new SimpleFileCache(new FileSystemPath($fileSystem . '/files/'));
+        $simppleFileCache = new SimpleFileCache(new FileSystemPath(StringVo::fromValue($fileSystem . '/files/')));
 
         return $simppleFileCache;
     }

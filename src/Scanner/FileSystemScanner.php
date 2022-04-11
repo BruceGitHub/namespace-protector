@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace NamespaceProtector\Scanner;
 
 use DirectoryIterator;
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Common\FileSystemPath;
 
@@ -43,7 +44,7 @@ final class FileSystemScanner implements ScannerInterface
                 }
 
                 $pathDescriptor = $file->getPathname();
-                $fileLoaded[] = new FileSystemPath($pathDescriptor);
+                $fileLoaded[] = new FileSystemPath(StringVo::fromValue($pathDescriptor));
             }
         }
 

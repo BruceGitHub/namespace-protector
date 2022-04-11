@@ -2,6 +2,7 @@
 
 namespace NamespaceProtector\Command;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Scanner\ComposerJson;
 use NamespaceProtector\Common\FileSystemPath;
@@ -53,7 +54,7 @@ final class NamespaceProtectorConfigCreatorCommand extends Command
                 continue;
             }
 
-            return new FileSystemPath($pathComposer);
+            return new FileSystemPath(StringVo::fromValue($pathComposer));
         }
 
         throw new \RuntimeException(NamespaceProtectorExceptionInterface::MSG_PLAIN_ERROR_COMPOSER_JSON_NOT_READABLE);

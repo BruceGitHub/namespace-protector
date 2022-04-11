@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
+use MinimalVo\BaseValueObject\StringVo;
+
 final class ResultProcessedMutableFile implements ResultProcessedMutableFileInterface
 {
     /** @var array<ErrorResult> */
     private array $conflicts = [];
 
-    public function __construct(private string $file)
+    public function __construct(private StringVo $file)
     {
     }
 
-    public function getFileName(): String
+    public function getFileName(): StringVo
     {
         return $this->file;
     }

@@ -9,9 +9,16 @@
   "config": {
     "sort-packages": true
   },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/BruceGitHub/minimal-vo.git"
+    }
+  ],
   "require": {
-    "ext-json": "*",
     "php": "^8",
+    "ext-json": "*",
+    "brucegithub/minimal-vo": "dev-main",
     "graphp/graphviz": "0.2.*",
     "nikic/php-parser": "^4.4",
     "psr/event-dispatcher": "^1.0",

@@ -2,6 +2,7 @@
 
 namespace NamespaceProtector\Parser\Node\Event;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Event\EventInterface;
 
 interface EventProcessNodeInterface extends EventInterface
@@ -10,5 +11,5 @@ interface EventProcessNodeInterface extends EventInterface
 
     public function withError(): bool;
 
-    public function getNodeName(): string;
+    public function getNodeName(): StringVo;
 }

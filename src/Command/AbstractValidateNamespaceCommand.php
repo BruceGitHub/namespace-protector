@@ -2,6 +2,7 @@
 
 namespace NamespaceProtector\Command;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Config\Config;
 use NamespaceProtector\Config\ConfigMaker;
 use NamespaceProtector\Common\FileSystemPath;
@@ -35,7 +36,7 @@ abstract class AbstractValidateNamespaceCommand extends Command
         $output->writeln('Boot validate analysis....');
 
         $configMaker = new ConfigMaker();
-        $config = $configMaker->createFromFile(new FileSystemPath(\getcwd() . '/namespace-protector-config.json'));
+        $config = $configMaker->createFromFile(new FileSystemPath(StringVo::fromValue(\getcwd() . '/namespace-protector-config.json')));
 
         $plotter = (string)$input->getArgument(self::PLOTTER_ARGUMENT);
         if ($plotter === self::PLOTTER_ARGUMENT) { //todo remove

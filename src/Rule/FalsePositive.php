@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Rule;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Entry\Entry;
 use NamespaceProtector\Db\BooleanMatchKey;
 use NamespaceProtector\Db\BooleanMatchValue;
@@ -69,7 +70,8 @@ class FalsePositive implements RuleInterface
     private function stripFirstSlash(Entry $token): Entry
     {
         if ($token->get()[0] === '\\') {
-            return new Entry(substr($token->get(), 1, strlen($token->get())));
+            $str = substr($token->get(), 1, strlen($token->get()));
+            return new Entry(StringVo::fromValue($str));
         }
 
         return $token;

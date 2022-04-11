@@ -3,27 +3,28 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Config;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Common\PathInterface;
 
 final class ConfigTemplateCreator implements ConfigTemplateCreatorInterface
 {
-    public function __construct(private string $configName, private string $templateName)
+    public function __construct(private StringVo $configName, private StringVo $templateName)
     {
     }
 
     public function create(PathInterface $destinationPathFileJson): void
     {
         $this->createFileWithBackup(
-            $destinationPathFileJson->get() . $this->configName,
+            StringVo::fromValue($destinationPathFileJson->get() . $this->configName->toValue()),
             $this->templateName
         );
     }
 
-    private function createFileWithBackup(string $fileName, string $templateFile): void
+    private function createFileWithBackup(StringVo $fileName, StringVo $templateFile): void
     {
-        @\rename($fileName, $fileName . '_backup.json');
+        @\rename($fileName->toValue(), $fileName->toValue() . '_backup.json');
 
-        $content = \safe\file_get_contents(__DIR__ . '/' . $templateFile);
-        \safe\file_put_contents($fileName, $content);
+        $content = \safe\file_get_contents(__DIR__ . '/' . $templateFile->toValue());
+        \safe\file_put_contents($fileName->toValue(), $content);
     }
 }

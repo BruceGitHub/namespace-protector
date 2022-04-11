@@ -33,7 +33,7 @@ csf:
 start:
 	docker-compose -f ./.container/docker-compose.yml up php
 
-shell: start
+shell:
 	docker-compose -f ./.container/docker-compose.yml run php sh
 
 stop:

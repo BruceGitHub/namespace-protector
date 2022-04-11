@@ -2,6 +2,8 @@
 
 namespace NamespaceProtector\Config;
 
+use MinimalVo\BaseValueObject\BooleanVo;
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Common\PathInterface;
 use Webmozart\Assert\Assert;
 
@@ -15,14 +17,14 @@ final class Config
     public const PLOTTER_PNG = 'plotter-png';
 
     public function __construct(
-        private string $version,
+        private StringVo $version,
         private PathInterface $pathStart,
         private PathInterface $pathComposerJson,
         private array $privateEntries,
         private array $publicEntries,
-        private string $mode = self::MODE_PUBLIC,
-        private bool $enabledCache = false,
-        private string $plotter = self::PLOTTER_TERMINAL
+        private StringVo $mode,
+        private BooleanVo $enabledCache,
+        private StringVo $plotter
     ) {
     }
 
@@ -43,12 +45,12 @@ final class Config
 
     public function getMode(): string
     {
-        return $this->mode;
+        return $this->mode->toValue();
     }
 
     public function getPlotter(): string
     {
-        return $this->plotter;
+        return $this->plotter->toValue();
     }
 
     public function getPathComposerJson(): PathInterface
@@ -69,11 +71,11 @@ final class Config
     public function getVersion(): string
     {
         //todo: use https://github.com/nikolaposa/version
-        return $this->version;
+        return $this->version->toValue();
     }
 
     public function enabledCache(): bool
     {
-        return $this->enabledCache;
+        return $this->enabledCache->toValue();
     }
 }

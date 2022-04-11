@@ -2,9 +2,11 @@
 
 namespace NamespaceProtector\Result;
 
+use MinimalVo\BaseValueObject\StringVo;
+
 interface ResultProcessedFileInterface extends ResultInterface
 {
-    public function getFileName(): String;
+    public function getFileName(): StringVo;
 
     /** @return array<ErrorResult> */
     public function getConflicts(): array;

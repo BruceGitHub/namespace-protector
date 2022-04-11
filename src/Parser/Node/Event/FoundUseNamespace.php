@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Parser\Node\Event;
 
+use MinimalVo\BaseValueObject\StringVo;
+
 final class FoundUseNamespace implements EventProcessNodeInterface
 {
     private bool $erroDetect = false;
 
-    public function __construct(private int $line, private string $nodeName)
+    public function __construct(private int $line, private StringVo $nodeName)
     {
     }
 
@@ -17,7 +19,7 @@ final class FoundUseNamespace implements EventProcessNodeInterface
         return $this->line;
     }
 
-    public function getNodeName(): string
+    public function getNodeName(): StringVo
     {
         return $this->nodeName;
     }

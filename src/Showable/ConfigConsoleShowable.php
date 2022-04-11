@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Showable;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Config as RootConfig;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,9 +28,9 @@ class ConfigConsoleShowable implements ConfigShowableInterface
             '|> Path start: ' . $config->getStartPath()->get() . PHP_EOL .
             '|> Composer Json path: ' . $config->getPathComposerJson()->get() . PHP_EOL .
             '|> Mode: ' . $config->getMode() . PHP_EOL .
-            '|> Private entries: ' . $prettyPrintPrivateEntries . PHP_EOL .
+            '|> Private entries: ' . $prettyPrintPrivateEntries->toValue() . PHP_EOL .
             '|' . PHP_EOL .
-            '|> Public entries: ' . $prettyPrintPublicEntries . PHP_EOL .
+            '|> Public entries: ' . $prettyPrintPublicEntries->toValue() . PHP_EOL .
             '';
 
         /** @var string $writeOutput */
@@ -41,7 +42,7 @@ class ConfigConsoleShowable implements ConfigShowableInterface
     /**
      * @param array<mixed> $entries
      */
-    private function populateOutputVarFromArray(array $entries): string
+    private function populateOutputVarFromArray(array $entries): StringVo
     {
         $prettyPrintNamespaceToValidate = "\n";
 
@@ -51,6 +52,6 @@ class ConfigConsoleShowable implements ConfigShowableInterface
             fn (string $namespace): string => $prettyPrintNamespaceToValidate .= '|       >' . $namespace . \PHP_EOL,
         );
 
-        return $prettyPrintNamespaceToValidate;
+        return StringVo::fromValue($prettyPrintNamespaceToValidate);
     }
 }

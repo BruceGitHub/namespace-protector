@@ -2,6 +2,8 @@
 
 namespace NamespaceProtector\Config;
 
+use MinimalVo\BaseValueObject\BooleanVo;
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Common\PathInterface;
 use NamespaceProtector\Common\FileSystemPath;
 
@@ -50,14 +52,14 @@ final class ConfigMaker extends AbstractConfigMaker
         $plotter = $parameters['plotter'] ?? Config::PLOTTER_TERMINAL;
 
         $self = new Config(
-            $version,
-            new FileSystemPath($startPath),
-            new FileSystemPath($composerJsonPath),
+            StringVo::fromValue($version),
+            new FileSystemPath(StringVo::fromValue($startPath)),
+            new FileSystemPath(StringVo::fromValue($composerJsonPath)),
             $privateEntries,
             $publicEntries,
-            $mode,
-            $cache,
-            $plotter,
+            StringVo::fromValue($mode),
+            BooleanVo::fromValue($cache),
+            StringVo::fromValue($plotter),
         );
 
         $self->validateLoadedConfig();
@@ -67,14 +69,14 @@ final class ConfigMaker extends AbstractConfigMaker
     public function createFromItSelf(Config $config, array $parameters): Config
     {
         $self = new Config(
-            $config->getVersion(),
+            StringVo::fromValue($config->getVersion()),
             $config->getStartPath(),
             $config->getPathComposerJson(),
             $config->getPrivateEntries(),
             $config->getPublicEntries(),
-            $config->getMode(),
-            $config->enabledCache(),
-            $parameters['plotter'] ?? $config->getPlotter(),
+            StringVo::fromValue($config->getMode()),
+            BooleanVo::fromValue($config->enabledCache()),
+            StringVo::fromValue($parameters['plotter'] ?? $config->getPlotter()),
         );
 
         $self->validateLoadedConfig();

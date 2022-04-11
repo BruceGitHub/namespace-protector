@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use MinimalVo\BaseValueObject\StringVo;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Config\ConfigMaker;
 use NamespaceProtector\Common\FileSystemPath;
@@ -18,7 +19,7 @@ class ConfigTest extends AbstractUnitTestCase
         $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
 
         $configMaker = new ConfigMaker();
-        $configLoaded = $configMaker->createFromFile(new FileSystemPath($fileConfigJson));
+        $configLoaded = $configMaker->createFromFile(new FileSystemPath(StringVo::fromValue($fileConfigJson)));
 
         $this->assertEquals('MODE_MAKE_VENDOR_PRIVATE', $configLoaded->getMode());
         $this->assertEquals('vfs://root/stat_path_in_config', $configLoaded->getStartPath()->get());
@@ -49,7 +50,7 @@ class ConfigTest extends AbstractUnitTestCase
         $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
 
         $configMaker = new ConfigMaker();
-        $configLoaded = $configMaker->createFromFile(new FileSystemPath($fileConfigJson));
+        $configLoaded = $configMaker->createFromFile(new FileSystemPath(StringVo::fromValue($fileConfigJson)));
 
         $this->assertEquals(true, $configLoaded->enabledCache());
     }
@@ -73,7 +74,7 @@ class ConfigTest extends AbstractUnitTestCase
         $fileConfigJson = $fileSystem->url() . '/json/namespace-protector-config-full-options.json';
 
         $configMaker = new ConfigMaker();
-        $configLoaded = $configMaker->createFromFile(new FileSystemPath($fileConfigJson));
+        $configLoaded = $configMaker->createFromFile(new FileSystemPath(StringVo::fromValue($fileConfigJson)));
 
         $this->assertEquals(false, $configLoaded->enabledCache());
     }

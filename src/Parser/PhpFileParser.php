@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Parser;
 
+use MinimalVo\BaseValueObject\StringVo;
 use PhpParser\Parser;
 use PhpParser\NodeTraverserInterface;
 use NamespaceProtector\Result\ResultParser;
@@ -42,7 +43,7 @@ final class PhpFileParser implements ParserInterface
             return new ResultParser($emptyCollection);
         }
 
-        $processFileResult = new ResultProcessedMutableFile($pathFile->get());
+        $processFileResult = new ResultProcessedMutableFile(StringVo::fromValue($pathFile->get()));
 
         array_map(
             fn ($item) => $processFileResult->addConflic($item),

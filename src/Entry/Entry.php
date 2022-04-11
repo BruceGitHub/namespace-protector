@@ -2,11 +2,12 @@
 
 namespace NamespaceProtector\Entry;
 
+use MinimalVo\BaseValueObject\StringVo;
 use Webmozart\Assert\Assert;
 
 final class Entry
 {
-    public function __construct(private string $entry)
+    public function __construct(private StringVo $entry)
     {
         Assert::notEmpty($entry);
     }
@@ -18,7 +19,7 @@ final class Entry
 
     public function get(): string
     {
-        return $this->entry;
+        return $this->entry->toValue();
     }
 
     public function __invoke(): string

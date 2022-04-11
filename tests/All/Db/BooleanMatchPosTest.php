@@ -2,6 +2,7 @@
 
 namespace Tests\All\Db;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Entry\Entry;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Db\BooleanMatchPos;
@@ -13,7 +14,7 @@ class BooleanMatchPosTest extends AbstractUnitTestCase
     /** @test */
     public function it_evaluate_return_true_if_match(): void
     {
-        $entry = new Entry('fooBar');
+        $entry = new Entry(StringVo::fromValue('fooBar'));
         $collections = ['fooBar' => 'bar'];
 
         $mach = new BooleanMatchPos();
@@ -25,7 +26,7 @@ class BooleanMatchPosTest extends AbstractUnitTestCase
     /** @test */
     public function it_evaluate_return_false_if_match(): void
     {
-        $entry = new Entry('barFoo');
+        $entry = new Entry(StringVo::fromValue('barFoo'));
         $collections = ['foo' => 'bar'];
 
         $mach = new BooleanMatchPos();

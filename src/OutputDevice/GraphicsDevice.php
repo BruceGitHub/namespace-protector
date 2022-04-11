@@ -35,7 +35,7 @@ final class GraphicsDevice implements OutputDeviceInterface
     {
         if (\count($processedFileResult->getConflicts()) > 0) {
             /** @var int $fileName */
-            $fileName = $processedFileResult->getFileName();
+            $fileName = $processedFileResult->getFileName()->toValue();
 
             $blue = $graph->createVertex($fileName, true);
             $blue->setAttribute('graphviz.color', 'blue');
@@ -43,7 +43,7 @@ final class GraphicsDevice implements OutputDeviceInterface
             array_map(
                 function ($conflict) use ($graph, $blue): void {
                     /** @var int $fileName */
-                    $fileName = $conflict->get();
+                    $fileName = $conflict->get()->toValue();
 
                     $red = $graph->createVertex($fileName, true);
                     $red->setAttribute('graphviz.color', 'red');

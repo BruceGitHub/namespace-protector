@@ -2,6 +2,7 @@
 
 namespace Tests\All;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Config\ConfigMaker;
 use NamespaceProtector\Common\FileSystemPath;
 use NamespaceProtector\OutputDevice\ConsoleDevice;
@@ -14,7 +15,7 @@ class NamespaceProtectorProcessorTest extends AbstractUnitTestCase
     public function it_process_work(): void
     {
         $configMaker = new ConfigMaker();
-        $config = $configMaker->createFromFile(new FileSystemPath('tests/Stub/targetProject/json/namespace-protector-config.json'));
+        $config = $configMaker->createFromFile(new FileSystemPath(StringVo::fromValue('tests/Stub/targetProject/json/namespace-protector-config.json')));
         $factory = new NamespaceProtectorProcessorFactory();
         $namespaceProtectorProcessor = $factory->create($config);
         $namespaceProtectorProcessor->load();

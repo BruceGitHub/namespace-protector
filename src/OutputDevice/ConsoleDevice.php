@@ -42,7 +42,7 @@ final class ConsoleDevice implements OutputDeviceInterface
         $result = '';
 
         if (\count($processedFileResult->getConflicts()) > 0) {
-            $result = "\nProcessed file: " . $processedFileResult->getFileName() . "\n";
+            $result = "\nProcessed file: " . $processedFileResult->getFileName()->toValue() . "\n";
         }
 
         foreach ($processedFileResult->getConflicts() as $conflict) {

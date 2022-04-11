@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Parser\Node;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Entry\Entry;
 use Psr\SimpleCache\CacheInterface;
 use NamespaceProtector\Config\Config;
@@ -36,7 +37,7 @@ final class ProcessUseStatement
         ];
 
         foreach ($rules as $rule) {
-            if ($rule->apply(new Entry($event->getNodeName()), $event)) {
+            if ($rule->apply(new Entry(StringVo::fromValue($event->getNodeName()->toValue())), $event)) {
                 return;
             }
         }

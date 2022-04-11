@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\All\OutputDevice;
 
+use MinimalVo\BaseValueObject\StringVo;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Result\ErrorResult;
 use NamespaceProtector\Result\ResultCollected;
@@ -21,8 +22,8 @@ class ConsoleDeviceTest extends AbstractUnitTestCase
         $consoleDevice = new ConsoleDevice(new ConsoleOutput());
         \ob_start();
 
-        $rpf = new ResultProcessedMutableFile('FileA');
-        $rpf->addConflic(new ErrorResult(99, 'ConflicA', 1));
+        $rpf = new ResultProcessedMutableFile(StringVo::fromValue('FileA'));
+        $rpf->addConflic(new ErrorResult(99, StringVo::fromValue('ConflicA'), 1));
 
         $result = $this->prophesize(ResultProcessorInterface::class);
 

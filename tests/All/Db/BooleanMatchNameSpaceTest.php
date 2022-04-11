@@ -2,6 +2,7 @@
 
 namespace Tests\All\Db;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Entry\Entry;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Db\BooleanMatchNameSpace;
@@ -18,7 +19,7 @@ class BooleanMatchNameSpaceTest extends AbstractUnitTestCase
     {
         $booleanMatch = new BooleanMatchNameSpace();
 
-        $result = $booleanMatch->evaluate($configuredEntry, new Entry($tokenFromSourceCode));
+        $result = $booleanMatch->evaluate($configuredEntry, new Entry(StringVo::fromValue($tokenFromSourceCode)));
 
         $this->assertInstanceOf($expectedClass, $result);
     }

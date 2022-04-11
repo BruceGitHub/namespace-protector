@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Unit\Result;
+namespace Tests\All\Result;
 
+use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Result\Result;
 use NamespaceProtector\Result\ResultCollected;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +14,7 @@ final class ResultCollectorTest extends TestCase
     /** @test */
     public function it_create_work(): void
     {
-        $result = new Result('a', 1);
+        $result = new Result(StringVo::fromValue('a'), 1);
 
         $resultCollector = new ResultCollected();
         $resultCollector->addResult($result);
@@ -25,7 +26,7 @@ final class ResultCollectorTest extends TestCase
     /** @test */
     public function it_empty_work(): void
     {
-        $result = new Result('a', 1);
+        $result = new Result(StringVo::fromValue('a'), 1);
 
         $resultCollector = new ResultCollected();
         $resultCollector->addResult($result);

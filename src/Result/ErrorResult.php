@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Result;
 
+use MinimalVo\BaseValueObject\StringVo;
+
 final class ErrorResult implements ResultInterface
 {
-    public function __construct(private int $line, private string $use, private int $type)
+    public function __construct(private int $line, private StringVo $use, private int $type)
     {
     }
 
-    public function get(): String
+    public function get(): StringVo
     {
         return $this->use;
     }
@@ -22,7 +24,7 @@ final class ErrorResult implements ResultInterface
 
     public function getUse(): string
     {
-        return $this->use;
+        return $this->use->toValue();
     }
 
     public function getLine(): int
