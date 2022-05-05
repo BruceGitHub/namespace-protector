@@ -2,14 +2,15 @@
 
 namespace NamespaceProtector\Common;
 
+use MinimalVo\BaseValueObject\BooleanVo;
 use MinimalVo\BaseValueObject\StringVo;
 use Webmozart\Assert\Assert;
 
 final class FileSystemPath implements PathInterface
 {
-    public function __construct(private StringVo $path, bool $noCheck = false)
+    public function __construct(private StringVo $path, BooleanVo $noCheck = new BooleanVo(false))
     {
-        if ($noCheck === false) {
+        if ($noCheck === BooleanVo::fromValue(false)) {
             Assert::readable($path->toValue());
         }
     }

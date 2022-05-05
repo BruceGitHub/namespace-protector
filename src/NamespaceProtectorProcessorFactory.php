@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector;
 
+use MinimalVo\BaseValueObject\BooleanVo;
 use MinimalVo\BaseValueObject\StringVo;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
@@ -80,7 +81,10 @@ final class NamespaceProtectorProcessorFactory
         if ($config->enabledCache()) {
             $directory = \sys_get_temp_dir() . self::NAMESPACE_PROTECTOR_CACHE;
 
-            return new SimpleFileCache(new FileSystemPath(StringVo::fromValue($directory), true));
+            return new SimpleFileCache(
+                new FileSystemPath(StringVo::fromValue($directory),
+                    BooleanVo::fromValue(true))
+            );
         }
 
         return new NullCache();

@@ -10,10 +10,11 @@ use MinimalVo\BaseValueObject\StringVo;
 
 final class FoundUseNamespace implements EventProcessNodeInterface
 {
-    private bool $erroDetect = false;
+    private BooleanVo $erroDetect;
 
     public function __construct(private IntegerVo $line, private StringVo $nodeName)
     {
+        $this->erroDetect = BooleanVo::fromValue(false);
     }
 
     public function getLine(): IntegerVo
@@ -28,11 +29,11 @@ final class FoundUseNamespace implements EventProcessNodeInterface
 
     public function foundError(): void
     {
-        $this->erroDetect = true;
+        $this->erroDetect = BooleanVo::fromValue(true);
     }
 
     public function withError(): BooleanVo
     {
-        return BooleanVo::fromValue($this->erroDetect);
+        return $this->erroDetect;
     }
 }
