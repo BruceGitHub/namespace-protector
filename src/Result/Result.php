@@ -9,11 +9,11 @@ use MinimalVo\BaseValueObject\StringVo;
 
 final class Result implements ResultInterface
 {
-    private IntegerVo $type;
-
-    public function __construct(private StringVo $value,int $type = 0)
+    public function __construct(
+        private StringVo $value,
+        private IntegerVo $type = new IntegerVo(0)
+    )
     {
-        $this->type = IntegerVo::fromValue($type);
     }
 
     public function get(): StringVo
