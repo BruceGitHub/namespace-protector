@@ -1,4 +1,4 @@
-FROM php:8.0.3-cli-alpine
+FROM php:8.1-cli-alpine
 
 LABEL maintainer="roberto.diana@gmail.com"
 COPY src /var/www/html/src
