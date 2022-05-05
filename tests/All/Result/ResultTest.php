@@ -15,6 +15,6 @@ final class ResultTest extends TestCase
         $result = new Result(StringVo::fromValue('value'), 1);
 
         $this->assertEquals($result->get()->toValue(), 'value');
-        $this->assertEquals($result->getType(), 1);
+        $this->assertEquals($result->getType()->toValue(), 1);
     }
 }

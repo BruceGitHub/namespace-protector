@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\All;
 
+use MinimalVo\BaseValueObject\IntegerVo;
 use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Analyser;
 use NamespaceProtector\Result\ErrorResult;
@@ -51,7 +52,7 @@ class AnalyserTest extends AbstractUnitTestCase
         $result[] = new ResultProcessedFileReadOnly(
             StringVo::fromValue($file->get()),
             [
-                new ErrorResult(1, StringVo::fromValue('use'), 1),
+                new ErrorResult(IntegerVo::fromValue(1), StringVo::fromValue('use'), IntegerVo::fromValue(1)),
             ]
         );
 

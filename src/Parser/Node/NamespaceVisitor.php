@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NamespaceProtector\Parser\Node;
 
+use MinimalVo\BaseValueObject\IntegerVo;
 use MinimalVo\BaseValueObject\StringVo;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\UseUse;
@@ -46,12 +47,12 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
     {
         $this->listNodeProcessor[UseUse::class] = function (Node $node) use ($eventDispatcher): object {
             /** @var UseUse $node */
-            return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), StringVo::fromValue($node->name->toCodeString())));
+            return $eventDispatcher->dispatch(new FoundUseNamespace(IntegerVo::fromValue($node->getStartLine()), StringVo::fromValue($node->name->toCodeString())));
         };
 
         $this->listNodeProcessor[FullyQualified::class] = function (Node $node) use ($eventDispatcher): object {
             /** @var FullyQualified $node */
-            return $eventDispatcher->dispatch(new FoundUseNamespace($node->getStartLine(), StringVo::fromValue($node->toCodeString())));
+            return $eventDispatcher->dispatch(new FoundUseNamespace(IntegerVo::fromValue($node->getStartLine()), StringVo::fromValue($node->toCodeString())));
         };
 
         $collection = $this->errorCollectionFactory->createForErrorResult();
@@ -84,7 +85,7 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
         /** @var FoundUseNamespace */
         $resultProcessNode = $func($node);
 
-        if (!$resultProcessNode->withError()) {
+        if (!$resultProcessNode->withError()->toValue()) {
             return;
         }
 
@@ -95,9 +96,9 @@ final class NamespaceVisitor extends NameResolver implements NamespaceProtectorV
         // }
 
         $err = new ErrorResult(
-            $node->getLine(),
+            IntegerVo::fromValue($node->getLine()),
             StringVo::fromValue($resultProcessNode->getNodeName()->toValue()),
-            self::ERR
+            IntegerVo::fromValue(self::ERR)
         );
 
         $this->storeProcessNodeResult->addResult($err);

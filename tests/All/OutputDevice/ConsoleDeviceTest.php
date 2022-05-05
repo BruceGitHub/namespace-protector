@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\All\OutputDevice;
 
+use MinimalVo\BaseValueObject\IntegerVo;
 use MinimalVo\BaseValueObject\StringVo;
 use Tests\All\AbstractUnitTestCase;
 use NamespaceProtector\Result\ErrorResult;
@@ -23,7 +24,12 @@ class ConsoleDeviceTest extends AbstractUnitTestCase
         \ob_start();
 
         $rpf = new ResultProcessedMutableFile(StringVo::fromValue('FileA'));
-        $rpf->addConflic(new ErrorResult(99, StringVo::fromValue('ConflicA'), 1));
+        $rpf->addConflic(new ErrorResult(
+            IntegerVo::fromValue(99),
+            StringVo::fromValue('ConflicA'),
+            IntegerVo::fromValue(1)
+            )
+        );
 
         $result = $this->prophesize(ResultProcessorInterface::class);
 

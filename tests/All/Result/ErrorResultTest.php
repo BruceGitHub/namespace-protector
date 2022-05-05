@@ -2,6 +2,7 @@
 
 namespace Tests\All\Result;
 
+use MinimalVo\BaseValueObject\IntegerVo;
 use MinimalVo\BaseValueObject\StringVo;
 use NamespaceProtector\Result\ErrorResult;
 use Tests\All\AbstractUnitTestCase;
@@ -11,9 +12,9 @@ class ErrorResultTest extends AbstractUnitTestCase
     /** @test */
     public function it_get_work(): void
     {
-        $err = new ErrorResult(111, StringVo::fromValue('minny'), 999);
+        $err = new ErrorResult(IntegerVo::fromValue(111), StringVo::fromValue('minny'), IntegerVo::fromValue(999));
 
         $this->assertEquals('minny', $err->get()->toValue());
-        $this->assertEquals(999, $err->getType());
+        $this->assertEquals(IntegerVo::fromValue(999), $err->getType());
     }
 }
