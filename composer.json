@@ -29,6 +29,7 @@
   },
   "require-dev": {
     "mikey179/vfsstream": "^1.6",
+    "pestphp/pest": "^1.21",
     "phpspec/prophecy-phpunit": "^2.0",
     "phpunit/phpunit": "^9",
     "roave/security-advisories": "dev-master",

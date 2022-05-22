@@ -87,4 +87,7 @@ local_prepare_phar_release:
 local_prepare_release: local_phar_build docker_command_build local_prepare_phar_release
 	echo "Release ready"
 
+local-test-pest:
+	docker-compose -f ./.container/docker-compose.yml run php php ./vendor/bin/pest
+
 .SILENT:

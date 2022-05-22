@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-if (version_compare(PHP_VERSION, '7.4.0') < 0) {
-    fwrite(STDERR, "PHP 7.4 or major is required\n");
+if (version_compare(PHP_VERSION, '8.1') < 0) {
+    fwrite(STDERR, "PHP 8.1 or major is required\n");
     exit(1);
 }
 
@@ -26,7 +26,7 @@ use NamespaceProtector\Config\ConfigTemplateCreator;
 const FILENAME_TEMPLATE = 'template-config-json';
 
 //todo: use @package_version@ 
-$app = new Application('Namespace Protector','0.1.0 à(Alpha)');
+$app = new Application('Namespace Protector','0.1.0 (Alpha)');
 $app->add(new NamespaceProtectorCommand());
 $app->add(new NamespaceProtectorConfigCreatorCommand(
             'Namespace-Protector-Config-Create', 
